@@ -6,6 +6,7 @@ Human behavior using behavior trees via Active Logic [DRAFT]
 ## What?
 
 A sample Unity project created to demonstrate simple actions (push, grab, tell, ...) using behavior trees (BT).
+The idea is to provide a concise foundation for learning about BT and Active Logic; sample project to build from.
 
 ## Prerequisites
 
@@ -18,5 +19,10 @@ Some of the above assets are not free; I do not currently earn a commission on t
 
 ## Usage
 
-Find inspiration [in the source](Assets/Kabuki/Runtime/Actor.howl). Currently only Howl source is provided. I will create a C# mirror at a later date.
-With the current prerequisites, you may also build and run play mode tests.
+Find inspiration [in the source](Assets/Kabuki/Runtime/Actor.howl). C# sources live [here](Assets/~build/Kabuki/)
+With the referred prerequisites, you may also build and run play mode tests.
+
+## Future
+
+- Currently, reviewing implementations
+- Will provide alternative implementations ('classic' mecanim and legacy animation integrations)
