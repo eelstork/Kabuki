@@ -18,5 +18,5 @@ Some of the above assets are not free; I do not currently earn a commission on t
 
 ## Usage
 
-Find inspiration in the source. Currently only Howl source is provided. I will create a C# mirror at a later date.
+Find inspiration [in the source](Assets/Kabuki/Runtime/Actor.howl). Currently only Howl source is provided. I will create a C# mirror at a later date.
 With the current prerequisites, you may also build and run play mode tests.
