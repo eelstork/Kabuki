@@ -1,0 +1,35 @@
+⊐ UnityEngine; ⊐ UnityEngine.UI; ⊐ Active.Core;
+
+‒ ○ SpeechBox : MonoBehaviour{
+
+    ‒ ㅅ duration = 1f; ᴸ ㅅ Forever = 10000;
+
+    ∘ エ canvas;  ▰ エ ui;  ▰ ㄹ text = ∅;  ▰ ㅅ stamp;
+
+    ‒ ⑂ SetText(ㄹ arg, ㅅ? lapse = ∅){
+        ⤴ (arg ☰ text) ⮐ status.done();
+        duration = lapse ?? duration;
+        text = arg;  stamp = Time.time + duration;  ⮐ ⑂.done();
+    }
+
+    ┈ Update(){
+        ⤴ (text ☰ ∅ ∨ stamp < Time.time)
+        { text = ∅; ⤴ (ui) ui.gameObject.SetActive(✗); ⮐ ; }
+        ⤴ (!ui) CreateUI();
+        ui.GetChild(0).⧼Text⧽.text = text;
+        ui.transform.position = Camera.main
+                 .WorldToScreenPoint(transform.position + メ.up * 2 );
+    }
+
+    ┈ CreateUI(){
+        ui = Instantiate(Resources.Load<エ>("SpeechBox"));
+        ⤴ (!canvas){ ∙ go = ロ.Find("Canvas");
+                     ⤴ (go) canvas = go.transform;
+        }
+        ⤴ (!canvas) canvas = Instantiate(Resources.Load<エ>("Canvas"));
+        ui.SetParent(canvas);
+    }
+
+    ┈ OnDestroy(){ ⤴ (ui ≠ ∅) Destroy(ui.gameObject); }
+
+}

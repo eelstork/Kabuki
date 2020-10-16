@@ -1,0 +1,26 @@
+⊐ UnityEngine;
+⊐ Active.Core; ⊐̥ Active.Core.status; ⊐ Active.Util;
+
+⊓ Activ.Kabuki{
+‒ ○ XTask : UTask{
+
+    ‒ ⑂ Play(ㄹ anim) → Req<MecanimDriver>().Play(anim);
+
+    ‒ ⑂ Playing(ㄹ anim, status @while){
+        ⤴ (@while.running) Req<MecanimDriver>().Play(anim);
+        ⮐ @while;
+    }
+
+    ‒ C Req<C>() ¿ C : Component{
+        ∙ c = ⧼C⧽; ⤴ (c ≠ ∅) ⮐ c;
+        ⮐ 《C》;
+    }
+
+    ‒ action Destroy(エ arg){
+        ⤴ (arg ≠ ∅) Destroy(arg.gameObject);
+        ⮐ @void();
+    }
+
+    ‒ エ θ → transform;
+
+}}

@@ -1,0 +1,18 @@
+⊐ UnityEngine;
+⊓ Activ.Kabuki{
+‒̥ ○ ActorSetup{
+
+    ‒̥ エ Setup(ロ go){
+        ∙ actor = go.《Actor》;
+        actor.leftHold  = actor.θ.Find("hand", "l");
+        actor.rightHold = actor.θ.Find("hand", "r");
+        actor.pushingBones = ⌢ エ[]{
+            actor.θ.Find("hand", "r"),
+            actor.θ.Find("hand", "l")
+        };
+        actor.⧼Animator⧽.applyRootMotion = ✗;
+        actor.《SpeechBox》;
+        ⮐ go.transform;
+    }
+
+}}

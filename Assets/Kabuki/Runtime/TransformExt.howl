@@ -1,0 +1,90 @@
+⊐ Ex = System.Exception;
+⊐ UnityEngine; ⊐̥ UnityEngine.Time; ⊐̥ UnityEngine.Mathf;
+⊐ T = UnityEngine.Transform;
+⊐ Active.Core; ⊐̥ Active.Core.status;
+
+⊓ Activ.Kabuki{
+‒̥ ○ TransformExt{
+
+    ‒̥ メ Dir(⦿ T x, T y, ㅇ planar = ✗)
+        → planar ? (y.position - x.position).X_Z().normalized
+                 : (y.position - x.position).normalized;
+
+    ‒̥ ㅅ Dist(⦿ T x, T y) → メ.Distance(x.position, y.position);
+
+    ‒̥ ㅅ Radius(⦿ T x){
+        ∙ bounds = x.GetComponentInChildren<Renderer>().bounds;
+        ∙ s = bounds.size;
+        ⮐ (s.x + s.y + s.z) / 6 * 0.7f;
+    }
+
+    ‒̥ エ Req(⦿ エ x, ⋯ ㄹ[] hints){
+        ∙ ㄸ = x.Find(hints);
+        ⮐ ㄸ ≠ ∅ ? ㄸ : (╯°□°)╯ ⌢ Ex("Not found: " + hints);
+
+    }
+
+    ‒̥ エ Find(⦿ エ x, ⋯ ㄹ[] hints){
+        ∀ (エ child ∈ x){
+            ∙ name = child.gameObject.name.ToLower();  ㅇ match = ✓;
+            ∀ (∙ h ∈ hints) ⤴ (!name.Contains(h)){ match = false; ¦ }
+            ⤴ (match) ⮐ child;
+            ∙ ㄸ = child.Find(hints);
+            ⤴ (ㄸ ≠ ∅) ⮐ ㄸ;
+        }
+        ⏂
+    }
+
+    ‒̥ ㅇ Has(⦿ T x, T y) → y.IsAncestor(x);
+
+    // is y an ancestor of x?
+    ‒̥ ㅇ IsAncestor(⦿ T x, T y){
+        ⟲ (x ≠ null){
+            ⤴ (x ☰ y) ㆑
+            x = x.parent;
+        } ⤬
+    }
+
+    ‒̥ ㅅ Look(⦿ T x, T y, ㅇ planar = ✓)
+        → メ.Angle(x.forward, x.Dir(y, planar: planar));
+
+    ‒̥ ⑂ RotateTowards(⦿ エ θ, エ target, ㅅ speed, ㅅ μ = 0.1f){
+        メ u = θ.forward;
+        メ v = θ.Dir(target, planar: true);
+        ㅅ α = メ.Angle(u, v);
+        ⤴ (α < μ) ⮐ done();
+        θ.forward = メ.RotateTowards(u, v, Deg2Rad * speed * δt, 1f);
+        ⮐ cont();
+    }
+
+    ‒̥ ⑂ RotateTowards(⦿ エ θ, メ dir, ㅅ speed, ㅅ μ = 0.1f){
+        メ u = θ.forward;
+        ㅅ α = メ.Angle(u, dir);
+        ⤴ (α < μ) ⮐ done();
+        θ.forward =
+            メ.RotateTowards(u, dir, Deg2Rad * speed * δt, 1f);
+        ⮐ cont();
+    }
+
+    // a @while construct would be useful here
+    ‒̥ ⑂ MoveTowards(⦿ エ x, エ y, ㅅ dist, ㅅ speed)
+        → x.PlanarDist(y) < dist
+        ∨ (-Do( x.position += x.PlanarDir(y) * δt * speed)).ever;
+
+    ‒̥ ㅅ PlanarDist(⦿ T x, T y){
+        ∙ u = y.position - x.position; u.y = 0;
+        ⮐ u.magnitude;
+    }
+
+    ‒̥ メ PlanarDir(⦿ T x, T y){
+        ∙ u = y.position - x.position; u.y = 0;
+        ⮐ u.normalized;
+    }
+
+    // --------------------------------------------------------------
+
+    ∘ ㅅ δt → Time.deltaTime;
+
+    ∘ action Do(⊡ x) → @void();
+
+}}

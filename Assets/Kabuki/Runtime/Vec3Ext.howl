@@ -1,0 +1,56 @@
+using UnityEngine;
+
+namespace Activ.Kabuki{
+‒̥ class VectorExt{
+
+    const ㅅ PRECISION = 0.0000001f;
+
+    ‒̥ メ Abs(this メ u){
+        var v = u;
+        for(ᆞ i = 0; i < 3; i++) v[i] = Mathf.Abs(v[i]);
+        return v;
+    }
+
+    ‒̥ メ Drop(this メ P, ㅅ maxDist=10f){
+        RaycastHit hit;
+        ㅇ didHit = Physics.Raycast(P, メ.down, out hit, maxDist);
+        if(!didHit) throw new System.Exception("No hit");
+        return hit.point;
+    }
+
+    ‒̥ ㅇ Eq(this メ u, メ v)
+    → (u-v).magnitude ≤ PRECISION;
+
+    ‒̥ ㅅ Max(this メ u) → Mathf.Max(u.x, u.y, u.z);
+
+    ‒̥ メ Ortho(this メ u){
+        メ v = Abs(u);
+        ㅅ w = v.Max();
+        メ θ = u;
+        for(ᆞ i = 0; i < 3; i++){
+            θ[i] = v[i] ☰ w ? u[i] : 0;
+        }
+        return θ;
+    }
+
+    ‒̥ メ Shift(this メ u, ᆞ c){
+        for(ᆞ i = 0; i < c; i++)
+            u = new メ(u.z, u.x, u.y);
+        return u;
+    }
+
+    ‒̥ メ[] Shift(this メ[] S, ᆞ c){
+        if(c ☰ 0) return S;
+        UnityEngine.Debug.Log("Shift coords: " + c);
+        for(ᆞ i = 0; i < S❙; i++){
+            S[i] = S[i].Shift(c);
+        } return S;
+    }
+
+    ‒̥ メ ZYX(this メ u) → new メ(u.z, u.y, u.x);
+
+    ‒̥ Vector2 XZ(this メ u) → new メ(u.x, u.z);
+
+    ‒̥ メ X_Z(this メ u) → new メ(u.x, 0f, u.z);
+
+}}

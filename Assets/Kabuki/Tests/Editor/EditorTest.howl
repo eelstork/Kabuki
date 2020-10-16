@@ -1,0 +1,18 @@
+⊐ System.Collections.Generic;
+⊐ UnityEngine;
+⊐ NUnit.Framework;
+
+⊓ Kabuki.Test{
+‒ ○ EditorTest{
+
+    // Assertions ---------------------------------------------------
+
+    ◠ ┈ o (ㅇ arg) → Assert.That(arg);
+
+    ◠ ┈ o (⊡ x, ⊡ y) → Assert.That(x, Is.EqualTo(y));
+
+    ◠ ┈ Print(⊡ arg) → UnityEngine.Debug.Log(arg);
+
+    // --------------------------------------------------------------
+
+}}

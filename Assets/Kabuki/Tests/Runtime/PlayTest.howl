@@ -1,0 +1,91 @@
+⊐ System.Collections.Generic;
+⊐ UnityEngine;
+⊐ NUnit.Framework;
+
+⊓ Kabuki.Test{
+‒ ○ PlayTest{
+
+    ロ ground, sun, cam;
+    List<ロ> objects = new List<ロ>();
+
+    // Assertions ---------------------------------------------------
+
+    ◠ ┈ o (ㅇ arg) → Assert.That(arg);
+
+    ◠ ┈ o (⊡ x, ⊡ y) → Assert.That(x, Is.EqualTo(y));
+
+    ‒ ロ Create(ㄹ name, メ? pos=∅){
+        ∙ go = Object.Instantiate(Resources.Load<ロ>(name));
+        go.name = name;
+        objects.Add(go);
+        go.transform.position = pos ?? メ.zero;
+        ⮐ go;
+    }
+
+    ‒ エ Ball(ㅅ size, ㄹ name = "Ball", エ parent = ∅){
+        ∙ go = ロ.CreatePrimitive(PrimitiveType.Sphere);
+        go.name = name;
+        ∙ θ = go.transform;
+        θ.localScale = メ.one * size;
+        θ.SetParent(parent);
+        ⤴ (parent ≠ ∅) go.SetActive(✗);
+        objects.Add(go);
+        ⮐ θ;
+    }
+
+    ‒ エ Box(ㅅ x, ㅅ z, ㅅ size, ㄹ name = "Box"){
+        ∙ go = ロ.CreatePrimitive(PrimitiveType.Cube);
+        go.name = name;
+        ∙ θ = go.transform;
+        θ.localScale = メ.one * size;
+        θ.position = ⌢ メ(x, size/2, z);
+        objects.Add(go);
+        ⮐ θ;
+    }
+
+    ‒ エ CreateEmpty(ㄹ name, メ pos){
+        ∙ θ = CreateEmpty(pos);
+        θ.gameObject.name = name;
+        ⮐ θ;
+    }
+
+    ‒ エ CreateEmpty(メ pos){
+        ∙ go = ⌢ ロ("Empty");
+        go.transform.position = pos;
+        objects.Add(go);
+        ⮐ go.transform;
+    }
+
+    ◠ ┈ Print(⊡ arg) → UnityEngine.Debug.Log(arg);
+
+    // --------------------------------------------------------------
+
+    ⍜ Setup(){
+        Time.timeScale = 1;
+        cam = ロ.Find("Camera");
+        ⤴ (!cam){
+            // Create a camera
+            cam = ⌢ ロ("Camera");
+            cam.《Camera》.backgroundColor = Color.white;
+            cam.transform.position = メ.back * 2 + メ.up * 1;
+            cam.⧼Camera⧽.tag = "MainCamera";
+            // Create a light
+            sun = ⌢ ロ("Sun");
+            sun.transform.localEulerAngles = ⌢ メ(30, 30, 0);
+            ∙ light = sun.《Light》;
+            light.type = LightType.Directional;
+            // Remove skybox
+            RenderSettings.skybox = ∅;
+            // Create ground
+            ground = ロ.CreatePrimitive(PrimitiveType.Plane);
+            ground.transform.localScale *= 12;
+        }
+    }
+
+    ⍉ Teardown(){
+        ∀ (∙ k ∈ objects) ロ.DestroyImmediate(k);
+        objects = ⌢ 𝕃 <ロ>();
+        Time.timeScale = 1;
+    }
+
+}}

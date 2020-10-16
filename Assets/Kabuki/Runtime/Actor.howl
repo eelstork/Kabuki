@@ -1,0 +1,140 @@
+⊐ Ex = System.Exception;
+⊐ T = UnityEngine.Transform; ⊐ UnityEngine;
+⊐ Active.Core; ⊐̥ Active.Core.status; ⊐ Active.Util;
+
+⊓ Activ.Kabuki{
+‒ ○ Actor : XTask{
+
+    ‒ ㅅ speed = 1, rotationSpeed = 180;
+    ‒ エ leftHold, rightHold; // for holding an object in hand
+    ‒ エ[] pushingBones;      // contact points for pushing
+    ‒ Actor other;           // for give/take interaction
+    ‒ エ gift;
+
+    // --------------------------------------------------------------
+
+    ‒ ⑂ ⦿[ㄹ gesture, エ ⧕] → LookAt(⧕) ∧ Play(gesture);
+
+    ‒ ⑂ ⦿[ㄹ anim] → Play(anim);
+
+    ‒ ⑂ Face(エ ⧕, ㄹ anim = "Walk")
+        → Playing(anim, θ.RotateTowards(⧕, rotationSpeed));
+
+    ‒ ⑂ Face(メ dir, ㄹ anim = "Walk")
+        → Playing(anim, θ.RotateTowards(dir, rotationSpeed));
+
+    ‒ ⑂ Give(エ ⧕, Actor recipient)
+        → Reach(recipient.θ)
+        ∧ Playing("Idle", Offer(⧕, recipient))
+        ∧ Present(⧕, recipient);
+
+    ‒ ⑂ Grab(エ ⧕)
+        → (Has(⧕) ∨ Reach(⧕))
+        ∧ ⦿["Grab"] % After(0.5f)?[ Hold(⧕).now ];
+
+    ‒ ⑂ Ingest(エ ⧕)
+        → Hold(⧕, allowNull: ✓, hand: "L")
+        ∧ ⦿["Eat"] % After(1.2f) ? [Destroy(⧕).now];
+
+    ‒ ⑂ Idle → ⦿["Idle"];
+
+    ‒ ⑂ LookAt(エ ⧕, ㄹ rotationAnim = "Walk", ㄹ idleAnim = "Idle")
+        → Face(⧕, rotationAnim) ∧ ⦿[idleAnim];
+
+    ‒ ⑂ Push(エ ⧕) → Sequence()[
+        and ? Reach(⧕) ∧ PushingSetup() :
+        and ? ⦿["Push"] ∧ PushingTeardown() : end
+    ];
+
+    ‒ ⑂ Strike(エ ⧕) → Reach(⧕) ∧ ⦿["Strike"];
+
+    ‒ ⑂ Take()
+        → (other ≠ ∅) ∧ Face(other.θ) ∧ ⦿["Take"]
+                      % After(0.5f)?[ Hold(gift).now ];
+
+    ‒ ⑂ Tell(エ ⧕, ㄹ msg)
+        → Reach(⧕)
+        ∧ ⧼SpeechBox⧽.SetText(msg) ∧ ⦿["Tell"];
+
+    ‒ ⑂ Throw(エ ⧕, メ dir) → Sequence()[
+        and ? Hold(⧕) :
+        and ? Face(dir) ∧ ⦿["Throw"] + After(0.5f)?
+                                       [Impel(⧕, dir)] : end
+    ];
+
+    ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
+        → Face(⧕) ∧ Playing("Walk", θ.MoveTowards(⧕, dist, speed));
+
+    // ==============================================================
+
+    ‒ ㅇ IsLookingAt(Actor ⧕) → θ.Look(⧕.θ) < 5f;
+
+    ‒ ㅇ Has(エ ⧕) → θ.Has(⧕);
+
+    // ==============================================================
+
+    action Hold(エ ⧕, ㅇ allowNull = ✗, ㄹ hand = "R")
+        → Hold(⧕, hand ☰ "R" ? rightHold : leftHold, allowNull);
+
+    action Hold(エ ⧕, エ hold, ㅇ allowNull){
+        ⤴ (hold ☰ ∅)
+            (╯°□°)╯ ⌢ Ex("'hold' is null");
+        ⤴ (⧕ ☰ ∅) ⮐ allowNull ? @void()
+                                 : (╯°□°)╯ ⌢ Ex("that is null");
+        ⧕.gameObject.SetActive(✓);
+        ⤴ (⧕.parent ☰ hold) ⮐ @void();
+        ∙ body = ⧕.⧼Rigidbody⧽;
+        ⤴ (body) body.isKinematic = ✓;
+        ⧕.SetParent(hold);
+        ⧕.localPosition =  Palm(hold) + メ.forward * ⧕.Radius();
+        ⮐ @void();
+    }
+
+    action Impel(エ ⧕, メ dir, ㅅ force = 10f){
+        ⧕.SetParent(∅);
+        ∙ body = ⧕.⧼Rigidbody⧽;
+        body.isKinematic = ✗;
+        ∙ F = dir.normalized * force;
+        body.AddForce(F, ForceMode.Impulse);
+        ⮐ @void();
+    }
+
+    ⑂ Offer(エ ⧕, Actor recipient)
+        → Do(recipient.other = ⦿).now
+        ∧ Do(recipient.gift  = ⧕).now
+        ∧ +(⑂)recipient.IsLookingAt(⦿);
+
+    ⑂ Present(エ ⧕, Actor recipient)
+        → (recipient.Has(⧕) ∨ Hold(⧕).now) ∧ ⦿["Give"];
+
+    action PushingSetup(){
+        UseRootMotion(✓);
+        ∀ (エ x ∈ pushingBones){
+            ∙ c = x.《SphereCollider》; c.radius = 0.05f;
+            ∙ b = x.《Rigidbody》; b.isKinematic = ✓;
+        }
+        ⮐ @void();
+    }
+
+    action PushingTeardown(){
+        UseRootMotion(✗);
+        ∀ (エ x ∈ pushingBones){
+            Destroy(x.⧼SphereCollider⧽);
+            Destroy(x.⧼Rigidbody⧽);
+        }
+        ⮐ @void();
+    }
+
+    action UseRootMotion(ㅇ flag)
+        → Do( ⧼Animator⧽.applyRootMotion = flag );
+
+    // --------------------------------------------------------------
+
+    メ Palm(エ hold){
+        メ sum = メ.zero; ᆞ count = 1;
+        ∀ (エ x ∈ hold){ sum += x.localPosition/2; count ++; }
+        sum /= count;
+        ⮐ sum;
+    }
+
+}}

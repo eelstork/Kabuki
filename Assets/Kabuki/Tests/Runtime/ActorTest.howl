@@ -1,0 +1,189 @@
+⊐ System.Collections;
+⊐ UnityEngine; ⊐ UnityEngine.TestTools;
+⊐ NUnit.Framework;
+⊐ Active.Core; ⊐ Activ.Kabuki;
+
+⊓ Kabuki.Test{ ‒ ○ ActorTest : PlayTest{
+
+    ᴸ ㄹ ActorName = "Dummy";
+    Actor actor;
+    ᆞ frame;
+
+    ⍜ _ActorSetup(){
+        actor = ActorSetup.Setup( Create(ActorName) ).⧼Actor⧽;
+        Active.Core.Details.RoR.Enter(this, frame);
+    }
+
+    ⍉ _ActorTearDown ⎚ Active.Core.Details.RoR.Exit(this, ref frame);
+
+    // --------------------------------------------------------------
+
+    ⏚ Gesture(){
+        ∙ x = CreateEmpty( メ.right * 2f );
+        ᆞ i; ⟳ (i = 0; i < 400; i++){
+            ∙ s = actor["Take", x];
+            ⤴ (s.complete ∧ Playing("IdleComeHere")) ¦
+            yield ⏂;
+        }
+        o( actor.transform.Look(x) < 1f);
+        yield ⏂;
+    }
+
+    ⏚ Give_accept(){
+        ∙ ball  = Ball(0.2f, parent: actor.θ);
+        ∙ other = Other;
+        other.gameObject.name = "Mimi";
+        ⑂ s = status.fail(); ᆞ i;
+        ⟳ (i = 0; i < 1000; i++){
+            s = actor.Give(ball, other);
+            other.Take();
+            ⤴ (other.Has(ball) ∧ s.complete) ¦
+            yield ⏂;
+        }
+        Assert.That(i, Is.LessThan(1000) );
+        Assert.That(other.Has(ball));
+    }
+
+    ⏚ Give_ignore(){
+        ∙ ball = Ball(0.2f, parent: actor.θ);
+        ∙ other = Other;
+        ⑂ s = status.fail(); ᆞ i;
+        ⟳ (i = 0; i < 300; i++){
+            s = actor.Give(ball, other);
+            o( s.running );
+            yield ⏂;
+        }
+        o( s.running );
+    }
+
+    Actor Other
+    → ActorSetup.Setup(Create(ActorName, メ.right * 2f)).⧼Actor⧽;
+
+    ⏚ Grab(){
+        ∙ x = Ball(0.3f);
+        x.position = メ.right * 2f + メ.up * 0.15f;
+        ᆞ i; ⟳ (i = 0; i < 500; i++){
+            ∙ s = actor.Grab(x);
+            ⤴ (s.complete) ¦
+            yield ⏂;
+        }
+        o( x.transform.parent, actor.rightHold);
+        o(i < 500);
+        Print($"Done in {Time.time:0.##}s, {i} frames.");
+    }
+
+    ⏚ Ingest(){
+        actor.θ.forward = -メ.forward;
+        ∙ food = Ball( 0.15f, parent: actor.transform );
+        ∙ s = status.cont();
+        ⟲ (s.running){
+            s = actor.Ingest(food);
+            yield ⏂;
+        }
+        o( s.complete );
+        o( food ☰ ∅ );
+    }
+
+    ⏚ Idle(){
+        ⟳ (ᆞ i = 0; i < 5; i++){
+            o( actor.Idle.running );
+            o( PlayingNow("Idle") );
+            yield ⏂;
+        }
+    }
+
+    ⏚ LookAt(){
+        ∙ x = CreateEmpty( メ.right * 2f );
+        o( actor.transform.Look(x), 90f);
+        ㅇ didPlayRotationAnim = ✗;
+        //
+        ᆞ i; ⟳ (i = 0; i < 100; i++){
+            ∙ s = actor.LookAt(x);
+            didPlayRotationAnim |= Playing("Walk");
+            o ( s.running );
+            ⤴ ( Playing("Idle") ) ¦
+            yield ⏂;
+        }
+        o( didPlayRotationAnim );
+        o( actor.transform.Look(x) < 1f);
+        Print($"Done in {Time.time:0.##}s, {i} frames.");
+        yield ⏂;
+    }
+
+    ⏚ Play(){
+        ∙ t0 = Time.time;
+        ⑂ s = status.cont();
+        ᆞ i; ⟳ (i = 0; i < 600; i++){
+            s = actor.Play("Take");
+            ⤴ (s.complete) ¦
+            ⤵ o( s.running );
+            yield ⏂;
+        }
+        o(s.complete);
+        o(i < 600);
+        o(Time.time - t0 < 6f);
+        Print($"Done in {Time.time:0.##}s, {i} frames.");
+    }
+
+    ⏚ Push(){
+        ∙ block = Box(1f, 2f, 1.5f); block.《Rigidbody》;
+        ∙ s = status.cont();
+        ⟳ (ᆞ i = 0; i < 2000; i++ ){
+            s = actor.Push(block);
+            yield ⏂;
+            ⤴ (s.complete) ¦
+        }
+        o( s.complete );
+    }
+
+    ⏚ Reach(){
+        ∙ x = CreateEmpty( メ.forward * 2f );
+        ⟳ (;;){
+            ∙ s = actor.Reach(x);
+            ⤴ (s.complete) ¦
+            yield ⏂;
+        }
+        o( actor.transform.Dist(x) < 1f);
+    }
+
+    ⏚ Strike(){
+        ∙ other = Other.θ;
+        ∙ s = status.cont();
+        ⟲ (s.running){
+            s = actor.Strike(other);
+            yield ⏂;
+        }
+        o( s.complete );
+    }
+
+    ⏚ Tell(){
+        ∙ other = Other.θ;
+        ∙ s = status.cont();
+        ⟲ (s.running){
+            s = actor.Tell(other, "Hello");
+            yield ⏂;
+        }
+        o( s.complete );
+    }
+
+    ⏚ Throw(){
+        ∙ ball = Box(0f, 0f, 0.1f); ball.《Rigidbody》;
+        ∙ s = status.cont();
+        ⟳ (ᆞ i = 0; i < 350; i++){
+            s = actor.Throw(ball, メ.right + メ.forward);
+            yield ⏂;
+        }
+        o( s.complete );
+        //⟳ (ᆞ i = 0; i < 500; i++) yield ⏂;
+    }
+
+    // --------------------------------------------------------------
+
+    ㅇ PlayingNow(ㄹ anim)
+        → actor.⧼Animator⧽.GetCurrentAnimatorStateInfo(0).IsName(anim);
+
+    // Likely should query several indices here
+    ㅇ Playing(ㄹ anim)
+        → actor.⧼Animator⧽.GetNextAnimatorStateInfo(0).IsName(anim);
+
+}}
