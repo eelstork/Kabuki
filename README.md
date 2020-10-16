@@ -15,7 +15,8 @@ The idea is to provide a concise foundation for learning about BT and Active Log
 - [Basic motions](https://assetstore.unity.com/packages/3d/animations/basic-motions-free-pack-154271)
 - [Prop animations](https://assetstore.unity.com/packages/3d/animations/props-animations-10214)
 
-Some of the above assets are not free; I do not currently earn a commission on the above links.
+Some of the above assets are not free; later this repository may include licensed animations and models.
+I do not earn a commission on the above links.
 
 ## Usage
 
