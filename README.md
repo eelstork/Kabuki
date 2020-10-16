@@ -9,10 +9,10 @@ A sample Unity project created to demonstrate simple actions (push, grab, tell, 
 
 ## Prerequisites
 
-- (Active Logic)[https://assetstore.unity.com/packages/tools/ai/active-logic-151850]
-- (Howl)[https://assetstore.unity.com/packages/tools/localization/howl-the-symbolic-notation-for-c-177081]
-- (Basic motions) [https://assetstore.unity.com/packages/3d/animations/basic-motions-free-pack-154271]
-- (Prop animations) [https://assetstore.unity.com/packages/3d/animations/props-animations-10214]
+- [Active Logic](https://assetstore.unity.com/packages/tools/ai/active-logic-151850)
+- [Howl](https://assetstore.unity.com/packages/tools/localization/howl-the-symbolic-notation-for-c-177081)
+- [Basic motions](https://assetstore.unity.com/packages/3d/animations/basic-motions-free-pack-154271)
+- [Prop animations](https://assetstore.unity.com/packages/3d/animations/props-animations-10214)
 
 Some of the above assets are not free; I do not currently earn a commission on the above links.
 
