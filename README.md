@@ -1,7 +1,7 @@
 # Kabuki
 Human behavior using behavior trees via Active Logic [DRAFT]
 
-**This repository is a DRAFT; you are free to look around and may find inspiration here, however Kabuki is not ready for prime time**
+**This repository is a DRAFT; you are free to look around, however Kabuki is not ready for prime time**
 
 ## What?
 
