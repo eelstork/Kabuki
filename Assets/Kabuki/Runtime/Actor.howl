@@ -24,7 +24,7 @@
         → Playing(anim, み.RotateTowards(dir, rotationSpeed));
 
     ‒ ⑂ Give(エ ⧕, Actor recipient)
-        → Reach(recipient⊺)
+        → Reach(recipient.み)
         ∧ Playing("Idle", Offer(⧕, recipient))
         ∧ Present(⧕, recipient);
 
@@ -41,10 +41,9 @@
     ‒ ⑂ LookAt(エ ⧕, ㄹ rotationAnim = "Walk", ㄹ idleAnim = "Idle")
         → Face(⧕, rotationAnim) ∧ ⦿[idleAnim];
 
-    ‒ ⑂ Push(エ ⧕) → Sequence()[
-        and ? Reach(⧕) ∧ PushingSetup() :
-        and ? ⦿["Push"] ∧ PushingTeardown() : end
-    ];
+    ‒ ⑂ Push(エ ⧕)
+        → Once()?[ Reach(⧕) ∧ PushingSetup() ]
+        ∧ ⦿["Push"] ∧ PushingTeardown();
 
     ‒ ⑂ Strike(エ ⧕) → Reach(⧕) ∧ ⦿["Strike"];
 
@@ -56,11 +55,9 @@
         → Reach(⧕)
         ∧ ⧼SpeechBox⧽.SetText(msg) ∧ ⦿["Tell"];
 
-    ‒ ⑂ Throw(エ ⧕, シ dir) → Sequence()[
-        and ? Hold(⧕) :
-        and ? Face(dir) ∧ ⦿["Throw"] + After(0.5f)?
-                                       [Impel(⧕, dir)] : end
-    ];
+    ‒ ⑂ Throw(エ ⧕, シ dir)
+        → Once()?[ Hold(⧕) ]
+        ∧ Face(dir) ∧ ⦿["Throw"] + After(0.5f)? [ Impel(⧕, dir) ];
 
     ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
         → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));

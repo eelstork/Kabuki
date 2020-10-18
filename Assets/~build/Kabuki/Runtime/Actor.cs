@@ -41,10 +41,9 @@ public class Actor : XTask{
     public status LookAt(Transform that, string rotationAnim = "Walk", string idleAnim = "Idle")
         => Face(that, rotationAnim) && this[idleAnim];
 
-    public status Push(Transform that) => Sequence()[
-        and ? Reach(that) && PushingSetup() :
-        and ? this["Push"] && PushingTeardown() : end
-    ];
+    public status Push(Transform that)
+        => Once()?[ Reach(that) && PushingSetup() ]
+        && this["Push"] && PushingTeardown();
 
     public status Strike(Transform that) => Reach(that) && this["Strike"];
 
@@ -56,11 +55,9 @@ public class Actor : XTask{
         => Reach(that)
         && GetComponent<SpeechBox>().SetText(msg) && this["Tell"];
 
-    public status Throw(Transform that, Vector3 dir) => Sequence()[
-        and ? Hold(that) :
-        and ? Face(dir) && this["Throw"] + After(0.5f)?
-                                       [Impel(that, dir)] : end
-    ];
+    public status Throw(Transform that, Vector3 dir)
+        => Once()?[ Hold(that) ]
+        && Face(dir) && this["Throw"] + After(0.5f)? [ Impel(that, dir) ];
 
     public status Reach(Transform that, float dist = 1f)
         => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
