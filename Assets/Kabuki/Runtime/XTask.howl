@@ -6,19 +6,18 @@
 
     ‒ ⑂ Play(ㄹ anim) → Req<MecanimDriver>().Play(anim);
 
-    ‒ ⑂ Playing(ㄹ anim, status @while){
+    ‒ ⑂ Playing(ㄹ anim, ⑂ @while){
         ⤴ (@while.running) Req<MecanimDriver>().Play(anim);
         ⮐ @while;
     }
 
-    ‒ C Req<C>() ¿ C : Component{
+    ‒ C Req<C>() ¿ C : ⫙ {
         ∙ c = ⧼C⧽; ⤴ (c ≠ ∅) ⮐ c;
         ⮐ 《C》;
     }
 
     ‒ action Destroy(エ arg){
-        ⤴ (arg ≠ ∅) Destroy(arg.gameObject);
-        ⮐ @void();
+        ⤴ (arg ≠ ∅) Destroy(arg.gameObject); ⌽
     }
 
     ‒ エ θ → transform;

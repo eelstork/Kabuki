@@ -18,13 +18,13 @@ public class Actor : XTask{
     public status this[string anim] => Play(anim);
 
     public status Face(Transform that, string anim = "Walk")
-        => Playing(anim, θ.RotateTowards(that, rotationSpeed));
+        => Playing(anim, transform.RotateTowards(that, rotationSpeed));
 
     public status Face(Vector3 dir, string anim = "Walk")
-        => Playing(anim, θ.RotateTowards(dir, rotationSpeed));
+        => Playing(anim, transform.RotateTowards(dir, rotationSpeed));
 
     public status Give(Transform that, Actor recipient)
-        => Reach(recipient.θ)
+        => Reach(recipient.transform)
         && Playing("Idle", Offer(that, recipient))
         && Present(that, recipient);
 
@@ -49,7 +49,7 @@ public class Actor : XTask{
     public status Strike(Transform that) => Reach(that) && this["Strike"];
 
     public status Take()
-        => (other != null) && Face(other.θ) && this["Take"]
+        => (other != null) && Face(other.transform) && this["Take"]
                       % After(0.5f)?[ Hold(gift).now ];
 
     public status Tell(Transform that, string msg)
@@ -63,13 +63,13 @@ public class Actor : XTask{
     ];
 
     public status Reach(Transform that, float dist = 1f)
-        => Face(that) && Playing("Walk", θ.MoveTowards(that, dist, speed));
+        => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
 
     // ==============================================================
 
-    public bool IsLookingAt(Actor that) => θ.Look(that.θ) < 5f;
+    public bool IsLookingAt(Actor that) => transform.Look(that.transform) < 5f;
 
-    public bool Has(Transform that) => θ.Has(that);
+    public bool Has(Transform that) => transform.Has(that);
 
     // ==============================================================
 
@@ -86,7 +86,7 @@ public class Actor : XTask{
         var body = that.GetComponent<Rigidbody>();
         if (body) body.isKinematic = true;
         that.SetParent(hold);
-        that.localPosition =  Palm(hold) + Vector3.forward * that.Radius();
+        that.localPosition = Palm(hold) + Vector3.forward * that.Radius();
         return @void();
     }
 
@@ -112,8 +112,7 @@ public class Actor : XTask{
         foreach (Transform x in pushingBones){
             var c = x.gameObject.AddComponent<SphereCollider>(); c.radius = 0.05f;
             var b = x.gameObject.AddComponent<Rigidbody>(); b.isKinematic = true;
-        }
-        return @void();
+        } return @void();
     }
 
     action PushingTeardown(){
@@ -121,8 +120,7 @@ public class Actor : XTask{
         foreach (Transform x in pushingBones){
             Destroy(x.GetComponent<SphereCollider>());
             Destroy(x.GetComponent<Rigidbody>());
-        }
-        return @void();
+        } return @void();
     }
 
     action UseRootMotion(bool flag)
@@ -132,7 +130,7 @@ public class Actor : XTask{
 
     Vector3 Palm(Transform hold){
         Vector3 sum = Vector3.zero; int count = 1;
-        foreach (Transform x in hold){ sum += x.localPosition/2; count ++; }
+        foreach (Transform x in hold){ sum += x.localPosition/2; count++; }
         sum /= count;
         return sum;
     }

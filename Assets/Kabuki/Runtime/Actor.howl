@@ -18,13 +18,13 @@
     ‒ ⑂ ⦿[ㄹ anim] → Play(anim);
 
     ‒ ⑂ Face(エ ⧕, ㄹ anim = "Walk")
-        → Playing(anim, θ.RotateTowards(⧕, rotationSpeed));
+        → Playing(anim, み.RotateTowards(⧕, rotationSpeed));
 
-    ‒ ⑂ Face(メ dir, ㄹ anim = "Walk")
-        → Playing(anim, θ.RotateTowards(dir, rotationSpeed));
+    ‒ ⑂ Face(シ dir, ㄹ anim = "Walk")
+        → Playing(anim, み.RotateTowards(dir, rotationSpeed));
 
     ‒ ⑂ Give(エ ⧕, Actor recipient)
-        → Reach(recipient.θ)
+        → Reach(recipient⊺)
         ∧ Playing("Idle", Offer(⧕, recipient))
         ∧ Present(⧕, recipient);
 
@@ -49,27 +49,27 @@
     ‒ ⑂ Strike(エ ⧕) → Reach(⧕) ∧ ⦿["Strike"];
 
     ‒ ⑂ Take()
-        → (other ≠ ∅) ∧ Face(other.θ) ∧ ⦿["Take"]
+        → (other ≠ ∅) ∧ Face(other.み) ∧ ⦿["Take"]
                       % After(0.5f)?[ Hold(gift).now ];
 
     ‒ ⑂ Tell(エ ⧕, ㄹ msg)
         → Reach(⧕)
         ∧ ⧼SpeechBox⧽.SetText(msg) ∧ ⦿["Tell"];
 
-    ‒ ⑂ Throw(エ ⧕, メ dir) → Sequence()[
+    ‒ ⑂ Throw(エ ⧕, シ dir) → Sequence()[
         and ? Hold(⧕) :
         and ? Face(dir) ∧ ⦿["Throw"] + After(0.5f)?
                                        [Impel(⧕, dir)] : end
     ];
 
     ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
-        → Face(⧕) ∧ Playing("Walk", θ.MoveTowards(⧕, dist, speed));
+        → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
 
     // ==============================================================
 
-    ‒ ㅇ IsLookingAt(Actor ⧕) → θ.Look(⧕.θ) < 5f;
+    ‒ ㅇ IsLookingAt(Actor ⧕) → み.Look(⧕.み) < 5f;
 
-    ‒ ㅇ Has(エ ⧕) → θ.Has(⧕);
+    ‒ ㅇ Has(エ ⧕) → み.Has(⧕);
 
     // ==============================================================
 
@@ -82,21 +82,21 @@
         ⤴ (⧕ ☰ ∅) ⮐ allowNull ? @void()
                                  : (╯°□°)╯ ⌢ Ex("that is null");
         ⧕.gameObject.SetActive(✓);
-        ⤴ (⧕.parent ☰ hold) ⮐ @void();
+        ⤴ (⧕.parent ☰ hold) ⌽
         ∙ body = ⧕.⧼Rigidbody⧽;
         ⤴ (body) body.isKinematic = ✓;
         ⧕.SetParent(hold);
-        ⧕.localPosition =  Palm(hold) + メ.forward * ⧕.Radius();
-        ⮐ @void();
+        ⧕.localPosition = Palm(hold) + シ.forward * ⧕.Radius();
+        ⌽
     }
 
-    action Impel(エ ⧕, メ dir, ㅅ force = 10f){
+    action Impel(エ ⧕, シ dir, ㅅ force = 10f){
         ⧕.SetParent(∅);
         ∙ body = ⧕.⧼Rigidbody⧽;
         body.isKinematic = ✗;
         ∙ F = dir.normalized * force;
         body.AddForce(F, ForceMode.Impulse);
-        ⮐ @void();
+        ⌽
     }
 
     ⑂ Offer(エ ⧕, Actor recipient)
@@ -112,8 +112,7 @@
         ∀ (エ x ∈ pushingBones){
             ∙ c = x.《SphereCollider》; c.radius = 0.05f;
             ∙ b = x.《Rigidbody》; b.isKinematic = ✓;
-        }
-        ⮐ @void();
+        } ⌽
     }
 
     action PushingTeardown(){
@@ -121,8 +120,7 @@
         ∀ (エ x ∈ pushingBones){
             Destroy(x.⧼SphereCollider⧽);
             Destroy(x.⧼Rigidbody⧽);
-        }
-        ⮐ @void();
+        } ⌽
     }
 
     action UseRootMotion(ㅇ flag)
@@ -132,7 +130,7 @@
 
     メ Palm(エ hold){
         メ sum = メ.zero; ᆞ count = 1;
-        ∀ (エ x ∈ hold){ sum += x.localPosition/2; count ++; }
+        ∀ (エ x ∈ hold){ sum += x.localPosition/2; count++; }
         sum /= count;
         ⮐ sum;
     }

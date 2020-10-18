@@ -14,10 +14,10 @@ public class SpeechBox : MonoBehaviour{
 
     void Update(){
         if (text == null || stamp < Time.time)
-        { text = null; if (ui) ui.gameObject.SetActive(false); return ; }
+        { text = null; if (ui) ui.gameObject.SetActive(false); return; }
         if (!ui) CreateUI();
         ui.GetChild(0).GetComponent<Text>().text = text;
-        ui.transform.position = Camera.main
+        ui.position = Camera.main
                  .WorldToScreenPoint(transform.position + Vector3.up * 2 );
     }
 

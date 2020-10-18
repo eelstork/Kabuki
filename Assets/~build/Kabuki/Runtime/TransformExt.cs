@@ -1,18 +1,17 @@
 using Ex = System.Exception;
 using UnityEngine; using static UnityEngine.Time; using static UnityEngine.Mathf;
-using T = UnityEngine.Transform;
 using Active.Core; using static Active.Core.status;
 
 namespace Activ.Kabuki{
 public static class TransformExt{
 
-    public static Vector3 Dir(this T x, T y, bool planar = false)
+    public static Vector3 Dir(this Transform x, Transform y, bool planar = false)
         => planar ? (y.position - x.position).X_Z().normalized
                  : (y.position - x.position).normalized;
 
-    public static float Dist(this T x, T y) => Vector3.Distance(x.position, y.position);
+    public static float Dist(this Transform x, Transform y) => Vector3.Distance(x.position, y.position);
 
-    public static float Radius(this T x){
+    public static float Radius(this Transform x){
         var bounds = x.GetComponentInChildren<Renderer>().bounds;
         var s = bounds.size;
         return (s.x + s.y + s.z) / 6 * 0.7f;
@@ -35,17 +34,17 @@ public static class TransformExt{
         return null;
     }
 
-    public static bool Has(this T x, T y) => y.IsAncestor(x);
+    public static bool Has(this Transform x, Transform y) => y.IsAncestor(x);
 
     // is y an ancestor of x?
-    public static bool IsAncestor(this T x, T y){
+    public static bool IsAncestor(this Transform x, Transform y){
         while (x != null){
             if (x == y) return true;
             x = x.parent;
         } return false;
     }
 
-    public static float Look(this T x, T y, bool planar = true)
+    public static float Look(this Transform x, Transform y, bool planar = true)
         => Vector3.Angle(x.forward, x.Dir(y, planar: planar));
 
     public static status RotateTowards(this Transform θ, Transform target, float speed, float μ = 0.1f){
@@ -61,22 +60,21 @@ public static class TransformExt{
         Vector3 u = θ.forward;
         float α = Vector3.Angle(u, dir);
         if (α < μ) return done();
-        θ.forward =
-            Vector3.RotateTowards(u, dir, Deg2Rad * speed * δt, 1f);
+        θ.forward = Vector3.RotateTowards(u, dir, Deg2Rad * speed * δt, 1f);
         return cont();
     }
 
     // a @while construct would be useful here
     public static status MoveTowards(this Transform x, Transform y, float dist, float speed)
         => x.PlanarDist(y) < dist
-        || (-Do( x.position += x.PlanarDir(y) * δt * speed)).ever;
+        || (- Do( x.position += x.PlanarDir(y) * δt * speed)).ever;
 
-    public static float PlanarDist(this T x, T y){
+    public static float PlanarDist(this Transform x, Transform y){
         var u = y.position - x.position; u.y = 0;
         return u.magnitude;
     }
 
-    public static Vector3 PlanarDir(this T x, T y){
+    public static Vector3 PlanarDir(this Transform x, Transform y){
         var u = y.position - x.position; u.y = 0;
         return u.normalized;
     }
@@ -85,6 +83,6 @@ public static class TransformExt{
 
     static float δt => Time.deltaTime;
 
-    static action Do(object x) => @void();
+    static action Do(object x) { return @void(); }
 
 }}

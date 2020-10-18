@@ -11,14 +11,13 @@ public class XTask : UTask{
         return @while;
     }
 
-    public C Req<C>() where C : Component{
+    public C Req<C>() where C : Component {
         var c = GetComponent<C>(); if (c != null) return c;
         return gameObject.AddComponent<C>();
     }
 
     public action Destroy(Transform arg){
-        if (arg != null) Destroy(arg.gameObject);
-        return @void();
+        if (arg != null) Destroy(arg.gameObject); return @void();
     }
 
     public Transform θ => transform;
