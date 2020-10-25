@@ -1,13 +1,17 @@
-⊐ UnityEngine;
+using Ex = System.Exception; ⊐ UnityEngine;
 ⊐ Active.Core; ⊐̥ Active.Core.status; ⊐ Active.Util;
 
 ⊓ Activ.Kabuki{
 ‒ ○ XTask : UTask{
 
-    ‒ ⑂ Play(ㄹ anim) → Req<MecanimDriver>().Play(anim);
+    AnimationDriver _animDriver;
+
+    ‒ ㅅ Duration(ㄹ anim) → animDriver.Duration(anim);
+
+    ‒ ⑂ Play(ㄹ anim) → animDriver.Play(anim);
 
     ‒ ⑂ Playing(ㄹ anim, ⑂ @while){
-        ⤴ (@while.running) Req<MecanimDriver>().Play(anim);
+        ⤴ (@while.running) Play(anim);
         ⮐ @while;
     }
 
@@ -20,6 +24,23 @@
         ⤴ (arg ≠ ∅) Destroy(arg.gameObject); ⌽
     }
 
+    // PRIVATE ------------------------------------------------------
+
+    AnimationDriver SetupAnimDriver(){
+        Animator  ator  = ∅;
+        Animation ation = ∅;
+        ⤴ (ator  = ⧼Animator⧽  )
+            ⮐ 《MecanimDriver》;
+        ⤳ (ation = ⧼Animation⧽ )
+            ⮐ 《LegacyAnimationDriver》;
+        ⤵
+            (╯°□°)╯ ⌢ Ex("No Animation or Animator component");
+    }
+
+    // --------------------------------------------------------------
+
     ‒ エ θ → transform;
+    ‒ AnimationDriver animDriver → _animDriver ≠ ∅ ? _animDriver
+        : (_animDriver = SetupAnimDriver());
 
 }}

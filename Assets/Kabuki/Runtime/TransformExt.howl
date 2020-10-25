@@ -5,16 +5,15 @@
 ⊓ Activ.Kabuki{
 ‒̥ ○ TransformExt{
 
-    ‒̥ メ Dir(⦿ エ x, エ y, ㅇ planar = ✗)
-        → planar ? (y.position - x.position).X_Z().normalized
-                 : (y.position - x.position).normalized;
+    ‒̥ シ Dir(⦿ エ x, エ y, ㅇ planar = ✗)
+        → planar ? (y˙ - x˙).X_Z()¹ : (y˙ - x˙)¹;
 
-    ‒̥ ㅅ Dist(⦿ エ x, エ y) → メ.Distance(x.position, y.position);
+    ‒̥ ㅅ Dist(⦿ エ x, エ y) → メ.Distance(x˙, y˙);
 
     ‒̥ ㅅ Radius(⦿ エ x){
         ∙ bounds = x.GetComponentInChildren<Renderer>().bounds;
         ∙ s = bounds.size;
-        ⮐ (s.x + s.y + s.z) / 6 * 0.7f;
+        ⮐ (s.x + s.y + s.z) / 6 ᐧ 0.7f;
     }
 
     ‒̥ エ Req(⦿ エ x, ⋯ ㄹ[] hints){
@@ -25,8 +24,8 @@
 
     ‒̥ エ Find(⦿ エ x, ⋯ ㄹ[] hints){
         ∀ (エ child ∈ x){
-            ∙ name = child.gameObject.name.ToLower();  ㅇ match = ✓;
-            ∀ (∙ h ∈ hints) ⤴ (!name.Contains(h)){ match = false; ¦ }
+            ∙ name = childˮ.ToLower();  ㅇ match = ✓;
+            ∀ (∙ h ∈ hints) ⤴ (!name.∋(h)){ match = false; ¦ }
             ⤴ (match) ⮐ child;
             ∙ ㄸ = child.Find(hints);
             ⤴ (ㄸ ≠ ∅) ⮐ ㄸ;
@@ -48,41 +47,33 @@
         → シ.Angle(x.forward, x.Dir(y, planar: planar));
 
     ‒̥ ⑂ RotateTowards(⦿ エ θ, エ target, ㅅ speed, ㅅ μ = 0.1f){
-        メ u = θ.forward;
-        メ v = θ.Dir(target, planar: ✓);
+        シ u = θ.forward;
+        シ v = θ.Dir(target, planar: ✓);
         ㅅ α = シ.Angle(u, v);
-        ⤴ (α < μ) ⮐ ◇;
-        θ.forward = メ.RotateTowards(u, v, Deg2Rad * speed * δt, 1f);
-        ⮐ ☡;
+        ⤴ (α < μ) ◇̠
+        θ.forward = メ.RotateTowards(u, v, 𝝇 ᐧ 𝛿𝚝 ᐧ ∠ʳ, 1f);
+        ☡̱
     }
 
     ‒̥ ⑂ RotateTowards(⦿ エ θ, メ dir, ㅅ speed, ㅅ μ = 0.1f){
         メ u = θ.forward;
         ㅅ α = シ.Angle(u, dir);
-        ⤴ (α < μ) ⮐ ◇;
-        θ.forward = シ.RotateTowards(u, dir, Deg2Rad * speed * δt, 1f);
-        ⮐ ☡;
+        ⤴ (α < μ) ◇̠
+        θ.forward = シ.RotateTowards(u, dir, 𝝇 ᐧ 𝛿𝚝 ᐧ ∠ʳ, 1f);
+        ☡̱
     }
 
-    // a @while construct would be useful here
     ‒̥ ⑂ MoveTowards(⦿ エ x, エ y, ㅅ dist, ㅅ speed)
         → x.PlanarDist(y) < dist
-        ∨ (- Do( x.position += x.PlanarDir(y) * δt * speed)).ever;
+        ∨ Repeat( x˙ += x.PlanarDir(y) ᐧ 𝛿𝚝 ᐧ 𝝇 );
 
-    ‒̥ ㅅ PlanarDist(⦿ エ x, エ y){
-        ∙ u = y.position - x.position; u.y = 0;
-        ⮐ u.magnitude;
-    }
+    ‒̥ ㅅ PlanarDist(⦿ エ x, エ y) → (y˙ - x˙).X_Z()❚;
 
-    ‒̥ メ PlanarDir(⦿ エ x, エ y){
-        ∙ u = y.position - x.position; u.y = 0;
-        ⮐ u.normalized;
-    }
+    ‒̥ シ PlanarDir(⦿ エ x, エ y) → (y˙ - x˙).X_Z()¹;
 
     // --------------------------------------------------------------
 
-    ∘ ㅅ δt → Time.deltaTime;
-
-    ∘ action Do(⊡ x) { ⌽ }
+    ∘ ▷ Do(⊡ x) { ⌽ }
+    ∘ ⑂ Repeat(⊡ x) { ☡̱ }
 
 }}

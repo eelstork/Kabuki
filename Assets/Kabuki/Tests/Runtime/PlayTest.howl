@@ -1,6 +1,8 @@
+⊐ System; ⊐ System.Collections;
 ⊐ System.Collections.Generic;
 ⊐ UnityEngine;
 ⊐ NUnit.Framework;
+⊐ Active.Core; ⊐̥ Active.Core.status;
 
 ⊓ Kabuki.Test{
 ‒ ○ PlayTest{
@@ -14,11 +16,18 @@
 
     ◠ ┈ o (⊡ x, ⊡ y) → Assert.That(x, Is.EqualTo(y));
 
+    ‒ 𝔼 Complete( ⒡<⑂> act, ㅅ timeout ){
+        ∙ t0 = ⒯ ;
+        ⟲ ( ⒯ - t0 < timeout ) ⤴ (act().complete) ¦ ⟆
+        ⤴ ( ⒯ - t0 ≥ timeout )
+            (╯°□°)╯ ⌢ System.Exception($"Timeout: {timeout}s");
+    }
+
     ‒ ロ Create(ㄹ name, メ? pos=∅){
-        ∙ go = Object.Instantiate(Resources.Load<ロ>(name));
+        ∙ go = UnityEngine.Object.Instantiate(Resources.Load<ロ>(name));
         go.name = name;
         objects.Add(go);
-        go.transform.position = pos ?? メ.zero;
+        go˙ = pos ?? メ.zero;
         ⮐ go;
     }
 
@@ -45,13 +54,13 @@
 
     ‒ エ CreateEmpty(ㄹ name, メ pos){
         ∙ θ = CreateEmpty(pos);
-        θ.gameObject.name = name;
+        θˮ = name;
         ⮐ θ;
     }
 
     ‒ エ CreateEmpty(メ pos){
         ∙ go = ⌢ ロ("Empty");
-        go.transform.position = pos;
+        go˙ = pos;
         objects.Add(go);
         ⮐ go.transform;
     }
@@ -67,7 +76,7 @@
             // Create a camera
             cam = ⌢ ロ("Camera");
             cam.《Camera》.backgroundColor = Color.white;
-            cam.transform.position = メ.back * 2 + メ.up * 1;
+            cam˙ = メ.back * 2 + メ.up * 1;
             cam.⧼Camera⧽.tag = "MainCamera";
             // Create a light
             sun = ⌢ ロ("Sun");

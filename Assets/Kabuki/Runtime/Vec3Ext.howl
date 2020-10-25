@@ -18,8 +18,7 @@
         ⮐ hit.point;
     }
 
-    ‒̥ ㅇ Eq(⦿ メ u, メ v)
-    → (u - v).magnitude ≤ PRECISION;
+    ‒̥ ㅇ Eq(⦿ メ u, メ v) → (u - v)❚ ≤ PRECISION;
 
     ‒̥ ㅅ Max(⦿ シ u) → Mathf.Max(u.x, u.y, u.z);
 
@@ -35,7 +34,7 @@
 
     ‒̥ シ Shift(⦿ シ u, ᆞ c){
         ⟳ (ᆞ i = 0; i < c; i++)
-            u = ⌢ メ(u.z, u.x, u.y);
+            u = ⌢ シ(u.z, u.x, u.y);
         ⮐ u;
     }
 

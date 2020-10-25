@@ -1,0 +1,753 @@
+fileFormatVersion: 2
+guid: 625795ecf932a4029ba03bfe8cfa33ed
+ModelImporter:
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: arm.L
+  - first:
+      1: 100004
+    second: arm.R
+  - first:
+      1: 100006
+    second: Armature
+  - first:
+      1: 100008
+    second: before jaw
+  - first:
+      1: 100010
+    second: Bone.019.L
+  - first:
+      1: 100012
+    second: Bone.019.R
+  - first:
+      1: 100014
+    second: dino
+  - first:
+      1: 100016
+    second: foot.L
+  - first:
+      1: 100018
+    second: foot.R
+  - first:
+      1: 100020
+    second: hand.L
+  - first:
+      1: 100022
+    second: hand.L_end
+  - first:
+      1: 100024
+    second: hand.R
+  - first:
+      1: 100026
+    second: hand.R_end
+  - first:
+      1: 100028
+    second: head
+  - first:
+      1: 100030
+    second: head ik
+  - first:
+      1: 100032
+    second: leg1.L
+  - first:
+      1: 100034
+    second: leg1.R
+  - first:
+      1: 100036
+    second: leg2.L
+  - first:
+      1: 100038
+    second: leg2.R
+  - first:
+      1: 100040
+    second: legctrl
+  - first:
+      1: 100042
+    second: legiktarget.L
+  - first:
+      1: 100044
+    second: legiktarget.L_end
+  - first:
+      1: 100046
+    second: legiktarget.R
+  - first:
+      1: 100048
+    second: legiktarget.R_end
+  - first:
+      1: 100050
+    second: little finger tip.L
+  - first:
+      1: 100052
+    second: little finger tip.L_end
+  - first:
+      1: 100054
+    second: little finger tip.R
+  - first:
+      1: 100056
+    second: little finger tip.R_end
+  - first:
+      1: 100058
+    second: little finger.L
+  - first:
+      1: 100060
+    second: little finger.R
+  - first:
+      1: 100062
+    second: long finger tip.L
+  - first:
+      1: 100064
+    second: long finger tip.L_end
+  - first:
+      1: 100066
+    second: long finger tip.R
+  - first:
+      1: 100068
+    second: long finger tip.R_end
+  - first:
+      1: 100070
+    second: long finger.L
+  - first:
+      1: 100072
+    second: long finger.R
+  - first:
+      1: 100074
+    second: low jaw
+  - first:
+      1: 100076
+    second: low jaw_end
+  - first:
+      1: 100078
+    second: master
+  - first:
+      1: 100080
+    second: masterbody
+  - first:
+      1: 100082
+    second: neck+head master
+  - first:
+      1: 100084
+    second: neck1
+  - first:
+      1: 100086
+    second: neck2
+  - first:
+      1: 100088
+    second: neck3
+  - first:
+      1: 100090
+    second: neckikrtarget
+  - first:
+      1: 100092
+    second: neckikrtarget_end
+  - first:
+      1: 100094
+    second: pelvis.L
+  - first:
+      1: 100096
+    second: pelvis.R
+  - first:
+      1: 100098
+    second: shoulder.L
+  - first:
+      1: 100100
+    second: shoulder.R
+  - first:
+      1: 100102
+    second: spine
+  - first:
+      1: 100104
+    second: tail1
+  - first:
+      1: 100106
+    second: tail2
+  - first:
+      1: 100108
+    second: tail3
+  - first:
+      1: 100110
+    second: tail4
+  - first:
+      1: 100112
+    second: tail5
+  - first:
+      1: 100114
+    second: tail6
+  - first:
+      1: 100116
+    second: tail7
+  - first:
+      1: 100118
+    second: tail7_end
+  - first:
+      1: 100120
+    second: tailik
+  - first:
+      1: 100122
+    second: tailiktarget
+  - first:
+      1: 100124
+    second: tailiktarget_end
+  - first:
+      1: 100126
+    second: tip finger fast control.L
+  - first:
+      1: 100128
+    second: tip finger fast control.L_end
+  - first:
+      1: 100130
+    second: tip finger fast control.R
+  - first:
+      1: 100132
+    second: tip finger fast control.R_end
+  - first:
+      1: 100134
+    second: tongue
+  - first:
+      1: 100136
+    second: tongue_end
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: arm.L
+  - first:
+      4: 400004
+    second: arm.R
+  - first:
+      4: 400006
+    second: Armature
+  - first:
+      4: 400008
+    second: before jaw
+  - first:
+      4: 400010
+    second: Bone.019.L
+  - first:
+      4: 400012
+    second: Bone.019.R
+  - first:
+      4: 400014
+    second: dino
+  - first:
+      4: 400016
+    second: foot.L
+  - first:
+      4: 400018
+    second: foot.R
+  - first:
+      4: 400020
+    second: hand.L
+  - first:
+      4: 400022
+    second: hand.L_end
+  - first:
+      4: 400024
+    second: hand.R
+  - first:
+      4: 400026
+    second: hand.R_end
+  - first:
+      4: 400028
+    second: head
+  - first:
+      4: 400030
+    second: head ik
+  - first:
+      4: 400032
+    second: leg1.L
+  - first:
+      4: 400034
+    second: leg1.R
+  - first:
+      4: 400036
+    second: leg2.L
+  - first:
+      4: 400038
+    second: leg2.R
+  - first:
+      4: 400040
+    second: legctrl
+  - first:
+      4: 400042
+    second: legiktarget.L
+  - first:
+      4: 400044
+    second: legiktarget.L_end
+  - first:
+      4: 400046
+    second: legiktarget.R
+  - first:
+      4: 400048
+    second: legiktarget.R_end
+  - first:
+      4: 400050
+    second: little finger tip.L
+  - first:
+      4: 400052
+    second: little finger tip.L_end
+  - first:
+      4: 400054
+    second: little finger tip.R
+  - first:
+      4: 400056
+    second: little finger tip.R_end
+  - first:
+      4: 400058
+    second: little finger.L
+  - first:
+      4: 400060
+    second: little finger.R
+  - first:
+      4: 400062
+    second: long finger tip.L
+  - first:
+      4: 400064
+    second: long finger tip.L_end
+  - first:
+      4: 400066
+    second: long finger tip.R
+  - first:
+      4: 400068
+    second: long finger tip.R_end
+  - first:
+      4: 400070
+    second: long finger.L
+  - first:
+      4: 400072
+    second: long finger.R
+  - first:
+      4: 400074
+    second: low jaw
+  - first:
+      4: 400076
+    second: low jaw_end
+  - first:
+      4: 400078
+    second: master
+  - first:
+      4: 400080
+    second: masterbody
+  - first:
+      4: 400082
+    second: neck+head master
+  - first:
+      4: 400084
+    second: neck1
+  - first:
+      4: 400086
+    second: neck2
+  - first:
+      4: 400088
+    second: neck3
+  - first:
+      4: 400090
+    second: neckikrtarget
+  - first:
+      4: 400092
+    second: neckikrtarget_end
+  - first:
+      4: 400094
+    second: pelvis.L
+  - first:
+      4: 400096
+    second: pelvis.R
+  - first:
+      4: 400098
+    second: shoulder.L
+  - first:
+      4: 400100
+    second: shoulder.R
+  - first:
+      4: 400102
+    second: spine
+  - first:
+      4: 400104
+    second: tail1
+  - first:
+      4: 400106
+    second: tail2
+  - first:
+      4: 400108
+    second: tail3
+  - first:
+      4: 400110
+    second: tail4
+  - first:
+      4: 400112
+    second: tail5
+  - first:
+      4: 400114
+    second: tail6
+  - first:
+      4: 400116
+    second: tail7
+  - first:
+      4: 400118
+    second: tail7_end
+  - first:
+      4: 400120
+    second: tailik
+  - first:
+      4: 400122
+    second: tailiktarget
+  - first:
+      4: 400124
+    second: tailiktarget_end
+  - first:
+      4: 400126
+    second: tip finger fast control.L
+  - first:
+      4: 400128
+    second: tip finger fast control.L_end
+  - first:
+      4: 400130
+    second: tip finger fast control.R
+  - first:
+      4: 400132
+    second: tip finger fast control.R_end
+  - first:
+      4: 400134
+    second: tongue
+  - first:
+      4: 400136
+    second: tongue_end
+  - first:
+      21: 2100000
+    second: Material
+  - first:
+      21: 2100002
+    second: Material.001
+  - first:
+      21: 2100004
+    second: Material.002
+  - first:
+      21: 2100006
+    second: Material.004
+  - first:
+      21: 2100008
+    second: Material.003
+  - first:
+      21: 2100010
+    second: Feather
+  - first:
+      21: 2100012
+    second: Gold
+  - first:
+      21: 2100014
+    second: Ash
+  - first:
+      21: 2100016
+    second: Other
+  - first:
+      21: 2100018
+    second: Red
+  - first:
+      43: 4300000
+    second: dino
+  - first:
+      74: 7400000
+    second: Walk
+  - first:
+      74: 7400002
+    second: Flail
+  - first:
+      74: 7400004
+    second: Swim.001
+  - first:
+      74: 7400006
+    second: Bite.001
+  - first:
+      74: 7400008
+    second: Flail
+  - first:
+      74: 7400010
+    second: Idle
+  - first:
+      74: 7400012
+    second: idle2
+  - first:
+      74: 7400014
+    second: Run
+  - first:
+      74: 7400016
+    second: Strike
+  - first:
+      74: 7400018
+    second: Swim
+  - first:
+      111: 11100000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: dino
+  externalObjects: {}
+  materials:
+    materialImportMode: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Flail
+      takeName: Armature|flail
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 24
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Idle
+      takeName: Armature|idle
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 99
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: idle2
+      takeName: Armature|idle2
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 99
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Walk
+      takeName: Armature|run
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 17
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Strike
+      takeName: Armature|strike
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 19
+      wrapMode: 1
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Swim
+      takeName: Armature|swim
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 23
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 0
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 1
+  humanoidOversampling: 1
+  avatarSetup: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

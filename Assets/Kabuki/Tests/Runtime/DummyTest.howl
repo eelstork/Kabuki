@@ -1,0 +1,25 @@
+⊐ System.Collections;
+⊐ UnityEngine; ⊐ UnityEngine.TestTools;
+⊐ Active.Core;
+
+⊓ Kabuki.Test{
+‒ ○ DummyTest : ActorTest{
+
+    ⁺◠ ㄹ ActorName → "Dummy";
+    ⁺◠ ㅅ ActorSize → 1f;
+
+    ⏚ PlayNonLooping(){
+        actor.み.⫫ = シ.⊢;
+        ⑂ s = status.cont();
+        ∙ t0 = ⒯ ;
+        ⟲ ( ⒯ - t0 < 2f ){
+            s = actor.Play("Strike");
+            o( !s.failing ); ⤴ (s.complete) ¦ ⟆
+        }
+        ∙ δ = ⒯ - t0;
+        o( s.complete  );
+        o( δ < 1.8f );
+        Print($"Done in {δ:0.##}s");
+    }
+
+}}

@@ -1,0 +1,35 @@
+⊐ System.Collections;
+⊐ UnityEngine; ⊐ UnityEngine.TestTools;
+⊐ Active.Core;
+
+⊓ Kabuki.Test{
+‒ ○ RaptorTest : ActorTest{
+
+    ⁺◠ ㄹ ActorName → "Raptor";
+    ⁺◠ ㅅ ActorSize → 20f;
+
+    ⁺◠ ㄹ[] skip → ⌢ ㄹ[]{
+        "Give_accept",
+        "Grab",
+        "Ingest",
+        "Push",
+        "Tell",
+        "Throw"
+    };
+
+    // Length: 0.792
+    ⏚ PlayNonLooping(){
+        actor.み.⫫ = シ.⊢;
+        ⑂ s =  status.cont();
+        ∙ t0 = ⒯ ;
+        ⟲ ( ⒯ - t0 < 2f ){
+            s = actor.Play("Strike");
+            o( !s.failing ); ⤴ (s.complete) ¦ ⟆
+        }
+        ∙ δ = ⒯ - t0;
+        o( s.complete  );
+        o( 0.75f < δ ∧ δ < 0.85f );
+        Print($"Done in {δ:0.##}s");
+    }
+
+}}

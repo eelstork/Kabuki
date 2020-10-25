@@ -1,16 +1,19 @@
-⊐ UnityEngine;
+⊐ Ex = System.Exception; ⊐ UnityEngine;
+
 ⊓ Activ.Kabuki{
 ‒̥ ○ ActorSetup{
 
-    ‒̥ エ Setup(ロ go){
+    ‒̥ エ Setup(ロ go, ㅅ size){
         ∙ actor = go.《Actor》;
+        actor.み.𝚜 = シ.one * size;
         actor.leftHold  = actor.み.Find("hand", "l");
         actor.rightHold = actor.み.Find("hand", "r");
+        ⤴ (actor.leftHold ☰ ∅) (╯°□°)╯ ⌢ Ex("left hold not found");
+        ⤵ Debug.Log($"actor left hold: {actor.leftHold}");
         actor.pushingBones = ⌢ エ[]{
             actor.θ.Find("hand", "r"),
             actor.θ.Find("hand", "l")
         };
-        actor.⧼Animator⧽.applyRootMotion = ✗;
         actor.《SpeechBox》;
         ⮐ go.み;
     }

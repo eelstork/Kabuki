@@ -1,13 +1,17 @@
-using UnityEngine;
+using Ex = System.Exception; using UnityEngine;
 using Active.Core; using static Active.Core.status; using Active.Util;
 
 namespace Activ.Kabuki{
 public class XTask : UTask{
 
-    public status Play(string anim) => Req<MecanimDriver>().Play(anim);
+    AnimationDriver _animDriver;
+
+    public float Duration(string anim) => animDriver.Duration(anim);
+
+    public status Play(string anim) => animDriver.Play(anim);
 
     public status Playing(string anim, status @while){
-        if (@while.running) Req<MecanimDriver>().Play(anim);
+        if (@while.running) Play(anim);
         return @while;
     }
 
@@ -20,6 +24,23 @@ public class XTask : UTask{
         if (arg != null) Destroy(arg.gameObject); return @void();
     }
 
+    // PRIVATE ------------------------------------------------------
+
+    AnimationDriver SetupAnimDriver(){
+        Animator  ator  = null;
+        Animation ation = null;
+        if (ator  = GetComponent<Animator>()  )
+            return gameObject.AddComponent<MecanimDriver>();
+        else if (ation = GetComponent<Animation>() )
+            return gameObject.AddComponent<LegacyAnimationDriver>();
+        else
+            throw new Ex("No Animation or Animator component");
+    }
+
+    // --------------------------------------------------------------
+
     public Transform θ => transform;
+    public AnimationDriver animDriver => _animDriver != null ? _animDriver
+        : (_animDriver = SetupAnimDriver());
 
 }}

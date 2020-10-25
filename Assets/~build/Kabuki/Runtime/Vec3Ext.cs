@@ -18,8 +18,7 @@ public static class VectorExt{
         return hit.point;
     }
 
-    public static bool Eq(this Vector3 u, Vector3 v)
-    => (u - v).magnitude <= PRECISION;
+    public static bool Eq(this Vector3 u, Vector3 v) => (u - v).magnitude <= PRECISION;
 
     public static float Max(this Vector3 u) => Mathf.Max(u.x, u.y, u.z);
 

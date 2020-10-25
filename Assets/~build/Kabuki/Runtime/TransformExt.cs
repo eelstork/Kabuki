@@ -6,10 +6,9 @@ namespace Activ.Kabuki{
 public static class TransformExt{
 
     public static Vector3 Dir(this Transform x, Transform y, bool planar = false)
-        => planar ? (y.position - x.position).X_Z().normalized
-                 : (y.position - x.position).normalized;
+        => planar ? (y.transform.position - x.transform.position).X_Z().normalized : (y.transform.position - x.transform.position).normalized;
 
-    public static float Dist(this Transform x, Transform y) => Vector3.Distance(x.position, y.position);
+    public static float Dist(this Transform x, Transform y) => Vector3.Distance(x.transform.position, y.transform.position);
 
     public static float Radius(this Transform x){
         var bounds = x.GetComponentInChildren<Renderer>().bounds;
@@ -52,7 +51,7 @@ public static class TransformExt{
         Vector3 v = θ.Dir(target, planar: true);
         float α = Vector3.Angle(u, v);
         if (α < μ) return done();
-        θ.forward = Vector3.RotateTowards(u, v, Deg2Rad * speed * δt, 1f);
+        θ.forward = Vector3.RotateTowards(u, v, speed * Time.deltaTime * Mathf.Deg2Rad, 1f);
         return cont();
     }
 
@@ -60,29 +59,21 @@ public static class TransformExt{
         Vector3 u = θ.forward;
         float α = Vector3.Angle(u, dir);
         if (α < μ) return done();
-        θ.forward = Vector3.RotateTowards(u, dir, Deg2Rad * speed * δt, 1f);
+        θ.forward = Vector3.RotateTowards(u, dir, speed * Time.deltaTime * Mathf.Deg2Rad, 1f);
         return cont();
     }
 
-    // a @while construct would be useful here
     public static status MoveTowards(this Transform x, Transform y, float dist, float speed)
         => x.PlanarDist(y) < dist
-        || (- Do( x.position += x.PlanarDir(y) * δt * speed)).ever;
+        || Repeat( x.transform.position += x.PlanarDir(y) * Time.deltaTime * speed );
 
-    public static float PlanarDist(this Transform x, Transform y){
-        var u = y.position - x.position; u.y = 0;
-        return u.magnitude;
-    }
+    public static float PlanarDist(this Transform x, Transform y) => (y.transform.position - x.transform.position).X_Z().magnitude;
 
-    public static Vector3 PlanarDir(this Transform x, Transform y){
-        var u = y.position - x.position; u.y = 0;
-        return u.normalized;
-    }
+    public static Vector3 PlanarDir(this Transform x, Transform y) => (y.transform.position - x.transform.position).X_Z().normalized;
 
     // --------------------------------------------------------------
 
-    static float δt => Time.deltaTime;
-
     static action Do(object x) { return @void(); }
+    static status Repeat(object x) { return cont(); }
 
 }}

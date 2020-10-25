@@ -1,6 +1,8 @@
+using System; using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NUnit.Framework;
+using Active.Core; using static Active.Core.status;
 
 namespace Kabuki.Test{
 public class PlayTest{
@@ -14,8 +16,15 @@ public class PlayTest{
 
     protected void o (object x, object y) => Assert.That(x, Is.EqualTo(y));
 
+    public IEnumerator Complete( Func<status> act, float timeout ){
+        var t0 = Time.time ;
+        while ( Time.time - t0 < timeout ) if (act().complete) break; yield return null;
+        if ( Time.time - t0 >= timeout )
+            throw new System.Exception($"Timeout: {timeout}s");
+    }
+
     public GameObject Create(string name, Vector3? pos=null){
-        var go = Object.Instantiate(Resources.Load<GameObject>(name));
+        var go = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(name));
         go.name = name;
         objects.Add(go);
         go.transform.position = pos ?? Vector3.zero;

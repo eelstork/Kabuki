@@ -18,14 +18,14 @@ public class Actor : XTask{
     public status this[string anim] => Play(anim);
 
     public status Face(Transform that, string anim = "Walk")
-        => Playing(anim, transform.RotateTowards(that, rotationSpeed));
+        => While( transform.RotateTowards(that, rotationSpeed) )?[ this[anim] ];
 
     public status Face(Vector3 dir, string anim = "Walk")
         => Playing(anim, transform.RotateTowards(dir, rotationSpeed));
 
     public status Give(Transform that, Actor recipient)
         => Reach(recipient.transform)
-        && Playing("Idle", Offer(that, recipient))
+        && While(Offer(that, recipient))?[ this["Idle"] ]
         && Present(that, recipient);
 
     public status Grab(Transform that)
@@ -42,7 +42,7 @@ public class Actor : XTask{
         => Face(that, rotationAnim) && this[idleAnim];
 
     public status Push(Transform that)
-        => Once()?[ Reach(that) && PushingSetup() ]
+        => Once()?[Reach(that) && PushingSetup()]
         && this["Push"] && PushingTeardown();
 
     public status Strike(Transform that) => Reach(that) && this["Strike"];
@@ -52,11 +52,10 @@ public class Actor : XTask{
                       % After(0.5f)?[ Hold(gift).now ];
 
     public status Tell(Transform that, string msg)
-        => Reach(that)
-        && GetComponent<SpeechBox>().SetText(msg) && this["Tell"];
+        => Reach(that) && GetComponent<SpeechBox>().SetText(msg) && this["Tell"];
 
     public status Throw(Transform that, Vector3 dir)
-        => Once()?[ Hold(that) ]
+        => Once()?[Hold(that)]
         && Face(dir) && this["Throw"] + After(0.5f)? [ Impel(that, dir) ];
 
     public status Reach(Transform that, float dist = 1f)
@@ -91,8 +90,7 @@ public class Actor : XTask{
         that.SetParent(null);
         var body = that.GetComponent<Rigidbody>();
         body.isKinematic = false;
-        var F = dir.normalized * force;
-        body.AddForce(F, ForceMode.Impulse);
+        body.AddForce(dir.normalized * force, ForceMode.Impulse);
         return @void();
     }
 
