@@ -13,7 +13,7 @@
 
     // --------------------------------------------------------------
 
-    ‒ ⑂ ⦿[ㄹ gesture, エ ⧕] → LookAt(⧕) ∧ Play(gesture);
+    ‒ ⑂ ⦿[ㄹ gesture, エ ⧕] → Face(⧕) ∧ ⦿[gesture];
 
     ‒ ⑂ ⦿[ㄹ anim] → Play(anim);
 
@@ -38,8 +38,11 @@
 
     ‒ ⑂ Idle → ⦿["Idle"];
 
-    ‒ ⑂ LookAt(エ ⧕, ㄹ rotationAnim = "Walk", ㄹ idleAnim = "Idle")
-        → Face(⧕, rotationAnim) ∧ ⦿[idleAnim];
+    ‒ impending LookAt(エ ⧕, ㄹ rotationAnim = "Walk",
+                              ㄹ idleAnim = "Idle"){
+        ∙ s = Face(⧕, rotationAnim) ∧ ⦿[idleAnim];
+        ⮐ impending.cont();
+    }
 
     ‒ ⑂ Push(エ ⧕)
         → ❰Reach(⧕) ∧ PushingSetup()❱
@@ -52,7 +55,7 @@
                       % After(0.5f)?[ Hold(gift).now ];
 
     ‒ ⑂ Tell(エ ⧕, ㄹ msg)
-        → Reach(⧕) ∧ ⧼SpeechBox⧽.SetText(msg) ∧ ⦿["Tell"];
+        → ❰Reach(⧕)❱ ∧ ⧼SpeechBox⧽.SetText(msg) ∧ ⦿["Tell"];
 
     ‒ ⑂ Throw(エ ⧕, シ dir)
         → ❰Hold(⧕)❱

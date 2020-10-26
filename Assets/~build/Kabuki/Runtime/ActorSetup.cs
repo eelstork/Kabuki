@@ -9,7 +9,7 @@ public static class ActorSetup{
         actor.leftHold  = actor.transform.Find("hand", "l");
         actor.rightHold = actor.transform.Find("hand", "r");
         if (actor.leftHold == null) throw new Ex("left hold not found");
-        else Debug.Log($"actor left hold: {actor.leftHold}");
+        //ebug.Log($"actor left hold: {actor.leftHold}");
         actor.pushingBones = new Transform[]{
             actor.θ.Find("hand", "r"),
             actor.θ.Find("hand", "l")

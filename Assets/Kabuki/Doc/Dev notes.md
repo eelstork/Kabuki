@@ -1,5 +1,14 @@
 # Kabuki dev notes
 
+## Legacy animation 2
+
+If we want smoothly chained animations, we cannot wait
+for the previous animation to end - we have to start a cross-fade before this happens, then, for the purpose of smoothing animations, `Play` should complete earlier.
+
+However this depends on the wrap mode; 'loop', 'pingpong' and 'clampForever' always return 'cont'. Only 'once' animations may ever complete.
+
+One question though, what if we want to cross fade with an overlap other than the 0.3f default?
+
 ## Legacy animation
 
 For legacy animation, I want to test pretty much the same actions as through the mecanim driver.

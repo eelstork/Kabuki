@@ -1,4 +1,5 @@
 using System; using System.Collections;
+using Ex = System.Exception;
 using System.Collections.Generic;
 using UnityEngine;
 using NUnit.Framework;
@@ -9,6 +10,7 @@ public class PlayTest{
 
     GameObject ground, sun, cam;
     List<GameObject> objects = new List<GameObject>();
+    float savedTimeScale = 0;
 
     // Assertions ---------------------------------------------------
 
@@ -16,11 +18,34 @@ public class PlayTest{
 
     protected void o (object x, object y) => Assert.That(x, Is.EqualTo(y));
 
-    public IEnumerator Complete( Func<status> act, float timeout ){
+    public IEnumerator Complete( Func<status> act, float timeout, int timeScale = 1 ){
+        OverrideTimeScale(timeScale);
         var t0 = Time.time ;
-        while ( Time.time - t0 < timeout ) if (act().complete) break; yield return null;
+        while ( Time.time - t0 < timeout ) { if (act().complete) break; yield return null; }
         if ( Time.time - t0 >= timeout )
-            throw new System.Exception($"Timeout: {timeout}s");
+            throw new Ex($"Timeout: {timeout}s");
+        RestoreTimeScale();
+    }
+
+    public IEnumerator Run( Func<status> act, float duration, int timeScale = 1 ){
+        OverrideTimeScale(timeScale);
+        var t0 = Time.time ;
+        while ( Time.time - t0 < duration ) {
+            var s = act();
+            if (!s.running) throw
+                new Ex($"'cont' expected, {s} found @{Time.frameCount}");
+            yield return null;
+        }
+        RestoreTimeScale();
+    }
+
+    public IEnumerator Fail( Func<status> act, float timeout, int timeScale = 1 ){
+        OverrideTimeScale(timeScale);
+        var t0 = Time.time ;
+        while ( Time.time - t0 < timeout ) { if (act().failing) break; yield return null; }
+        if ( Time.time - t0 >= timeout )
+            throw new Ex($"Timeout: {timeout}s");
+        RestoreTimeScale();
     }
 
     public GameObject Create(string name, Vector3? pos=null){
@@ -68,6 +93,13 @@ public class PlayTest{
     protected void Print(object arg) => UnityEngine.Debug.Log(arg);
 
     // --------------------------------------------------------------
+
+    void OverrideTimeScale(float x){
+        savedTimeScale = Time.timeScale;
+        Time.timeScale = x;
+    }
+
+    void RestoreTimeScale() => Time.timeScale = savedTimeScale;
 
     [SetUp] public void Setup(){
         Time.timeScale = 1;

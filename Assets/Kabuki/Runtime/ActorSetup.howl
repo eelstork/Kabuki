@@ -9,7 +9,7 @@
         actor.leftHold  = actor.み.Find("hand", "l");
         actor.rightHold = actor.み.Find("hand", "r");
         ⤴ (actor.leftHold ☰ ∅) (╯°□°)╯ ⌢ Ex("left hold not found");
-        ⤵ Debug.Log($"actor left hold: {actor.leftHold}");
+        //ebug.Log($"actor left hold: {actor.leftHold}");
         actor.pushingBones = ⌢ エ[]{
             actor.θ.Find("hand", "r"),
             actor.θ.Find("hand", "l")

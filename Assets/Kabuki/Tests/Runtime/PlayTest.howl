@@ -1,4 +1,5 @@
 ⊐ System; ⊐ System.Collections;
+⊐ Ex = System.Exception;
 ⊐ System.Collections.Generic;
 ⊐ UnityEngine;
 ⊐ NUnit.Framework;
@@ -9,6 +10,7 @@
 
     ロ ground, sun, cam;
     List<ロ> objects = new List<ロ>();
+    ㅅ savedTimeScale = 0;
 
     // Assertions ---------------------------------------------------
 
@@ -16,11 +18,34 @@
 
     ◠ ┈ o (⊡ x, ⊡ y) → Assert.That(x, Is.EqualTo(y));
 
-    ‒ 𝔼 Complete( ⒡<⑂> act, ㅅ timeout ){
+    ‒ 𝔼 Complete( ⒡<⑂> act, ㅅ timeout, ᆞ timeScale = 1 ){
+        OverrideTimeScale(timeScale);
         ∙ t0 = ⒯ ;
-        ⟲ ( ⒯ - t0 < timeout ) ⤴ (act().complete) ¦ ⟆
+        ⟲ ( ⒯ - t0 < timeout ) { ⤴ (act().complete) ¦ ⟆ }
         ⤴ ( ⒯ - t0 ≥ timeout )
-            (╯°□°)╯ ⌢ System.Exception($"Timeout: {timeout}s");
+            (╯°□°)╯ ⌢ Ex($"Timeout: {timeout}s");
+        RestoreTimeScale();
+    }
+
+    ‒ 𝔼 Run( ⒡<⑂> act, ㅅ duration, ᆞ timeScale = 1 ){
+        OverrideTimeScale(timeScale);
+        ∙ t0 = ⒯ ;
+        ⟲ ( ⒯ - t0 < duration ) {
+            ∙ s = act();
+            ⤴ (!s.running) (╯°□°)╯
+                ⌢ Ex($"'cont' expected, {s} found @{Time.frameCount}");
+            ⟆
+        }
+        RestoreTimeScale();
+    }
+
+    ‒ 𝔼 Fail( ⒡<⑂> act, ㅅ timeout, ᆞ timeScale = 1 ){
+        OverrideTimeScale(timeScale);
+        ∙ t0 = ⒯ ;
+        ⟲ ( ⒯ - t0 < timeout ) { ⤴ (act().failing) ¦ ⟆ }
+        ⤴ ( ⒯ - t0 ≥ timeout )
+            (╯°□°)╯ ⌢ Ex($"Timeout: {timeout}s");
+        RestoreTimeScale();
     }
 
     ‒ ロ Create(ㄹ name, メ? pos=∅){
@@ -68,6 +93,13 @@
     ◠ ┈ Print(⊡ arg) → UnityEngine.Debug.Log(arg);
 
     // --------------------------------------------------------------
+
+    ┈ OverrideTimeScale(ㅅ x){
+        savedTimeScale = Time.timeScale;
+        Time.timeScale = x;
+    }
+
+    ┈ RestoreTimeScale() → Time.timeScale = savedTimeScale;
 
     ⍜ Setup(){
         Time.timeScale = 1;

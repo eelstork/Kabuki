@@ -13,7 +13,7 @@ public class Actor : XTask{
 
     // --------------------------------------------------------------
 
-    public status this[string gesture, Transform that] => LookAt(that) && Play(gesture);
+    public status this[string gesture, Transform that] => Face(that) && this[gesture];
 
     public status this[string anim] => Play(anim);
 
@@ -38,8 +38,11 @@ public class Actor : XTask{
 
     public status Idle => this["Idle"];
 
-    public status LookAt(Transform that, string rotationAnim = "Walk", string idleAnim = "Idle")
-        => Face(that, rotationAnim) && this[idleAnim];
+    public impending LookAt(Transform that, string rotationAnim = "Walk",
+                              string idleAnim = "Idle"){
+        var s = Face(that, rotationAnim) && this[idleAnim];
+        return impending.cont();
+    }
 
     public status Push(Transform that)
         => Once()?[Reach(that) && PushingSetup()]
@@ -52,7 +55,7 @@ public class Actor : XTask{
                       % After(0.5f)?[ Hold(gift).now ];
 
     public status Tell(Transform that, string msg)
-        => Reach(that) && GetComponent<SpeechBox>().SetText(msg) && this["Tell"];
+        => Once()?[Reach(that)] && GetComponent<SpeechBox>().SetText(msg) && this["Tell"];
 
     public status Throw(Transform that, Vector3 dir)
         => Once()?[Hold(that)]

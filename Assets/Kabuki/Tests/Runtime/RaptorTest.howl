@@ -7,17 +7,39 @@
 
     ⁺◠ ㄹ ActorName → "Raptor";
     ⁺◠ ㅅ ActorSize → 20f;
+    Once once = ⌢ Once();
 
-    ⁺◠ ㄹ[] skip → ⌢ ㄹ[]{
-        "Give_accept",
-        "Grab",
-        "Ingest",
-        "Push",
-        "Tell",
-        "Throw"
-    };
+    ⁺◠ ㄹ[] skip → ⌢ ㄹ[]
+    { "Give_accept", "Grab", "Ingest", "Push", "Tell", "Throw" };
 
-    // Length: 0.792
+    // Length: 0.792 + 1 = 1.792
+    // With cross-fade enabled animations complete early
+    // (default 0.3s) so, the whole sequence is done
+    // in ~1.2s
+    ⏚ PlayChaining(){
+        actor.み.⫫ = シ.⊢;
+        //
+        ∙ t0 = ⒯ ;
+        ⑂ s = status.cont();
+        ⟲ (!s.complete){ s = actor["Strike"]; ⟆ }
+        ∙ δ0 = ⒯ - t0;
+        Print($"Strike played {δ0:0.##}s");
+        //
+        ∙ t1 = ⒯ ;
+        s = status.cont();
+        ⟲ (!s.complete){ s = actor["Flail"]; ⟆ }
+        ∙ δ1 = ⒯ - t1;
+        Print($"Flail played {δ1:0.##}s");
+        //
+        o( s.complete );
+        ㅅ D = actor.⧼Animation⧽["Strike"].length +
+              actor.⧼Animation⧽["Flail"].length
+              - 0.3f * 2f;
+        ∙ δ = δ0 + δ1;
+        o( Mathf.Abs(D - δ) < 0.05f );
+    }
+
+    // Length: 0.792 - 0.3 ~ 0.5 (early completion for cross-fade)
     ⏚ PlayNonLooping(){
         actor.み.⫫ = シ.⊢;
         ⑂ s =  status.cont();
@@ -27,9 +49,9 @@
             o( !s.failing ); ⤴ (s.complete) ¦ ⟆
         }
         ∙ δ = ⒯ - t0;
-        o( s.complete  );
-        o( 0.75f < δ ∧ δ < 0.85f );
         Print($"Done in {δ:0.##}s");
+        o( s.complete  );
+        o( 0.45f < δ ∧ δ < 0.55f );
     }
 
 }}
