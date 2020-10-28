@@ -4,56 +4,32 @@
 
 ‒ ○ MecanimDriverTest : Kabuki.Test.PlayTest{
 
-    MecanimDriver2 x;
-    Animator animator;
+    ⁺◠ ㅅ baseTimeScale → 12;  MecanimDriver2 x;  Animator animator;
 
     ⍜ SetupDriver(){
         animator = Create("Dummy").⧼Animator⧽;
         x = new MecanimDriver2( animator );
     }
 
-    // ---------------------------------------------------------------
-
     ؟ RootMotionOff ⎚ o( animator.applyRootMotion, ✗ );
 
-    // Play ----------------------------------------------------------
-
     ؟ Play() → o( x.Play("Walk").running );
+    //
+    ⏚ Play_once()  { ⟾ Complete( ⎚ x.Play("Strike")ʾ,    8f); }
+    ⏚ Play_loop()  { ⟾ Run( ⎚ x.Play("Walk")ʾ, duration: 2f); }
+    ⏚ Play_trans() { ⟾ Run( ⎚ x.Play("Strike")ʾ, 0.3f); }
+    // In Mecanim no direct equivalent to "clamp forever"
+    // ⏚ Play_clamp() { ⟾ Complete( ⎚ x.Play("KO"), timeout: 10f); }
 
-    ⏚ Play_returnsContWhileTransitioning(){
-        //∙ t = ⒯ ;
-        ⟾ Run( ⎚ x.Play("Strike"), duration: 0.3f);
-        //⟳ (ᆞ i = 0; i < 30; i++ ){
-        //    o( x.Play("Strike").running );
-        //    ⟆
-        //}
-    }
+    ⏚ Loop_force () { ⟾ Run( ⎚ x.Loop("Strike")ᴼ, duration: 5f); }
+    ⏚ Loop_normal() { ⟾ Run( ⎚ x.Loop("Walk")ᴼ,   duration: 5f); }
 
-    ⏚ Play_once()
-    { ⟾ Complete( ⎚ x.Play("Strike"), timeout: 10f); }
-
-    ⏚ Play_grab()
-    { ⟾ Complete( ⎚ x.Play("Grab"), timeout: 8f); }
-
-    ⏚ Play_loop()
-    { ⟾ Run( ⎚ x.Play("Walk"), duration: 2f); }
-
-    ⏚ Loop_force(){ ⟾ Run( ⎚ x.Loop("Strike"), duration: 5f); }
-
-    ⏚ Loop_normal(){ ⟾ Run( ⎚ x.Loop("Walk"), duration: 5f); }
-
-    // In Mecanim there is no direct equivalent to "clamp forever"
-    // ⏚ Play_wrapModeClampForever()
-    // { ⟾ Complete( ⎚ x.Play("KO"), timeout: 10f); }
-
-    ؟ Play_emptyString_throws() → ಠᴗಠ<ArgEx>( () → x.Play("") );
-
-    ؟ Play_nullString_throws() → ಠᴗಠ<ArgEx>( () → x.Play(null) );
+    ؟ Play_emptyString_throws() → ಠᴗಠ <ArgEx>( ⎚ x.Play("") );
+    ؟ Play_nullString_throws () → ಠᴗಠ <ArgEx>( ⎚ x.Play(∅ ) );
 
     ؟ Play_animationNotFound_logsWarning(){
-        x.Play("foo");
-        LogAssert.Expect(LogType.Warning,
-            "Animator.GotoState: State could not be found");
+        x.Play("foo"); LogAssert.Expect(LogType.Warning,
+                       "Animator.GotoState: State could not be found");
       }
 
 }

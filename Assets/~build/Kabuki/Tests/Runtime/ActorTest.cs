@@ -6,11 +6,9 @@ namespace Kabuki.Test{ public abstract class ActorTest : PlayTest{
 
     protected Actor actor;
 
-    protected abstract string ActorName { get; }
-    protected abstract float ActorSize { get; }
+    protected abstract string ActorName { get; }  protected abstract float ActorSize { get; }
 
-    protected virtual float fadeLength => 0.3f;
-    override protected float baseTimeScale => 12;
+    protected virtual float fadeLength => 0.3f;  override protected float baseTimeScale => 12;
 
     [SetUp] public void SetupActor(){
         actor = ActorSetup.Setup( Create(ActorName), ActorSize )
@@ -24,7 +22,6 @@ namespace Kabuki.Test{ public abstract class ActorTest : PlayTest{
         var x = CreateEmpty( Vector3.right * 2f );
         yield return Complete( () => actor["Greet", x], 6f);
         o( actor.transform.Look(x) < 1f);
-        yield return null;
     }
 
     [UnityTest] public IEnumerator Give_accept(){
@@ -58,19 +55,18 @@ namespace Kabuki.Test{ public abstract class ActorTest : PlayTest{
         o( food == null );
     }
 
-    [UnityTest] public IEnumerator Idle(){
-        yield return Run( () => actor.Idle, 3f);
-    }
+    [UnityTest] public IEnumerator Idle(){ yield return Run( () => actor.Idle, 3f); }
 
     [UnityTest] public IEnumerator LookAt(){
         var x = CreateEmpty( Vector3.right * 2f );
-        yield return Run( () => actor.LookAt(x), 2f);
+        yield return Run( () => actor.LookAt(x).undue, 2f);
         o( actor.transform.Look(x) < 1f);
     }
 
     [UnityTest] public IEnumerator Push(){
     if (Skip()) yield break;
-        var block = Box(1f, 2f, 1.5f); block.gameObject.AddComponent<Rigidbody>();
+        var block = Box(1f, 2f, 1.5f);
+        block.gameObject.AddComponent<Rigidbody>();
         yield return Complete( () => actor.Push(block), 20f);
     }
 
@@ -93,11 +89,10 @@ namespace Kabuki.Test{ public abstract class ActorTest : PlayTest{
 
     [UnityTest] public IEnumerator Throw(){
     if (Skip()) yield break;
-        var ball = Box(0f, 0f, 0.1f); ball.gameObject.AddComponent<Rigidbody>();
+        var ball = Box(0f, 0f, 0.1f);
+        ball.gameObject.AddComponent<Rigidbody>();
         yield return Complete( () => actor.Throw(ball, new Vector3(1, 0, 1)), 4f);
     }
-
-    // --------------------------------------------------------------
 
     Actor Other(string name = "Bucks"){
         var x = ActorSetup.Setup(Create(ActorName,

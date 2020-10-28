@@ -24,7 +24,7 @@
 
     // Runners ------------------------------------------------------
 
-    ‒ 𝔼 Complete( ⒡<⑂> act, ㅅ timeout, ᆞ timeScale = 1 ){
+    ‒ 𝔼 Complete( ⒡ <⑂> act, ㅅ timeout, ᆞ timeScale = 1 ){
         OverrideTimeScale(timeScale * baseTimeScale);
         ∙ t0 = ⒯ ;
         ⟲ ( ⒯ - t0 < timeout ) { ⤴ (act().complete) ¦ ⟆ }
@@ -33,7 +33,7 @@
         RestoreTimeScale();
     }
 
-    ‒ 𝔼 Run( ⒡<⑂> act, ㅅ duration, ᆞ timeScale = 1 ){
+    ‒ 𝔼 Run( ⒡ <⑂> act, ㅅ duration, ᆞ timeScale = 1 ){
         OverrideTimeScale(timeScale * baseTimeScale);
         ∙ t0 = ⒯ ;
         ⟲ ( ⒯ - t0 < duration ) {

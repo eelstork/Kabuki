@@ -15,7 +15,7 @@
 
     ‒ ⑂ ⦿[ㄹ gesture, エ ⧕] → Face(⧕) ∧ ⦿[gesture];
 
-    ‒ ⑂ ⦿[ㄹ anim] → Play(anim);
+    ‒ ⑂ ⦿[ㄹ anim] → Play(anim)ʾ;
 
     ‒ ⑂ Face(エ ⧕, ㄹ anim = "Walk")
         → ⸨ み.RotateTowards(⧕, rotationSpeed) ≫ ⦿[anim] ⸩;
@@ -32,18 +32,19 @@
         → (Has(⧕) ∨ Reach(⧕)) ∧ ⦿["Grab"] % After(0.5f)?[ Hold(⧕)ꜝ ];
 
     ‒ ⑂ Ingest(エ ⧕)
-        → Hold(⧕, allowNull: ✓, hand: "L")
+        → Hold(⧕, allowNull: ✓, hand: "L")ꜝ
         ∧ ⦿["Eat"] % After(1.2f) ? [ Destroy(⧕)ꜝ ];
 
     ‒ ⑂ Idle → ⦿["Idle"];
 
     ‒ ⨴ LookAt(エ ⧕, ㄹ rotationAnim = "Walk", ㄹ idleAnim = "Idle"){
-        ∙ s = Face(⧕, rotationAnim) ∧ ⦿[idleAnim]; ☡̱ʿ
+        ∙ s = Face(⧕, rotationAnim) ∧ ⦿[idleAnim];
+        ☡̱ʿ
     }
 
     ‒ ⑂ Push(エ ⧕)
-        → ❰Reach(⧕) ∧ PushingSetup()❱
-        ∧ ⦿["Push"] ∧ PushingTeardown();
+        → ❰Reach(⧕) ∧ PushingSetup()ꜝ ❱
+        ∧ ⦿["Push"] ∧ PushingTeardown()ꜝ ;
 
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes
@@ -59,8 +60,8 @@
         → ❰Reach(⧕)❱ ∧ ⧼SpeechBox⧽.SetText(msg) ∧ ⦿["Tell"];
 
     ‒ ⑂ Throw(エ ⧕, シ dir)
-        → ❰Hold(⧕)❱
-        ∧ Face(dir) ∧ ⦿["Throw"] * After(0.5f)? [ Impel(⧕, dir) ];
+        → ❰Hold(⧕)ꜝ❱
+        ∧ Face(dir) ∧ ⦿["Throw"] * After(0.5f)? [ Impel(⧕, dir)ꜝ ];
 
     ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
         → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
@@ -101,7 +102,7 @@
     ⑂ Offer(エ ⧕, Actor recipient)
         → Do(recipient.other = ⦿)ꜝ
         ∧ Do(recipient.gift  = ⧕)ꜝ
-        ∧ +(⑂)recipient.IsLookingAt(⦿);
+        ∧ (+(⑂)recipient.IsLookingAt(⦿))ʾ;
 
     ⑂ Present(エ ⧕, Actor recipient)
         → (recipient.Has(⧕) ∨ Hold(⧕)ꜝ) ∧ ⦿["Give"];

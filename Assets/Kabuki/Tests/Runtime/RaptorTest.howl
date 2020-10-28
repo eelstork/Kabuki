@@ -5,17 +5,13 @@
 ⊓ Kabuki.Test{
 ‒ ○ RaptorTest : ActorTest{
 
-    ⁺◠ ㄹ ActorName → "Raptor";
-    ⁺◠ ㅅ ActorSize → 20f;
-    Once once = ⌢ Once();
+    ⁺◠ ㄹ ActorName → "Raptor"; ⁺◠ ㅅ ActorSize → 20f;
 
     ⁺◠ ㄹ[] skip → ⌢ ㄹ[]
     { "Give_accept", "Grab", "Ingest", "Push", "Tell", "Throw" };
 
     // Length: 0.792 + 1 = 1.792
-    // With cross-fade enabled animations complete early
-    // (default 0.3s) so, the whole sequence is done
-    // in ~1.2s
+    // With cross-fade animations complete earlier
     ⏚ PlayChaining(){
         ㅅ fadeLength = actor.animDriver.fadeLength;
         actor.み.⫫ = シ.⊢;
@@ -44,11 +40,11 @@
     ⏚ PlayNonLooping(){
         ㅅ fadeLength = actor.animDriver.fadeLength;
         actor.み.⫫ = シ.⊢;
-        ⑂ s =  status.cont();
+        ⨮ s =  pending.cont();
         ∙ t0 = ⒯ ;
         ⟲ ( ⒯ - t0 < 2f ){
             s = actor.Play("Strike");
-            o( !s.failing ); ⤴ (s.complete) ¦ ⟆
+            ⤴ (s.complete) ¦ ⟆
         }
         ∙ δ = ⒯ - t0;
         Print($"Done in {δ:0.##}s");
@@ -59,8 +55,6 @@
 
 }
 
-‒ ○ RaptorTest_noCrossFade : RaptorTest{
-    ⁺◠ ㅅ fadeLength → 0f;
-}
+‒ ○ RaptorTest_noCrossFade : RaptorTest{ ⁺◠ ㅅ fadeLength → 0f; }
 
-}
+}  // Kabuki.Test

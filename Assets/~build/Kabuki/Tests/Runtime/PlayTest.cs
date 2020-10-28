@@ -24,7 +24,7 @@ public class PlayTest{
 
     // Runners ------------------------------------------------------
 
-    public IEnumerator Complete( Func<status> act, float timeout, int timeScale = 1 ){
+    public IEnumerator Complete( Func <status> act, float timeout, int timeScale = 1 ){
         OverrideTimeScale(timeScale * baseTimeScale);
         var t0 = Time.time ;
         while ( Time.time - t0 < timeout ) { if (act().complete) break; yield return null; }
@@ -33,7 +33,7 @@ public class PlayTest{
         RestoreTimeScale();
     }
 
-    public IEnumerator Run( Func<status> act, float duration, int timeScale = 1 ){
+    public IEnumerator Run( Func <status> act, float duration, int timeScale = 1 ){
         OverrideTimeScale(timeScale * baseTimeScale);
         var t0 = Time.time ;
         while ( Time.time - t0 < duration ) {

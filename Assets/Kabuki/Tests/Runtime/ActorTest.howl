@@ -6,11 +6,9 @@
 
     ◠ Actor actor;
 
-    ◠☋ ㄹ ActorName { get; }
-    ◠☋ ㅅ ActorSize { get; }
+    ◠☋ ㄹ ActorName { get; }  ◠☋ ㅅ ActorSize { get; }
 
-    ◠ᵛ ㅅ fadeLength → 0.3f;
-    ⁺◠ ㅅ baseTimeScale → 12;
+    ◠ᵛ ㅅ fadeLength → 0.3f;  ⁺◠ ㅅ baseTimeScale → 12;
 
     ⍜ SetupActor(){
         actor = ActorSetup.Setup( Create(ActorName), ActorSize )
@@ -24,7 +22,6 @@
         ∙ x = CreateEmpty( シ.⊢ * 2f );
         ⟾ Complete( ⎚ actor["Greet", x], 6f);
         o( actor.み.Look(x) < 1f);
-        ⟆
     }
 
     ⏚ Give_accept(){
@@ -58,19 +55,18 @@
         o( food ☰ ∅ );
     }
 
-    ⏚ Idle(){
-        ⟾ Run( ⎚ actor.Idle, 3f);
-    }
+    ⏚ Idle(){ ⟾ Run( ⎚ actor.Idle, 3f); }
 
     ⏚ LookAt(){
         ∙ x = CreateEmpty( シ.⊢ * 2f );
-        ⟾ Run( ⎚ actor.LookAt(x), 2f);
+        ⟾ Run( ⎚ actor.LookAt(x)ʿ, 2f);
         o( actor.み.Look(x) < 1f);
     }
 
     ⏚ Push(){
     ⒪
-        ∙ block = Box(1f, 2f, 1.5f); block.《Rigidbody》;
+        ∙ block = Box(1f, 2f, 1.5f);
+        block.《Rigidbody》;
         ⟾ Complete( ⎚ actor.Push(block), 20f);
     }
 
@@ -93,11 +89,10 @@
 
     ⏚ Throw(){
     ⒪
-        ∙ ball = Box(0f, 0f, 0.1f); ball.《Rigidbody》;
+        ∙ ball = Box(0f, 0f, 0.1f);
+        ball.《Rigidbody》;
         ⟾ Complete( ⎚ actor.Throw(ball, ⌢ シ(1, 0, 1)), 4f);
     }
-
-    // --------------------------------------------------------------
 
     Actor Other(ㄹ name = "Bucks"){
         ∙ x = ActorSetup.Setup(Create(ActorName,

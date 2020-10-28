@@ -6,7 +6,7 @@ using Ex = System.Exception; ⊐ UnityEngine;
 
     AnimationDriver2 _animDriver;
 
-    ‒ ⑂ Play(ㄹ anim) → animDriver.Play(anim);
+    ‒ ⨮ Play(ㄹ anim) → animDriver.Play(anim);
 
     ‒ ⑂ Playing(ㄹ anim, ⑂ @while){
         ⤴ (@while.running) Play(anim);

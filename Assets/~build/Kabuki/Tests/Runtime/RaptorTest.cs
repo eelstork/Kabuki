@@ -5,17 +5,13 @@ using Active.Core;
 namespace Kabuki.Test{
 public class RaptorTest : ActorTest{
 
-    override protected string ActorName => "Raptor";
-    override protected float ActorSize => 20f;
-    Once once = new Once();
+    override protected string ActorName => "Raptor"; override protected float ActorSize => 20f;
 
     override protected string[] skip => new string[]
     { "Give_accept", "Grab", "Ingest", "Push", "Tell", "Throw" };
 
     // Length: 0.792 + 1 = 1.792
-    // With cross-fade enabled animations complete early
-    // (default 0.3s) so, the whole sequence is done
-    // in ~1.2s
+    // With cross-fade animations complete earlier
     [UnityTest] public IEnumerator PlayChaining(){
         float fadeLength = actor.animDriver.fadeLength;
         actor.transform.forward = Vector3.right;
@@ -44,11 +40,11 @@ public class RaptorTest : ActorTest{
     [UnityTest] public IEnumerator PlayNonLooping(){
         float fadeLength = actor.animDriver.fadeLength;
         actor.transform.forward = Vector3.right;
-        status s =  status.cont();
+        pending s =  pending.cont();
         var t0 = Time.time ;
         while ( Time.time - t0 < 2f ){
             s = actor.Play("Strike");
-            o( !s.failing ); if (s.complete) break; yield return null;
+            if (s.complete) break; yield return null;
         }
         var δ = Time.time - t0;
         Print($"Done in {δ:0.##}s");
@@ -59,8 +55,6 @@ public class RaptorTest : ActorTest{
 
 }
 
-public class RaptorTest_noCrossFade : RaptorTest{
-    override protected float fadeLength => 0f;
-}
+public class RaptorTest_noCrossFade : RaptorTest{ override protected float fadeLength => 0f; }
 
-}
+}  // Kabuki.Test

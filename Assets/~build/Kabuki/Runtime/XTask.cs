@@ -6,7 +6,7 @@ public class XTask : UTask{
 
     AnimationDriver2 _animDriver;
 
-    public status Play(string anim) => animDriver.Play(anim);
+    public pending Play(string anim) => animDriver.Play(anim);
 
     public status Playing(string anim, status @while){
         if (@while.running) Play(anim);

@@ -15,7 +15,7 @@ public class Actor : Activ.Kabuki.XTask{
 
     public status this[string gesture, Transform that] => Face(that) && this[gesture];
 
-    public status this[string anim] => Play(anim);
+    public status this[string anim] => Play(anim).due;
 
     public status Face(Transform that, string anim = "Walk")
         => While( transform.RotateTowards(that, rotationSpeed) )?[ this[anim] ];
@@ -32,18 +32,19 @@ public class Actor : Activ.Kabuki.XTask{
         => (Has(that) || Reach(that)) && this["Grab"] % After(0.5f)?[ Hold(that).now ];
 
     public status Ingest(Transform that)
-        => Hold(that, allowNull: true, hand: "L")
+        => Hold(that, allowNull: true, hand: "L").now
         && this["Eat"] % After(1.2f) ? [ Destroy(that).now ];
 
     public status Idle => this["Idle"];
 
     public impending LookAt(Transform that, string rotationAnim = "Walk", string idleAnim = "Idle"){
-        var s = Face(that, rotationAnim) && this[idleAnim]; return impending.cont();
+        var s = Face(that, rotationAnim) && this[idleAnim];
+        return impending.cont();
     }
 
     public status Push(Transform that)
-        => Once()?[Reach(that) && PushingSetup()]
-        && this["Push"] && PushingTeardown();
+        => Once()?[Reach(that) && PushingSetup().now ]
+        && this["Push"] && PushingTeardown().now ;
 
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes
@@ -59,8 +60,8 @@ public class Actor : Activ.Kabuki.XTask{
         => Once()?[Reach(that)] && GetComponent<SpeechBox>().SetText(msg) && this["Tell"];
 
     public status Throw(Transform that, Vector3 dir)
-        => Once()?[Hold(that)]
-        && Face(dir) && this["Throw"] * After(0.5f)? [ Impel(that, dir) ];
+        => Once()?[Hold(that).now]
+        && Face(dir) && this["Throw"] * After(0.5f)? [ Impel(that, dir).now ];
 
     public status Reach(Transform that, float dist = 1f)
         => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
@@ -101,7 +102,7 @@ public class Actor : Activ.Kabuki.XTask{
     status Offer(Transform that, Actor recipient)
         => Do(recipient.other = this).now
         && Do(recipient.gift  = that).now
-        && +(status)recipient.IsLookingAt(this);
+        && (+(status)recipient.IsLookingAt(this)).due;
 
     status Present(Transform that, Actor recipient)
         => (recipient.Has(that) || Hold(that).now) && this["Give"];
