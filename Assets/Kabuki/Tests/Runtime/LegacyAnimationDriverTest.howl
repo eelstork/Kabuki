@@ -1,0 +1,43 @@
+⊐ System.Collections; ⊐ ArgEx = System.ArgumentException;
+⊐ NUnit.Framework; ⊐ UnityEngine; ⊐ UnityEngine.TestTools;
+⊐ Active.Core; ⊐̥ Active.Core.status; ⊐ Active.Util;
+
+‒ ○ LegacyAnimationDriverTest : Kabuki.Test.PlayTest{
+
+    LegacyAnimationDriver2 x;
+
+    ⍜ SetupDriver(){
+        ∙ go = Create("Raptor"); go.み.𝚜 = シ.one * 20;
+        x = new LegacyAnimationDriver2( go.⧼Animation⧽ );
+    }
+
+    // Play ----------------------------------------------------------
+
+    ؟ Play() → o( x.Play("Idle").running );
+
+    ⏚ PlayFully_wrapModeOnce()
+    { ⟾ Complete( ⎚ x.Play("Strike"), timeout: 1f); }
+
+    ⏚ Loop_force(){ ⟾ Run( ⎚ x.Loop("Strike"), duration: 2f); }
+
+    ⏚ Loop_normal(){ ⟾ Run( ⎚ x.Loop("Walk"), duration: 2f); }
+
+    ⏚ Play_loop() { ⟾ Run( ⎚ x.Play("Walk"), duration: 1f); }
+
+    ⏚ Play_clampForever()
+    { ⟾ Run( ⎚ x.Play("Clamping"), duration: 1f); }
+
+    ؟ Play_emptyString_throws() → ಠᴗಠ<ArgEx>( () → x.Play("") );
+
+    ؟ Play_nullString_throws() → ಠᴗಠ<ArgEx>( () → x.Play(null) );
+
+    ؟ Play_animationNotFound_logsError(){
+        x.Play("foo");
+        LogAssert.Expect(LogType.Error,
+            "The animation state foo could not be played because it "
+          + "couldn't be found!\nPlease attach an animation clip with"
+          + " the name 'foo' or call this function only for existing "
+          + "animations.");
+    }
+
+}

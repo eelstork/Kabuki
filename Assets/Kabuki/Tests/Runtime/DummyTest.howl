@@ -8,18 +8,10 @@
     ⁺◠ ㄹ ActorName → "Dummy";
     ⁺◠ ㅅ ActorSize → 1f;
 
-    ⏚ PlayNonLooping(){
-        actor.み.⫫ = シ.⊢;
-        ⑂ s = status.cont();
-        ∙ t0 = ⒯ ;
-        ⟲ ( ⒯ - t0 < 2f ){
-            s = actor.Play("Strike");
-            o( !s.failing ); ⤴ (s.complete) ¦ ⟆
-        }
-        ∙ δ = ⒯ - t0;
-        o( s.complete  );
-        o( δ < 1.8f );
-        Print($"Done in {δ:0.##}s");
-    }
+}
 
-}}
+‒ ○ DummyTest_noCrossFade : DummyTest{
+    ⁺◠ ㅅ fadeLength → 0f;
+}
+
+}

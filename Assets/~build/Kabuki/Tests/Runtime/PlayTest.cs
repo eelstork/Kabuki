@@ -1,16 +1,20 @@
-using System; using System.Collections;
-using Ex = System.Exception;
-using System.Collections.Generic;
-using UnityEngine;
-using NUnit.Framework;
-using Active.Core; using static Active.Core.status;
+using System; using System.Collections; using System.Linq;
+using System.Collections.Generic; using Ex = System.Exception;
+using M = System.Runtime.CompilerServices.CallerMemberNameAttribute;
+using UnityEngine; using NUnit.Framework;
+using Active.Core; using static Active.Core.status; using Active.Core.Details;
 
 namespace Kabuki.Test{
 public class PlayTest{
 
-    GameObject ground, sun, cam;
-    List<GameObject> objects = new List<GameObject>();
-    float savedTimeScale = 0;
+    GameObject       ground, sun, cam;
+    List<GameObject> objects       = new List<GameObject>();
+    float       savedTimeScale = 0;
+    int       frame;
+
+    protected virtual float baseTimeScale => 1;
+
+    protected virtual string[] skip{ get; }
 
     // Assertions ---------------------------------------------------
 
@@ -18,8 +22,10 @@ public class PlayTest{
 
     protected void o (object x, object y) => Assert.That(x, Is.EqualTo(y));
 
+    // Runners ------------------------------------------------------
+
     public IEnumerator Complete( Func<status> act, float timeout, int timeScale = 1 ){
-        OverrideTimeScale(timeScale);
+        OverrideTimeScale(timeScale * baseTimeScale);
         var t0 = Time.time ;
         while ( Time.time - t0 < timeout ) { if (act().complete) break; yield return null; }
         if ( Time.time - t0 >= timeout )
@@ -28,7 +34,7 @@ public class PlayTest{
     }
 
     public IEnumerator Run( Func<status> act, float duration, int timeScale = 1 ){
-        OverrideTimeScale(timeScale);
+        OverrideTimeScale(timeScale * baseTimeScale);
         var t0 = Time.time ;
         while ( Time.time - t0 < duration ) {
             var s = act();
@@ -40,13 +46,19 @@ public class PlayTest{
     }
 
     public IEnumerator Fail( Func<status> act, float timeout, int timeScale = 1 ){
-        OverrideTimeScale(timeScale);
+        OverrideTimeScale(timeScale * baseTimeScale);
         var t0 = Time.time ;
         while ( Time.time - t0 < timeout ) { if (act().failing) break; yield return null; }
         if ( Time.time - t0 >= timeout )
             throw new Ex($"Timeout: {timeout}s");
         RestoreTimeScale();
     }
+
+    // Filtering ----------------------------------------------------
+
+    protected bool Skip([M] string member="") => skip?.Contains(member) ?? false;
+
+    // Utilities ----------------------------------------------------
 
     public GameObject Create(string name, Vector3? pos=null){
         var go = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(name));
@@ -121,12 +133,14 @@ public class PlayTest{
             ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.transform.localScale *= 12;
         }
+        Active.Core.Details.RoR.Enter(this, frame);
     }
 
     [TearDown] public void Teardown(){
         foreach (var k in objects) GameObject.DestroyImmediate(k);
         objects = new List <GameObject>();
         Time.timeScale = 1;
+        Active.Core.Details.RoR.Exit(this, ref frame);
     }
 
 }}

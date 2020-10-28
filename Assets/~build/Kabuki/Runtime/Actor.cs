@@ -3,7 +3,7 @@ using T = UnityEngine.Transform; using UnityEngine;
 using Active.Core; using static Active.Core.status; using Active.Util;
 
 namespace Activ.Kabuki{
-public class Actor : XTask{
+public class Actor : Activ.Kabuki.XTask{
 
     public float speed = 1, rotationSpeed = 180;
     public Transform leftHold, rightHold; // for holding an object in hand
@@ -29,26 +29,27 @@ public class Actor : XTask{
         && Present(that, recipient);
 
     public status Grab(Transform that)
-        => (Has(that) || Reach(that))
-        && this["Grab"] % After(0.5f)?[ Hold(that).now ];
+        => (Has(that) || Reach(that)) && this["Grab"] % After(0.5f)?[ Hold(that).now ];
 
     public status Ingest(Transform that)
         => Hold(that, allowNull: true, hand: "L")
-        && this["Eat"] % After(1.2f) ? [Destroy(that).now];
+        && this["Eat"] % After(1.2f) ? [ Destroy(that).now ];
 
     public status Idle => this["Idle"];
 
-    public impending LookAt(Transform that, string rotationAnim = "Walk",
-                              string idleAnim = "Idle"){
-        var s = Face(that, rotationAnim) && this[idleAnim];
-        return impending.cont();
+    public impending LookAt(Transform that, string rotationAnim = "Walk", string idleAnim = "Idle"){
+        var s = Face(that, rotationAnim) && this[idleAnim]; return impending.cont();
     }
 
     public status Push(Transform that)
         => Once()?[Reach(that) && PushingSetup()]
         && this["Push"] && PushingTeardown();
 
-    public status Strike(Transform that) => Reach(that) && this["Strike"];
+    // TODO: flakiness in "Reach" requires the Once node here.
+    // if the memory node is removed the strike action will sometimes
+    // stop half-way and repeat. Solution may be fix the "Reach"
+    // action.
+    public status Strike(Transform that) => Once()?[Reach(that)] && this["Strike"];
 
     public status Take()
         => (other != null) && Face(other.transform) && this["Take"]
@@ -59,7 +60,7 @@ public class Actor : XTask{
 
     public status Throw(Transform that, Vector3 dir)
         => Once()?[Hold(that)]
-        && Face(dir) && this["Throw"] + After(0.5f)? [ Impel(that, dir) ];
+        && Face(dir) && this["Throw"] * After(0.5f)? [ Impel(that, dir) ];
 
     public status Reach(Transform that, float dist = 1f)
         => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
@@ -121,8 +122,7 @@ public class Actor : XTask{
         } return @void();
     }
 
-    action UseRootMotion(bool flag)
-        => Do( GetComponent<Animator>().applyRootMotion = flag );
+    action UseRootMotion(bool flag) => Do( GetComponent<Animator>().applyRootMotion = flag );
 
     // --------------------------------------------------------------
 

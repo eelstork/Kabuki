@@ -1,16 +1,20 @@
-⊐ System; ⊐ System.Collections;
-⊐ Ex = System.Exception;
-⊐ System.Collections.Generic;
-⊐ UnityEngine;
-⊐ NUnit.Framework;
-⊐ Active.Core; ⊐̥ Active.Core.status;
+⊐ System; ⊐ System.Collections; ⊐ System.Linq;
+⊐ System.Collections.Generic; ⊐ Ex = System.Exception;
+⊐ M = System.Runtime.CompilerServices.CallerMemberNameAttribute;
+⊐ UnityEngine; ⊐ NUnit.Framework;
+⊐ Active.Core; ⊐̥ Active.Core.status; ⊐ Active.Core.Details;
 
 ⊓ Kabuki.Test{
 ‒ ○ PlayTest{
 
-    ロ ground, sun, cam;
-    List<ロ> objects = new List<ロ>();
-    ㅅ savedTimeScale = 0;
+    ロ       ground, sun, cam;
+    List<ロ> objects       = new List<ロ>();
+    ㅅ       savedTimeScale = 0;
+    ᆞ       frame;
+
+    ◠ᵛ ㅅ baseTimeScale → 1;
+
+    ◠ᵛ ㄹ[] skip{ get; }
 
     // Assertions ---------------------------------------------------
 
@@ -18,8 +22,10 @@
 
     ◠ ┈ o (⊡ x, ⊡ y) → Assert.That(x, Is.EqualTo(y));
 
+    // Runners ------------------------------------------------------
+
     ‒ 𝔼 Complete( ⒡<⑂> act, ㅅ timeout, ᆞ timeScale = 1 ){
-        OverrideTimeScale(timeScale);
+        OverrideTimeScale(timeScale * baseTimeScale);
         ∙ t0 = ⒯ ;
         ⟲ ( ⒯ - t0 < timeout ) { ⤴ (act().complete) ¦ ⟆ }
         ⤴ ( ⒯ - t0 ≥ timeout )
@@ -28,7 +34,7 @@
     }
 
     ‒ 𝔼 Run( ⒡<⑂> act, ㅅ duration, ᆞ timeScale = 1 ){
-        OverrideTimeScale(timeScale);
+        OverrideTimeScale(timeScale * baseTimeScale);
         ∙ t0 = ⒯ ;
         ⟲ ( ⒯ - t0 < duration ) {
             ∙ s = act();
@@ -40,13 +46,19 @@
     }
 
     ‒ 𝔼 Fail( ⒡<⑂> act, ㅅ timeout, ᆞ timeScale = 1 ){
-        OverrideTimeScale(timeScale);
+        OverrideTimeScale(timeScale * baseTimeScale);
         ∙ t0 = ⒯ ;
         ⟲ ( ⒯ - t0 < timeout ) { ⤴ (act().failing) ¦ ⟆ }
         ⤴ ( ⒯ - t0 ≥ timeout )
             (╯°□°)╯ ⌢ Ex($"Timeout: {timeout}s");
         RestoreTimeScale();
     }
+
+    // Filtering ----------------------------------------------------
+
+    ◠ ㅇ Skip([M] ㄹ member="") → skip?.Contains(member) ?? ✗;
+
+    // Utilities ----------------------------------------------------
 
     ‒ ロ Create(ㄹ name, メ? pos=∅){
         ∙ go = UnityEngine.Object.Instantiate(Resources.Load<ロ>(name));
@@ -121,12 +133,14 @@
             ground = ロ.CreatePrimitive(PrimitiveType.Plane);
             ground.transform.localScale *= 12;
         }
+        Active.Core.Details.RoR.Enter(⦿, frame);
     }
 
     ⍉ Teardown(){
         ∀ (∙ k ∈ objects) ロ.DestroyImmediate(k);
         objects = ⌢ 𝕃 <ロ>();
         Time.timeScale = 1;
+        Active.Core.Details.RoR.Exit(⦿, ref frame);
     }
 
 }}

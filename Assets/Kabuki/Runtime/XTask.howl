@@ -4,9 +4,7 @@ using Ex = System.Exception; ⊐ UnityEngine;
 ⊓ Activ.Kabuki{
 ‒ ○ XTask : UTask{
 
-    AnimationDriver _animDriver;
-
-    ‒ ㅅ Duration(ㄹ anim) → animDriver.Duration(anim);
+    AnimationDriver2 _animDriver;
 
     ‒ ⑂ Play(ㄹ anim) → animDriver.Play(anim);
 
@@ -26,13 +24,13 @@ using Ex = System.Exception; ⊐ UnityEngine;
 
     // PRIVATE ------------------------------------------------------
 
-    AnimationDriver SetupAnimDriver(){
+    AnimationDriver2 SetupAnimDriver(){
         Animator  ator  = ∅;
         Animation ation = ∅;
         ⤴ (ator  = ⧼Animator⧽  )
-            ⮐ 《MecanimDriver》;
+            ⮐ ⌢ MecanimDriver2(ator);
         ⤳ (ation = ⧼Animation⧽ )
-            ⮐ 《LegacyAnimationDriver》;
+            ⮐ ⌢ LegacyAnimationDriver2(ation);
         ⤵
             (╯°□°)╯ ⌢ Ex("No Animation or Animator component");
     }
@@ -40,7 +38,7 @@ using Ex = System.Exception; ⊐ UnityEngine;
     // --------------------------------------------------------------
 
     ‒ エ θ → transform;
-    ‒ AnimationDriver animDriver → _animDriver ≠ ∅ ? _animDriver
+    ‒ AnimationDriver2 animDriver → _animDriver ≠ ∅ ? _animDriver
         : (_animDriver = SetupAnimDriver());
 
 }}

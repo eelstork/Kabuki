@@ -470,7 +470,7 @@ ModelImporter:
     second: Idle
   - first:
       74: 7400012
-    second: idle2
+    second: Clamping
   - first:
       74: 7400014
     second: Greet
@@ -573,12 +573,12 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: idle2
+      name: Clamping
       takeName: Armature|idle2
       internalID: 0
       firstFrame: 0
-      lastFrame: 99
-      wrapMode: 2
+      lastFrame: 12
+      wrapMode: 8
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
@@ -694,7 +694,7 @@ ModelImporter:
       internalID: 0
       firstFrame: 0
       lastFrame: 24
-      wrapMode: 0
+      wrapMode: 1
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0

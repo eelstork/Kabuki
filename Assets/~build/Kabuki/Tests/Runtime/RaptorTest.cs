@@ -17,30 +17,32 @@ public class RaptorTest : ActorTest{
     // (default 0.3s) so, the whole sequence is done
     // in ~1.2s
     [UnityTest] public IEnumerator PlayChaining(){
+        float fadeLength = actor.animDriver.fadeLength;
         actor.transform.forward = Vector3.right;
         //
         var t0 = Time.time ;
         status s = status.cont();
         while (!s.complete){ s = actor["Strike"]; yield return null; }
         var δ0 = Time.time - t0;
-        Print($"Strike played {δ0:0.##}s");
+        //rint($"Strike played {δ0:0.##}s");
         //
         var t1 = Time.time ;
         s = status.cont();
         while (!s.complete){ s = actor["Flail"]; yield return null; }
         var δ1 = Time.time - t1;
-        Print($"Flail played {δ1:0.##}s");
+        //rint($"Flail played {δ1:0.##}s");
         //
         o( s.complete );
         float D = actor.GetComponent<Animation>()["Strike"].length +
               actor.GetComponent<Animation>()["Flail"].length
-              - 0.3f * 2f;
+              - fadeLength * 2f;
         var δ = δ0 + δ1;
         o( Mathf.Abs(D - δ) < 0.05f );
     }
 
     // Length: 0.792 - 0.3 ~ 0.5 (early completion for cross-fade)
     [UnityTest] public IEnumerator PlayNonLooping(){
+        float fadeLength = actor.animDriver.fadeLength;
         actor.transform.forward = Vector3.right;
         status s =  status.cont();
         var t0 = Time.time ;
@@ -51,7 +53,14 @@ public class RaptorTest : ActorTest{
         var δ = Time.time - t0;
         Print($"Done in {δ:0.##}s");
         o( s.complete  );
-        o( 0.45f < δ && δ < 0.55f );
+        var d = 0.792 - fadeLength;
+        o( (d - 0.05f) < δ && δ < (d + 0.05f) );
     }
 
-}}
+}
+
+public class RaptorTest_noCrossFade : RaptorTest{
+    override protected float fadeLength => 0f;
+}
+
+}

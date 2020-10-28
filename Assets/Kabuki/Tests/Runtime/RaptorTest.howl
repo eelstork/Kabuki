@@ -17,30 +17,32 @@
     // (default 0.3s) so, the whole sequence is done
     // in ~1.2s
     ⏚ PlayChaining(){
+        ㅅ fadeLength = actor.animDriver.fadeLength;
         actor.み.⫫ = シ.⊢;
         //
         ∙ t0 = ⒯ ;
         ⑂ s = status.cont();
         ⟲ (!s.complete){ s = actor["Strike"]; ⟆ }
         ∙ δ0 = ⒯ - t0;
-        Print($"Strike played {δ0:0.##}s");
+        //rint($"Strike played {δ0:0.##}s");
         //
         ∙ t1 = ⒯ ;
         s = status.cont();
         ⟲ (!s.complete){ s = actor["Flail"]; ⟆ }
         ∙ δ1 = ⒯ - t1;
-        Print($"Flail played {δ1:0.##}s");
+        //rint($"Flail played {δ1:0.##}s");
         //
         o( s.complete );
         ㅅ D = actor.⧼Animation⧽["Strike"].length +
               actor.⧼Animation⧽["Flail"].length
-              - 0.3f * 2f;
+              - fadeLength * 2f;
         ∙ δ = δ0 + δ1;
         o( Mathf.Abs(D - δ) < 0.05f );
     }
 
     // Length: 0.792 - 0.3 ~ 0.5 (early completion for cross-fade)
     ⏚ PlayNonLooping(){
+        ㅅ fadeLength = actor.animDriver.fadeLength;
         actor.み.⫫ = シ.⊢;
         ⑂ s =  status.cont();
         ∙ t0 = ⒯ ;
@@ -51,7 +53,14 @@
         ∙ δ = ⒯ - t0;
         Print($"Done in {δ:0.##}s");
         o( s.complete  );
-        o( 0.45f < δ ∧ δ < 0.55f );
+        ∙ d = 0.792 - fadeLength;
+        o( (d - 0.05f) < δ ∧ δ < (d + 0.05f) );
     }
 
-}}
+}
+
+‒ ○ RaptorTest_noCrossFade : RaptorTest{
+    ⁺◠ ㅅ fadeLength → 0f;
+}
+
+}

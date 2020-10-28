@@ -3,7 +3,7 @@
 ⊐ Active.Core; ⊐̥ Active.Core.status; ⊐ Active.Util;
 
 ⊓ Activ.Kabuki{
-‒ ○ Actor : XTask{
+‒ ○ Actor : Activ.Kabuki.XTask{
 
     ‒ ㅅ speed = 1, rotationSpeed = 180;
     ‒ エ leftHold, rightHold; // for holding an object in hand
@@ -29,37 +29,38 @@
         ∧ Present(⧕, recipient);
 
     ‒ ⑂ Grab(エ ⧕)
-        → (Has(⧕) ∨ Reach(⧕))
-        ∧ ⦿["Grab"] % After(0.5f)?[ Hold(⧕).now ];
+        → (Has(⧕) ∨ Reach(⧕)) ∧ ⦿["Grab"] % After(0.5f)?[ Hold(⧕)ꜝ ];
 
     ‒ ⑂ Ingest(エ ⧕)
         → Hold(⧕, allowNull: ✓, hand: "L")
-        ∧ ⦿["Eat"] % After(1.2f) ? [Destroy(⧕).now];
+        ∧ ⦿["Eat"] % After(1.2f) ? [ Destroy(⧕)ꜝ ];
 
     ‒ ⑂ Idle → ⦿["Idle"];
 
-    ‒ impending LookAt(エ ⧕, ㄹ rotationAnim = "Walk",
-                              ㄹ idleAnim = "Idle"){
-        ∙ s = Face(⧕, rotationAnim) ∧ ⦿[idleAnim];
-        ⮐ impending.cont();
+    ‒ ⨴ LookAt(エ ⧕, ㄹ rotationAnim = "Walk", ㄹ idleAnim = "Idle"){
+        ∙ s = Face(⧕, rotationAnim) ∧ ⦿[idleAnim]; ☡̱ʿ
     }
 
     ‒ ⑂ Push(エ ⧕)
         → ❰Reach(⧕) ∧ PushingSetup()❱
         ∧ ⦿["Push"] ∧ PushingTeardown();
 
-    ‒ ⑂ Strike(エ ⧕) → Reach(⧕) ∧ ⦿["Strike"];
+    // TODO: flakiness in "Reach" requires the Once node here.
+    // if the memory node is removed the strike action will sometimes
+    // stop half-way and repeat. Solution may be fix the "Reach"
+    // action.
+    ‒ ⑂ Strike(エ ⧕) → ❰Reach(⧕)❱ ∧ ⦿["Strike"];
 
     ‒ ⑂ Take()
         → (other ≠ ∅) ∧ Face(other.み) ∧ ⦿["Take"]
-                      % After(0.5f)?[ Hold(gift).now ];
+                      % After(0.5f)?[ Hold(gift)ꜝ ];
 
     ‒ ⑂ Tell(エ ⧕, ㄹ msg)
         → ❰Reach(⧕)❱ ∧ ⧼SpeechBox⧽.SetText(msg) ∧ ⦿["Tell"];
 
     ‒ ⑂ Throw(エ ⧕, シ dir)
         → ❰Hold(⧕)❱
-        ∧ Face(dir) ∧ ⦿["Throw"] + After(0.5f)? [ Impel(⧕, dir) ];
+        ∧ Face(dir) ∧ ⦿["Throw"] * After(0.5f)? [ Impel(⧕, dir) ];
 
     ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
         → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
@@ -98,12 +99,12 @@
     }
 
     ⑂ Offer(エ ⧕, Actor recipient)
-        → Do(recipient.other = ⦿).now
-        ∧ Do(recipient.gift  = ⧕).now
+        → Do(recipient.other = ⦿)ꜝ
+        ∧ Do(recipient.gift  = ⧕)ꜝ
         ∧ +(⑂)recipient.IsLookingAt(⦿);
 
     ⑂ Present(エ ⧕, Actor recipient)
-        → (recipient.Has(⧕) ∨ Hold(⧕).now) ∧ ⦿["Give"];
+        → (recipient.Has(⧕) ∨ Hold(⧕)ꜝ) ∧ ⦿["Give"];
 
     ▷ PushingSetup(){
         UseRootMotion(✓);
@@ -121,8 +122,7 @@
         } ⌽
     }
 
-    ▷ UseRootMotion(ㅇ flag)
-        → Do( ⧼Animator⧽.applyRootMotion = flag );
+    ▷ UseRootMotion(ㅇ flag) → Do( ⧼Animator⧽.applyRootMotion = flag );
 
     // --------------------------------------------------------------
 

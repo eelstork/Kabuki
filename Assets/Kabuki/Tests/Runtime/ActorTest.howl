@@ -1,149 +1,108 @@
-⊐ System.Collections;
-⊐ System.Linq;
-⊐ UnityEngine; ⊐ UnityEngine.TestTools;
-⊐ NUnit.Framework;
-⊐ Active.Core; ⊐ Activ.Kabuki;
-⊐ Active.Core.Details;
-⊐ Active.Util;
+⊐ System; ⊐ System.Collections; ⊐ System.Collections.Generic;
+⊐ UnityEngine; ⊐ UnityEngine.TestTools; ⊐ NUnit.Framework;
+⊐ Active.Core; ⊐ Activ.Kabuki; ⊐ Active.Util;
 
-⊓ Kabuki.Test{
-‒☋ ○ ActorTest : PlayTest{
+⊓ Kabuki.Test{ ‒☋ ○ ActorTest : PlayTest{
 
     ◠ Actor actor;
-    ᆞ frame;
 
-    ◠☋ ㄹ ActorName{ get; }
-    ◠☋ ㅅ ActorSize{ get; }
-    ◠ᵛ ㄹ[] skip{ get; }
+    ◠☋ ㄹ ActorName { get; }
+    ◠☋ ㅅ ActorSize { get; }
 
-    ⍜ _ActorSetup(){
+    ◠ᵛ ㅅ fadeLength → 0.3f;
+    ⁺◠ ㅅ baseTimeScale → 12;
+
+    ⍜ SetupActor(){
         actor = ActorSetup.Setup( Create(ActorName), ActorSize )
-                                                             .⧼Actor⧽;
-        Active.Core.Details.RoR.Enter(⦿, frame);
+                          .⧼Actor⧽;
+        actor.animDriver.fadeLength = fadeLength;
     }
-
-    ⍉ _ActorTearDown ⎚ Active.Core.Details.RoR.Exit(⦿, ref frame);
 
     // --------------------------------------------------------------
 
     ⏚ Gesture(){
-        ∙ x = CreateEmpty( メ.right * 2f );
-        yield ⮐ Complete( ⎚ actor["Greet", x], 6f, 4);
+        ∙ x = CreateEmpty( シ.⊢ * 2f );
+        ⟾ Complete( ⎚ actor["Greet", x], 6f);
         o( actor.み.Look(x) < 1f);
+        ⟆
     }
 
     ⏚ Give_accept(){
-        ⤴ (Skip(nameof(Give_accept))) yield ¦
+    ⒪
         ∙ ball  = Ball(0.2f, parent: actor.み);
         ∙ other = Other("Mimi");
-        yield ⮐ Complete(
+        ⟾ Complete(
             ⎚ (actor.Give(ball, other) ∧ other.Has(ball))
-               % other.Take(),
-            10f, 2
-        );
+               % other.Take(), 10f);
     }
 
     ⏚ Give_ignore(){
-        ∙ ball = Ball(0.2f, parent: actor.θ);
+        ∙ ball = Ball(0.2f, parent: actor.み);
         ∙ other = Other();
-        yield ⮐ Run( ⎚ actor.Give(ball, other), 5f, 3);
+        ⟾ Run( ⎚ actor.Give(ball, other), 5f);
     }
 
     ⏚ Grab(){
-        ⤴ (Skip(nameof(Grab))) yield ¦
+    ⒪
         ∙ x = Ball(0.3f);
         x˙ = シ.⊢ ᐧ 2 + シ.⊥ ᐧ 0.15f;
-        yield ⮐ Complete( ⎚ actor.Grab(x), 5f, 8 );
+        ⟾ Complete( ⎚ actor.Grab(x), 5f);
         o( x.み.parent, actor.rightHold);
     }
 
     ⏚ Ingest(){
-        ⤴ (Skip(nameof(Ingest))) yield ¦
+    ⒪
         actor.み.⫫ = シ.⫪;
         ∙ food = Ball( 0.15f, parent: actor.み );
-        yield ⮐ Complete( ⎚ actor.Ingest(food), 5f, 4 );
+        ⟾ Complete( ⎚ actor.Ingest(food), 5f);
         o( food ☰ ∅ );
     }
 
-    ⏚ Idle(){ yield ⮐ Run( ⎚ actor.Idle, 3, 3 ); }
-
-    ⏚ LookAt(){
-        ∙ x = CreateEmpty( メ.right * 2f );
-        //o( actor.transform.Look(x), 90f);
-        ㅇ didPlayRotationAnim = ✗;
-        //
-        Print($"Start @{Time.frameCount}");
-        ᆞ i; ⟳ (i = 0; i < 500; i++){
-            ∙ s = actor.LookAt(x);
-            didPlayRotationAnim |= NowPlaying("Walk");
-            o ( s.running );
-            ⤴ ( didPlayRotationAnim ∧ NowPlaying("Idle") ){
-                //rint("Exit loop because did play rot, now idle");
-                ¦
-            }
-            //rint($"It {i}");
-            ⟆
-        }
-        //rint($"Frame {Time.frameCount}");
-        //rint($"Did play rotation anim? {didPlayRotationAnim}");
-        //rint($"Angle {actor.transform.Look(x)}");
-        o( didPlayRotationAnim );
-        o( actor.み.Look(x) < 1f);
-        //rint($"Done in {Time.time:0.##}s, {i} frames.");
-        ⟆
+    ⏚ Idle(){
+        ⟾ Run( ⎚ actor.Idle, 3f);
     }
 
-    ⏚ Play(){
-        ∙ t0 = ⒯ ;
-        actor.み.⫫ = シ.⊢;
-        yield ⮐ Complete( ⎚ actor["Strike"], 5f, 2);
+    ⏚ LookAt(){
+        ∙ x = CreateEmpty( シ.⊢ * 2f );
+        ⟾ Run( ⎚ actor.LookAt(x), 2f);
+        o( actor.み.Look(x) < 1f);
     }
 
     ⏚ Push(){
-        ⤴ (Skip(nameof(Push))) yield ¦
+    ⒪
         ∙ block = Box(1f, 2f, 1.5f); block.《Rigidbody》;
-        yield ⮐ Complete( ⎚ actor.Push(block), 20f, 2);
+        ⟾ Complete( ⎚ actor.Push(block), 20f);
     }
 
     ⏚ Reach(){
-        ∙ x = CreateEmpty( メ.forward * 2f );
-        yield ⮐ Complete( ⎚ actor.Reach(x), 4f, 2);
+        ∙ x = CreateEmpty( シ.⫫ * 2f );
+        ⟾ Complete( ⎚ actor.Reach(x), 4f);
         o( actor.み.Dist(x) < 1f);
     }
 
     ⏚ Strike(){
         ∙ other = Other().み;
-        yield ⮐ Complete( ⎚ actor.Strike(other), 5f, 2);
+        ⟾ Complete( ⎚ actor.Strike(other), 5f);
     }
 
     ⏚ Tell(){
-        ⤴ (Skip(nameof(Tell))) yield ¦
+    ⒪
         ∙ other = Other().み;
-        yield ⮐ Complete( ⎚ actor.Tell(other, "Hello"), 4f, 2);
+        ⟾ Complete( ⎚ actor.Tell(other, "Hello"), 4f);
     }
 
     ⏚ Throw(){
-        ⤴ (Skip(nameof(Throw))) yield ¦
+    ⒪
         ∙ ball = Box(0f, 0f, 0.1f); ball.《Rigidbody》;
-        yield ⮐ Complete( ⎚ actor.Throw(ball, メ.right + メ.forward),
-                           4f, 2);
+        ⟾ Complete( ⎚ actor.Throw(ball, ⌢ シ(1, 0, 1)), 4f);
     }
 
     // --------------------------------------------------------------
 
     Actor Other(ㄹ name = "Bucks"){
-        ∙ x = ActorSetup.Setup(
-                      Create(ActorName, シ.⊢ * 2f), ActorSize).⧼Actor⧽;
-        x.name = name;
-        ⮐ x;
+        ∙ x = ActorSetup.Setup(Create(ActorName,
+                                      シ.⊢ * 2f), ActorSize).⧼Actor⧽;
+        xˮ = name; ⮐ x;
     }
-
-    ㅇ Skip(ㄹ test) → skip?.Contains(test) ?? ✗;
-
-    ㅇ NowPlaying(ㄹ anim) → actor.⧼AnimationDriver⧽.NowPlaying(anim);
-
-    // Query several indices?
-    ㅇ IsNext(ㄹ anim)
-        → actor.⧼Animator⧽.GetNextAnimatorStateInfo(0).IsName(anim);
 
 }}
