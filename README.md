@@ -10,8 +10,8 @@ The idea is to provide a concise foundation for learning about BT and Active Log
 
 ## Prerequisites
 
-- [Active Logic](https://assetstore.unity.com/packages/tools/ai/active-logic-151850)
-- [Howl](https://assetstore.unity.com/packages/tools/localization/howl-the-symbolic-notation-for-c-177081)
+- [Active Logic](https://assetstore.unity.com/packages/tools/ai/active-logic-151850) (v1.3 required, eta Nov. 2020)
+- [Howl](https://assetstore.unity.com/packages/tools/localization/howl-the-symbolic-notation-for-c-177081) (v1.1 required, eta Nov 2020)
 - [Basic motions](https://assetstore.unity.com/packages/3d/animations/basic-motions-free-pack-154271)
 - [Prop animations](https://assetstore.unity.com/packages/3d/animations/props-animations-10214)
 
