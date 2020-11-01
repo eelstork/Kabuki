@@ -32,6 +32,11 @@ public static class VectorExt{
         return θ;
     }
 
+    public static Vector3 RandomX_Z(float radius){
+        var p = Random.insideUnitCircle;
+        return new Vector3(p.x, 0, p.y) * radius;
+    }
+
     public static Vector3 Shift(this Vector3 u, int c){
         for (int i = 0; i < c; i++)
             u = new Vector3(u.z, u.x, u.y);

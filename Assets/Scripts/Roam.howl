@@ -1,0 +1,11 @@
+⊐ Active.Core; ⊐̥ Active.Core.status;
+⊐ UnityEngine;
+⊐ Activ.Kabuki; ⊐̥ Activ.Kabuki.VectorExt;
+
+‒ ○ Roam : Actor{
+
+    シ target; ‒ エ giz;
+
+    ⁺‒ ⑂ Step() → Reach(target) ∧ Do( target = ⦿˙ + RandomX_Z(5f) );
+
+}

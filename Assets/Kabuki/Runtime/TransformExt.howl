@@ -8,6 +8,9 @@
     ‒̥ シ Dir(⦿ エ x, エ y, ㅇ planar = ✗)
         → planar ? (y˙ - x˙).X_Z()¹ : (y˙ - x˙)¹;
 
+    ‒̥ シ Dir(⦿ エ x, メ y, ㅇ planar = ✗)
+        → planar ? (y - x˙).X_Z()¹ : (y - x˙)¹;
+
     ‒̥ ㅅ Dist(⦿ エ x, エ y) → メ.Distance(x˙, y˙);
 
     ‒̥ ㅅ Radius(⦿ エ x){
@@ -46,34 +49,46 @@
     ‒̥ ㅅ Look(⦿ エ x, エ y, ㅇ planar = ✓)
         → シ.Angle(x.forward, x.Dir(y, planar: planar));
 
-    ‒̥ ⑂ RotateTowards(⦿ エ θ, エ target, ㅅ speed, ㅅ μ = 0.1f){
-        シ u = θ.forward;
-        シ v = θ.Dir(target, planar: ✓);
-        ㅅ α = シ.Angle(u, v);
-        ⤴ (α < μ) ◇̠
-        θ.forward = メ.RotateTowards(u, v, 𝝇 ᐧ 𝛿𝚝 ᐧ ∠ʳ, 1f);
-        ☡̱
+    ‒̥ ⑂ RotateTowards(⦿ エ θ, エ ⧕, ㅅ speed, ㅅ μ = 0.1f){
+        シ u = θ.⫫, v = θ.Dir(⧕, planar: ✓);
+        ⮐ ( シ.Angle(u, v) < μ )  ? ◇
+           : Run( θ.⫫ = メ.RotateTowards(u, v, 𝝇 ᐧ 𝛿𝚝 ᐧ ∠ʳ, 1f) );
     }
 
-    ‒̥ ⑂ RotateTowards(⦿ エ θ, メ dir, ㅅ speed, ㅅ μ = 0.1f){
-        メ u = θ.forward;
+    ‒̥ ⑂ RotateTowards(⦿ エ θ, メ pos, ㅅ speed, ㅅ μ = 0.1f){
+        シ u = θ.forward, dir = θ.Dir(pos, planar: ✓);
         ㅅ α = シ.Angle(u, dir);
         ⤴ (α < μ) ◇̠
         θ.forward = シ.RotateTowards(u, dir, 𝝇 ᐧ 𝛿𝚝 ᐧ ∠ʳ, 1f);
         ☡̱
     }
 
+    ‒̥ ⑂ MoveTo(⦿ エ x, シ y, ㅅ speed){
+        ⤴ (x˙ ☰ y) ⮐ ◇;
+        ㅅ d = PlanarDist(x, y);
+        ㅅ δ = Mathf.Min(𝛿𝚝 ᐧ 𝝇, d);
+        ⮐ Run(x˙ += x.PlanarDir(y) ᐧ δ);
+    }
+
+    ‒̥ ⑂ MoveTowards(⦿ エ x, シ y, ㅅ dist, ㅅ speed)
+        → x.PlanarDist(y) < dist
+        ∨ Run( x˙ += x.PlanarDir(y) ᐧ 𝛿𝚝 ᐧ 𝝇 );
+
     ‒̥ ⑂ MoveTowards(⦿ エ x, エ y, ㅅ dist, ㅅ speed)
         → x.PlanarDist(y) < dist
-        ∨ Repeat( x˙ += x.PlanarDir(y) ᐧ 𝛿𝚝 ᐧ 𝝇 );
+        ∨ Run( x˙ += x.PlanarDir(y) ᐧ 𝛿𝚝 ᐧ 𝝇 );
 
-    ‒̥ ㅅ PlanarDist(⦿ エ x, エ y) → (y˙ - x˙).X_Z()❚;
+    ‒̥ ㅅ PlanarDist(⦿ エ x, シ y) → (y - x˙).X_Z()❚;
 
-    ‒̥ シ PlanarDir(⦿ エ x, エ y) → (y˙ - x˙).X_Z()¹;
+    ‒̥ ㅅ PlanarDist(⦿ エ x, エ y) → PlanarDist(x, y˙);
+
+    ‒̥ シ PlanarDir(⦿ エ x, シ y) → (y - x˙).X_Z()¹;
+
+    ‒̥ シ PlanarDir(⦿ エ x, エ y) → PlanarDir(x, y˙);
 
     // --------------------------------------------------------------
 
-    ∘ ▷ Do(⊡ x) { ⌽ }
-    ∘ ⑂ Repeat(⊡ x) { ☡̱ }
+    ∘ ⑂ Do(⊡ x) { ⌽ }
+    ∘ ⑂ Run(⊡ x) { ☡̱ }
 
 }}

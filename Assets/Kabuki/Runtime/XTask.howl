@@ -8,7 +8,7 @@ using Ex = System.Exception; ⊐ UnityEngine;
 
     ‒ ⨮ Play(ㄹ anim) → animDriver.Play(anim);
 
-    ‒ ⑂ Playing(ㄹ anim, ⑂ @while){
+    ‒ ⑂ Playing(ㄹ anim,  ⑂ @while){
         ⤴ (@while.running) Play(anim);
         ⮐ @while;
     }

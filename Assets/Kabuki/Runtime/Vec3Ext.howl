@@ -32,6 +32,11 @@
         ⮐ θ;
     }
 
+    ‒̥ シ RandomX_Z(ㅅ radius){
+        ∙ p = Random.insideUnitCircle;
+        ⮐ ⌢ シ(p.x, 0, p.y) * radius;
+    }
+
     ‒̥ シ Shift(⦿ シ u, ᆞ c){
         ⟳ (ᆞ i = 0; i < c; i++)
             u = ⌢ シ(u.z, u.x, u.y);

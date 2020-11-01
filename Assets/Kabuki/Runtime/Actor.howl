@@ -18,10 +18,12 @@
     ‒ ⑂ ⦿[ㄹ anim] → Play(anim)ʾ;
 
     ‒ ⑂ Face(エ ⧕, ㄹ anim = "Walk")
-        → ⸨ み.RotateTowards(⧕, rotationSpeed) ≫ ⦿[anim] ⸩;
+    → Playing(anim, み.RotateTowards(⧕, rotationSpeed));
 
-    ‒ ⑂ Face(シ dir, ㄹ anim = "Walk")
-        → Playing(anim, み.RotateTowards(dir, rotationSpeed));
+    //    → ⸨ み.RotateTowards(⧕, rotationSpeed) ≫ ⦿[anim] ⸩;
+
+    ‒ ⑂ Face(メ pos, ㄹ anim = "Walk")
+        → Playing(anim, み.RotateTowards(pos, rotationSpeed));
 
     ‒ ⑂ Give(エ ⧕, Actor recipient)
         → Reach(recipient.み)
@@ -29,11 +31,11 @@
         ∧ Present(⧕, recipient);
 
     ‒ ⑂ Grab(エ ⧕)
-        → (Has(⧕) ∨ Reach(⧕)) ∧ ⦿["Grab"] % After(0.5f)?[ Hold(⧕)ꜝ ];
+        → (Has(⧕) ∨ Reach(⧕)) ∧ ⦿["Grab"] % After(0.5f)?[ Hold(⧕) ];
 
     ‒ ⑂ Ingest(エ ⧕)
-        → Hold(⧕, allowNull: ✓, hand: "L")ꜝ
-        ∧ ⦿["Eat"] % After(1.2f) ? [ Destroy(⧕)ꜝ ];
+        → Hold(⧕, allowNull: ✓, hand: "L")
+        & ⦿["Eat"] % ( Wait(1.2f) ∧ Destroy(⧕) );
 
     ‒ ⑂ Idle → ⦿["Idle"];
 
@@ -43,8 +45,8 @@
     }
 
     ‒ ⑂ Push(エ ⧕)
-        → ❰Reach(⧕) ∧ PushingSetup()ꜝ ❱
-        ∧ ⦿["Push"] ∧ PushingTeardown()ꜝ ;
+        → ❰Reach(⧕) ∧ PushingSetup() ❱
+        ∧ ⦿["Push"] ∧ PushingTeardown() ;
 
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes
@@ -53,18 +55,22 @@
     ‒ ⑂ Strike(エ ⧕) → ❰Reach(⧕)❱ ∧ ⦿["Strike"];
 
     ‒ ⑂ Take()
-        → (other ≠ ∅) ∧ Face(other.み) ∧ ⦿["Take"]
-                      % After(0.5f)?[ Hold(gift)ꜝ ];
+    → (other ≠ ∅) ∧ Face(other.み) ∧ ⦿["Take"]
+                  % After(0.5f)?[ Hold(gift) ];
 
     ‒ ⑂ Tell(エ ⧕, ㄹ msg)
-        → ❰Reach(⧕)❱ ∧ ⧼SpeechBox⧽.SetText(msg) ∧ ⦿["Tell"];
+    → ❰Reach(⧕)❱ ∧ ⧼SpeechBox⧽.SetText(msg) ∧ ⦿["Tell"];
 
     ‒ ⑂ Throw(エ ⧕, シ dir)
-        → ❰Hold(⧕)ꜝ❱
-        ∧ Face(dir) ∧ ⦿["Throw"] * After(0.5f)? [ Impel(⧕, dir)ꜝ ];
+    → ❰Hold(⧕)❱
+    ∧ Face(dir) ∧ ⦿["Throw"] * After(0.5f)? [ Impel(⧕, dir) ];
 
     ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
-        → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
+    → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
+
+    ‒ ⑂ Reach(シ? ⧕) → ⧕.HasValue
+    ? Face(⧕ᖾ) ∧ Playing("Walk", み.MoveTo(⧕ᖾ, speed))
+    : ◇;
 
     // ==============================================================
 
@@ -100,12 +106,12 @@
     }
 
     ⑂ Offer(エ ⧕, Actor recipient)
-        → Do(recipient.other = ⦿)ꜝ
-        ∧ Do(recipient.gift  = ⧕)ꜝ
-        ∧ (+(⑂)recipient.IsLookingAt(⦿))ʾ;
+        → Do(recipient.other = ⦿)
+        & Do(recipient.gift  = ⧕)
+        & (+(⑂)recipient.IsLookingAt(⦿))ʾ;
 
     ⑂ Present(エ ⧕, Actor recipient)
-        → (recipient.Has(⧕) ∨ Hold(⧕)ꜝ) ∧ ⦿["Give"];
+        → (recipient.Has(⧕) ∨ Hold(⧕)) ∧ ⦿["Give"];
 
     ▷ PushingSetup(){
         UseRootMotion(✓);
