@@ -108,7 +108,7 @@ public class Actor : Activ.Kabuki.XTask{
     status Offer(Transform that, Actor recipient)
         => Do(recipient.other = this)
         & Do(recipient.gift  = that)
-        & (+(status)recipient.IsLookingAt(this)).due;
+        & +(status)recipient.IsLookingAt(this);
 
     status Present(Transform that, Actor recipient)
         => (recipient.Has(that) || Hold(that)) && this["Give"];

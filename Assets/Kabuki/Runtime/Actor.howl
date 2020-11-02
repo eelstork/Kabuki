@@ -108,7 +108,7 @@
     ⑂ Offer(エ ⧕, Actor recipient)
         → Do(recipient.other = ⦿)
         & Do(recipient.gift  = ⧕)
-        & (+(⑂)recipient.IsLookingAt(⦿))ʾ;
+        & +(⑂)recipient.IsLookingAt(⦿);
 
     ⑂ Present(エ ⧕, Actor recipient)
         → (recipient.Has(⧕) ∨ Hold(⧕)) ∧ ⦿["Give"];

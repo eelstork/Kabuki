@@ -1,5 +1,33 @@
 # Kabuki dev notes
 
+## Sequences vs Selectors
+
+There's a couple of things that we're going to cover here:
+
+2) Getting to the bottom of the `Once` RoR issue.
+1) Why selectors are a better default than sequences.
+3) Delegation
+
+## Is `Once` broken?
+
+The `Once` decorator does not behave *exactly* like the memory node described in Ögren et al.; specifically, Once does not reset "when exiting the parent composite. It resets upon finding a temporal discontinuity. As a result, placed in first position in a stateless composite, `Once` does not reset when looping over:
+
+`Once(A) && B && C` does not reset on loop
+
+`A && Once(B) && C` resets on loop, unless A completes immediately.
+
+This may be considered a bug. There's a couple of ways this can be fixed, however probably not without adding an API. The best candidate is this:
+
+`A && Once(B) && C && @break()`
+
+In this case, what we may offer is a function level, explicit *reset*; this cannot be implemented right away. Currently decorators hash on a line basis. So we'll have to also store them on a member basis (via diagnostics) to implement this feature.
+
+An alternative here is the standard, ordered `Sequence`; however no luck here (could be a genuine 'bug').
+
+## Selectors are better than sequences
+
+Based on what 
+
 ## Roaming - failing gracefully
 
 When we implemented roaming we decided to condone failures - such as when avoidance is not enough, or the target is inside another object.
