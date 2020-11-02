@@ -47,27 +47,25 @@ public static class TransformExt{
     }
 
     public static float Look(this Transform x, Transform y, bool planar = true)
-        => Vector3.Angle(x.forward, x.Dir(y, planar: planar));
-
-    public static status RotateTowards(this Transform θ, Transform that, float speed, float μ = 0.1f){
-        Vector3 u = θ.forward, v = θ.Dir(that, planar: true);
-        return ( Vector3.Angle(u, v) < μ )  ? done()
-           : Run( θ.forward = Vector3.RotateTowards(u, v, speed * Time.deltaTime * Mathf.Deg2Rad, 1f) );
-    }
-
-    public static status RotateTowards(this Transform θ, Vector3 pos, float speed, float μ = 0.1f){
-        Vector3 u = θ.forward, dir = θ.Dir(pos, planar: true);
-        float α = Vector3.Angle(u, dir);
-        if (α < μ) return done();
-        θ.forward = Vector3.RotateTowards(u, dir, speed * Time.deltaTime * Mathf.Deg2Rad, 1f);
-        return cont();
-    }
+    => Vector3.Angle(x.forward, x.Dir(y, planar: planar));
 
     public static status MoveTo(this Transform x, Vector3 y, float speed){
         if (x.transform.position == y) return done();
         float d = PlanarDist(x, y);
         float δ = Mathf.Min(Time.deltaTime * speed, d);
-        return Run(x.transform.position += x.PlanarDir(y) * δ);
+        Vector3 u = x.PlanarDir(y);
+        return Run(x.transform.position += u * δ);
+    }
+
+    public static status MoveToWithAvoidance(this Transform x, Vector3 y, float speed){
+        if (x.transform.position == y) return done();
+        float d = PlanarDist(x, y);
+        float δ = Mathf.Min(Time.deltaTime * speed, d);
+        Vector3  u0 = x.PlanarDir(y);
+        Vector3? u1 = Avoidance.Clear(x.transform.position, u0, maxDistance: d);
+        if (u1 == null) return fail();
+        x.forward = Vector3.Lerp(x.forward, u1.Value, 0.1f);
+        return Run(x.transform.position += u1.Value * δ);
     }
 
     public static status MoveTowards(this Transform x, Vector3 y, float dist, float speed)
@@ -85,6 +83,25 @@ public static class TransformExt{
     public static Vector3 PlanarDir(this Transform x, Vector3 y) => (y - x.transform.position).X_Z().normalized;
 
     public static Vector3 PlanarDir(this Transform x, Transform y) => PlanarDir(x, y.transform.position);
+
+    public static status RotateTowards(this Transform θ, Transform that, float speed, float μ = 0.1f){
+        Vector3 u = θ.forward, v = θ.Dir(that, planar: true);
+        return ( Vector3.Angle(u, v) < μ )  ? done()
+           : Run( θ.forward = Vector3.RotateTowards(u, v, speed * Time.deltaTime * Mathf.Deg2Rad, 1f) );
+    }
+
+    public static status RotateTowards(this Transform θ, Vector3 pos, float speed, float μ = 0.1f){
+        Vector3 u = θ.forward, dir = θ.Dir(pos, planar: true);
+        float α = Vector3.Angle(u, dir);
+        if (α < μ) return done();
+        θ.forward = Vector3.RotateTowards(u, dir, speed * Time.deltaTime * Mathf.Deg2Rad, 1f);
+        return cont();
+    }
+
+    static action Log(string arg){
+        Debug.Log(arg + $" @{Time.frameCount}");
+        return @void();
+    }
 
     // --------------------------------------------------------------
 

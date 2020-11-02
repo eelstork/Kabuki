@@ -1,5 +1,74 @@
 # Kabuki dev notes
 
+## Roaming - failing gracefully
+
+When we implemented roaming we decided to condone failures - such as when avoidance is not enough, or the target is inside another object.
+
+We'd like to do something more colorful than just picking another target.
+
+## Avoidance
+
+Essentially, avoidance provides a function that transforms a raw direction vector into a corrected, clear LOS (line of sight) vector.
+
+Candidly, we integrate this with a `MoveTo` function:
+
+```
+‒̥ ⑂ MoveToWithAvoidance(⦿ エ x, メ y, ㅅ speed){
+    ⤴ (x˙ ☰ y) ◇̠
+    ㅅ d = PlanarDist(x, y);
+    ㅅ δ = Mathf.Min(𝛿𝚝 ᐧ 𝝇, d);
+    シ  u0 = x.PlanarDir(y);
+    シ? u1 = Avoidance.Clear(x˙, u0, maxDistance: d);
+    ⤴ (u1 ☰ ∅) ⮐ ■;
+    ⮐ Run(x˙ += u1 ᐧ δ);
+}
+```
+
+The result is actually, well. Fairly disappointing. Kind of works, but we notice two things at first:
+- The agent are *slowing down*.
+- The rotation is wrong
+
+The issue originates part upstream (in the `Reach`) function, part here, in our first integration.
+- Correcting the direction vector means the actor are no longer facing towards the target.
+- The actor's orientation also does not match the direction they are moving towards.
+
+As to why this causes the actor to slow down, that's because `Reach` is implemented like this:
+
+```
+‒ ⑂ Reach(シ? ⧕) → ⧕.HasValue
+? Face(⧕ᖾ) ∧ Playing("Walk", み.MoveToWithAvoidance(⧕ᖾ, speed))
+: ◇;
+```
+
+If, then, the orientation of the actor is lost, `Face()` shorts locomotion until orientation is corrected, and we're effectively moving at half speed, every odd frame (tested).
+
+We could use a `Once` node (`Once(Face) && MoveTo`). The problem though, is that `Once` resets on discontinuity, and there is no discontinuity in looping the `Roam` task:
+
+```
+⁺‒ ⑂ Step() → Reach(target) ∧ Do( giz˙ = target = Target() );
+```
+
+Although a bit clunky, we're going to fix this in a simple way:
+
+```
+⁺‒ ⑂ Step(){
+    ⤴ (target.HasValue) ⮐ Reach(target) ∧ Do( target = ∅ );
+    ⤵ {
+        target = Target();
+        giz˙ = targetᖾ; ☡̱
+    }
+```
+
+An issue which arises, is obstacle avoidance may fail. For now we'll just condone this failure:
+
+```
+(~Reach(target))ʾ
+```
+
+Now that this is out of the way let's fix the orientation of the bird while moving. First we just align the transform with the walking direction `x.⫫ = u1ᖾ`; but the avoidance vector does not vary smoothly, so `シ.Lerp(x.⫫, u1ᖾ, 0.1f)`.
+
+Note we only smooth the orientation, not position. This is not perfect, but if we start smoothing positions that will open edge cases where avoidance does not work; leaving that for later.
+
 ## Legacy animation 2
 
 If we want smoothly chained animations, we cannot wait

@@ -1,0 +1,10 @@
+⊐ UnityEngine;
+⊐ Active.Core; ⊐̥ Active.Core.status; ⊐ Activ.Kabuki;
+
+‒ ○ Tracker : Actor{
+
+    ‒ エ giz;
+
+    ⁺‒ ⑂ Step() → Reach(giz˙);
+
+}

@@ -47,27 +47,25 @@
     }
 
     ‒̥ ㅅ Look(⦿ エ x, エ y, ㅇ planar = ✓)
-        → シ.Angle(x.forward, x.Dir(y, planar: planar));
+    → シ.Angle(x.forward, x.Dir(y, planar: planar));
 
-    ‒̥ ⑂ RotateTowards(⦿ エ θ, エ ⧕, ㅅ speed, ㅅ μ = 0.1f){
-        シ u = θ.⫫, v = θ.Dir(⧕, planar: ✓);
-        ⮐ ( シ.Angle(u, v) < μ )  ? ◇
-           : Run( θ.⫫ = メ.RotateTowards(u, v, 𝝇 ᐧ 𝛿𝚝 ᐧ ∠ʳ, 1f) );
-    }
-
-    ‒̥ ⑂ RotateTowards(⦿ エ θ, メ pos, ㅅ speed, ㅅ μ = 0.1f){
-        シ u = θ.forward, dir = θ.Dir(pos, planar: ✓);
-        ㅅ α = シ.Angle(u, dir);
-        ⤴ (α < μ) ◇̠
-        θ.forward = シ.RotateTowards(u, dir, 𝝇 ᐧ 𝛿𝚝 ᐧ ∠ʳ, 1f);
-        ☡̱
-    }
-
-    ‒̥ ⑂ MoveTo(⦿ エ x, シ y, ㅅ speed){
-        ⤴ (x˙ ☰ y) ⮐ ◇;
+    ‒̥ ⑂ MoveTo(⦿ エ x, メ y, ㅅ speed){
+        ⤴ (x˙ ☰ y) ◇̠
         ㅅ d = PlanarDist(x, y);
         ㅅ δ = Mathf.Min(𝛿𝚝 ᐧ 𝝇, d);
-        ⮐ Run(x˙ += x.PlanarDir(y) ᐧ δ);
+        シ u = x.PlanarDir(y);
+        ⮐ Run(x˙ += u ᐧ δ);
+    }
+
+    ‒̥ ⑂ MoveToWithAvoidance(⦿ エ x, メ y, ㅅ speed){
+        ⤴ (x˙ ☰ y) ◇̠
+        ㅅ d = PlanarDist(x, y);
+        ㅅ δ = Mathf.Min(𝛿𝚝 ᐧ 𝝇, d);
+        シ  u0 = x.PlanarDir(y);
+        シ? u1 = Avoidance.Clear(x˙, u0, maxDistance: d);
+        ⤴ (u1 ☰ ∅) ⮐ ■;
+        x.⫫ = シ.Lerp(x.⫫, u1ᖾ, 0.1f);
+        ⮐ Run(x˙ += u1ᖾ ᐧ δ);
     }
 
     ‒̥ ⑂ MoveTowards(⦿ エ x, シ y, ㅅ dist, ㅅ speed)
@@ -85,6 +83,25 @@
     ‒̥ シ PlanarDir(⦿ エ x, シ y) → (y - x˙).X_Z()¹;
 
     ‒̥ シ PlanarDir(⦿ エ x, エ y) → PlanarDir(x, y˙);
+
+    ‒̥ ⑂ RotateTowards(⦿ エ θ, エ ⧕, ㅅ speed, ㅅ μ = 0.1f){
+        シ u = θ.⫫, v = θ.Dir(⧕, planar: ✓);
+        ⮐ ( シ.Angle(u, v) < μ )  ? ◇
+           : Run( θ.⫫ = メ.RotateTowards(u, v, 𝝇 ᐧ 𝛿𝚝 ᐧ ∠ʳ, 1f) );
+    }
+
+    ‒̥ ⑂ RotateTowards(⦿ エ θ, メ pos, ㅅ speed, ㅅ μ = 0.1f){
+        シ u = θ.forward, dir = θ.Dir(pos, planar: ✓);
+        ㅅ α = シ.Angle(u, dir);
+        ⤴ (α < μ) ◇̠
+        θ.forward = シ.RotateTowards(u, dir, 𝝇 ᐧ 𝛿𝚝 ᐧ ∠ʳ, 1f);
+        ☡̱
+    }
+
+    ∘ ▷ Log(ㄹ arg){
+        Debug.Log(arg + $" @{Time.frameCount}");
+        ⌽
+    }
 
     // --------------------------------------------------------------
 

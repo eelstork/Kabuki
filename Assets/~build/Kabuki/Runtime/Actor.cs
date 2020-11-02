@@ -48,6 +48,13 @@ public class Actor : Activ.Kabuki.XTask{
         => Once()?[Reach(that) && PushingSetup() ]
         && this["Push"] && PushingTeardown() ;
 
+    public status Reach(Transform that, float dist = 1f)
+    => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
+
+    public status Reach(Vector3? that) => that.HasValue
+    ? Once()?[Face(that .Value)] && Playing("Walk", transform.MoveToWithAvoidance(that .Value, speed))
+    : done();
+
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes
     // stop half-way and repeat. Solution may be fix the "Reach"
@@ -64,13 +71,6 @@ public class Actor : Activ.Kabuki.XTask{
     public status Throw(Transform that, Vector3 dir)
     => Once()?[Hold(that)]
     && Face(dir) && this["Throw"] * After(0.5f)? [ Impel(that, dir) ];
-
-    public status Reach(Transform that, float dist = 1f)
-    => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
-
-    public status Reach(Vector3? that) => that.HasValue
-    ? Face(that .Value) && Playing("Walk", transform.MoveTo(that .Value, speed))
-    : done();
 
     // ==============================================================
 

@@ -4,8 +4,20 @@
 
 ‒ ○ Roam : Actor{
 
-    シ target; ‒ エ giz;
+    ‒ ㅇ anchored = ✓;
+    ‒ シ origin   = シ.zero;
+    ‒ エ giz;
 
-    ⁺‒ ⑂ Step() → Reach(target) ∧ Do( target = ⦿˙ + RandomX_Z(5f) );
+    シ? target;
+
+    ⁺‒ ⑂ Step(){
+        ⤴ (target.HasValue) ⮐ (~ Reach(target))ʾ ∧ Do( target = ∅ );
+        ⤵ {
+            target = Target();
+            giz˙ = targetᖾ; ☡̱
+        }
+    }
+
+    メ Target ⎚ RandomX_Z(15f) + (anchored ? origin : ⦿˙);
 
 }

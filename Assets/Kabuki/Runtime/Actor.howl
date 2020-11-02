@@ -48,6 +48,13 @@
         → ❰Reach(⧕) ∧ PushingSetup() ❱
         ∧ ⦿["Push"] ∧ PushingTeardown() ;
 
+    ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
+    → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
+
+    ‒ ⑂ Reach(シ? ⧕) → ⧕.HasValue
+    ? ❰Face(⧕ᖾ)❱ ∧ Playing("Walk", み.MoveToWithAvoidance(⧕ᖾ, speed))
+    : ◇;
+
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes
     // stop half-way and repeat. Solution may be fix the "Reach"
@@ -64,13 +71,6 @@
     ‒ ⑂ Throw(エ ⧕, シ dir)
     → ❰Hold(⧕)❱
     ∧ Face(dir) ∧ ⦿["Throw"] * After(0.5f)? [ Impel(⧕, dir) ];
-
-    ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
-    → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
-
-    ‒ ⑂ Reach(シ? ⧕) → ⧕.HasValue
-    ? Face(⧕ᖾ) ∧ Playing("Walk", み.MoveTo(⧕ᖾ, speed))
-    : ◇;
 
     // ==============================================================
 

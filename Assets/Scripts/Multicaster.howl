@@ -1,0 +1,42 @@
+⊐ UnityEngine;
+
+‒ ○ Multicaster : MonoBehaviour{
+
+    ‒ ㅅ maxAngle = 45;
+    ‒ ㅅ δ = 10;
+    ‒ ㅅ distance = 10f;
+
+    ┈ Update(){
+        ∙ u = FindClearLOS();
+        ⤴ (u.HasValue) Debug.DrawRay(⦿˙, uᖾ, Color.green);
+    }
+
+    シ? FindClearLOS(){
+        シ? ㄸ = ∅;
+        ⟳ (ㅅ i = 0 ; i < maxAngle; i += δ ){
+            シ a = ᇅ.AngleAxis(i, シ.⊥) * み.⫫ * distance;
+            シ b = ᇅ.AngleAxis(i, シ.⊤) * み.⫫ * distance;
+            ⤴ (HasClearLOS(a)){ ㄸ = ㄸ ?? a; }
+            ⤴ (HasClearLOS(b)){ ㄸ = ㄸ ?? b; }
+        }
+        ⮐ ㄸ;
+    }
+
+    ㅇ HasClearLOS(シ u){
+        メ? P = Cast(u, distance);
+        ⤴ (!P.HasValue){
+            Debug.DrawRay(⦿˙, u, Color.white); ㆑
+        }⤵ {
+            Debug.DrawLine(⦿˙, Pᖾ, Color.red); ⮐ ✗;
+        }
+    }
+
+    メ? Cast(シ u, ㅅ dist){
+        RaycastHit hit;
+        ⤴ (Physics.SphereCast(⦿˙, 0.5f, u, out hit, dist)){
+            //ebug.Log("Did hit " + hit.colliderˮ);
+            ⮐ hit.point;
+        } ⏂
+    }
+
+}
