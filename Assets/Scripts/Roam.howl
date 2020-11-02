@@ -10,14 +10,8 @@
 
     シ? target;
 
-    ⁺‒ ⑂ Step(){
-        ⤴ (target.HasValue) ⮐ (~ Reach(target))ʾ ∧ Do( target = ∅ );
-        ⤵ {
-            target = Target();
-            giz˙ = targetᖾ; ☡̱
-        }
-    }
-
-    メ Target ⎚ RandomX_Z(15f) + (anchored ? origin : ⦿˙);
+    ⁺‒ ⑂ Step() → (target.HasValue)
+    ? (Reach(target) ∨ ⦿["Flail"]) ∧ Do( target = ∅ )
+    : Do( target = giz˙ = RandomX_Z(15f) + (anchored ? origin : ⦿˙));
 
 }

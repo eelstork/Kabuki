@@ -4,7 +4,17 @@
 
 When we implemented roaming we decided to condone failures - such as when avoidance is not enough, or the target is inside another object.
 
-We'd like to do something more colorful than just picking another target.
+We'd like to do something more colorful than just picking another target. Let's have the raptor flail when stuck. This is a simple change; before:
+
+```
+⮐ (~ Reach(target))ʾ ∧ Do( target = ∅ );
+```
+
+After:
+
+```
+⮐ (Reach(target) ∨ ⦿["Flail"]) ∧ Do( target = ∅ );
+```
 
 ## Avoidance
 
