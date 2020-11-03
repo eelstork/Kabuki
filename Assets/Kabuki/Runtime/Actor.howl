@@ -52,9 +52,11 @@
     ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
         → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
 
-    ‒ ⑂ Reach(シ? ⧕) → !⧕.HasValue ? ◇
-        : ❰Face(⧕ᖾ)❱ ∧ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇 )
-                                        ?? み.MoveTo(⧕ᖾ, 𝝇 ));
+    ‒ ⑂ Reach(シ? ⧕) → !⧕.HasValue ? ◇ : Sequence()[
+        and ? Face(⧕ᖾ) :
+        and ? Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇 )
+                              ?? み.MoveTo(⧕ᖾ    , 𝝇 )) : reset
+    ];
 
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes

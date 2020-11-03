@@ -12,9 +12,16 @@ public class Roam : Actor{
 
     void Start () => loco = new Locomotion();
 
-    override public status Step() => (target.HasValue)
-    ? (Eat(target) || this["Flail"]) && Do( target = null )
-    : Do( target = giz.transform.position = RandomX_Z(15f) + (anchored ? origin : this .transform.position));
+    override public status Step() => ~Reach(target) && Target();
+
+    //⁺‒ ⑂ Step() → (target.HasValue)
+    //? (Eat(target) ∨ ⦿["Flail"]) ∧ Do( target = ∅ )
+    //: Do( target = giz˙ = RandomX_Z(15f) + (anchored ? origin : ⦿˙));
+
+    action Target(){
+         target = giz.transform.position = RandomX_Z(15f) + (anchored ? origin : this .transform.position);
+         return @void();
+    }
 
     status Eat(Vector3? target) =>  Reach(target) && this["Eat"];
 

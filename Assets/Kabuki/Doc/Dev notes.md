@@ -1,6 +1,41 @@
 # Kabuki dev notes
 
-## Animation placeholders
+## Back to ordered sequences
+
+My conclusion for now is that until a `@break` statement can be implemented, ordered sequences should be used instead.
+
+Well, a quick test finds no fault with ordered sequences.
+
+In `loop` mode a sequence does not complete, and the raptor will aim towards the first target, then walk in place.
+In fact this should be expected. `loop` ensures that the sequence will *never* return `done`... does it?
+
+So what if we run in `end` mode?
+Then we see the other symptom, where the target once reached, starts blinking all over the map.
+
+Let's run through this step by step.
+
+`Sequence()` returns the `iterator` associated with a stored sequence.
+Indeed, the sequence class itself only stores a `SeqIterator`.
+`SeqIterator` is a kind of `Iterator`; it maintains the iterative node index `i`. That is NOT indexing the current task, it is only used to traverse the ternary structure.
+
+When `end` is called onto `UTask` (UTaskComposites.cs), the *current* `iterator` is retrieved. Now that's because a `UTask` only refers ONE current iterator at any time (not thread safe), and said `iterator` is nulled (no longer current, so we null the reference). This is *not* trying to GC the iterator. It's only saying "end of composite, the iterator is no longer current".
+
+Then via `SeqIterator.end`, the status +2 (overdone) is returned.
+
+Why +2? That's because control then re-accesses the SAME iterator through `this[in status x]` and this will then return the (-x) status value. So:
+- Where a subtask finishes it returns `done`, and because the iterator may run more tasks, the status must be `cont`.
+- Where the `end` statement is encountered, we return `done + 1` and this becomes `done`; the `κ.index` value is not modified.
+- Where the `loop` statement is encountered, we return `done` and this becomes `cont`; the `κ.index` value is set to -1.
+
+As to said `κ`, that is the `Composite` object, and the `index` value represents the current task.
+
+So uhm, that settles the case:
+- in `loop` mode we never get a `done` signal. Cause looping. The ordered sequence resets, but the caller doesn't know that.
+- in `end` mode we do get a `done` signal. However the ordered sequence is NOT reset, so it won't ever re-run.
+
+This is a design issue. What's happening here is the client want to loop-over, but they also want to process the `done` signal.
+
+## Animation placeholder
 
 If we look at the raptor, it is lacking an "eat" animation. Although we can duplicate another animation, this is not informative.
 Let's just see how playing a non-existent state fails. And, well, that creates an error but no exception.

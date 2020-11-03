@@ -52,9 +52,11 @@ public class Actor : Activ.Kabuki.XTask{
     public status Reach(Transform that, float dist = 1f)
         => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
 
-    public status Reach(Vector3? that) => !that.HasValue ? done()
-        : Once()?[Face(that .Value)] && Playing("Walk", loco?.MoveTo(transform, that .Value, speed )
-                                        ?? transform.MoveTo(that .Value, speed ));
+    public status Reach(Vector3? that) => !that.HasValue ? done() : Sequence()[
+        and ? Face(that .Value) :
+        and ? Playing("Walk", loco?.MoveTo(transform, that .Value, speed )
+                              ?? transform.MoveTo(that .Value    , speed )) : reset
+    ];
 
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes
