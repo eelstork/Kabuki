@@ -12,17 +12,11 @@
 
     ┈ Start ⎚ loco = ⌢ Locomotion();
 
-    ⁺‒ ⑂ Step() → ~Reach(target) ∧ Target();
+    ⁺‒ ⑂ Step() → (Reach(target) ∨ ⦿["Flail"]) ∧ Retarget();
 
-    //⁺‒ ⑂ Step() → (target.HasValue)
-    //? (Eat(target) ∨ ⦿["Flail"]) ∧ Do( target = ∅ )
-    //: Do( target = giz˙ = RandomX_Z(15f) + (anchored ? origin : ⦿˙));
+    ▷ Retarget()
+    { target = giz˙ = RandomX_Z(15f) + (anchored ? origin : ⦿˙); ⌽ }
 
-    ▷ Target(){
-         target = giz˙ = RandomX_Z(15f) + (anchored ? origin : ⦿˙);
-         ⌽
-    }
-
-    ⑂ Eat(シ? target) →  Reach(target) ∧ ⦿["Eat"];
+    //⑂ Eat(シ? target) → Reach(target) ∧ ⦿["Eat"];
 
 }
