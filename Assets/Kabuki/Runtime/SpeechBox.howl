@@ -1,4 +1,5 @@
 ⊐ UnityEngine; ⊐ UnityEngine.UI; ⊐ Active.Core;
+⊐̥ Active.Core.status;
 
 ‒ ○ SpeechBox : MonoBehaviour{
 
@@ -7,24 +8,36 @@
     ∘ エ canvas;  ▰ エ ui;  ▰ ㄹ text = ∅;  ▰ ㅅ stamp;
 
     ‒ ⑂ SetText(ㄹ arg, ㅅ? lapse = ∅){
-        ⤴ (arg ☰ text) ⮐ ⑂.◇;
         duration = lapse ?? duration;
-        text = arg;  stamp = Time.time + duration;  ⮐ ⑂.◇;
+        ⤴ (arg ≠ text){
+            text = arg;  stamp = ⒯ + duration;
+        } ◇̠
     }
 
     ┈ Update(){
-        ⤴ (text ☰ ∅ ∨ stamp < Time.time)
-        { text = ∅; ⤴ (ui) ui.gameObject.SetActive(✗); ⮐; }
         ⤴ (!ui) CreateUI();
-        ui.GetChild(0).⧼Text⧽.text = text;
-        ui.position = Camera.main
+        ⤴ ( ⒯ > stamp) text = ∅;
+        ⤴ (ui.gameObject.activeInHierarchy ∧ text ☰ ∅)
+        {
+            text = ∅;
+            ⤴ (ui) ui.gameObject.SetActive(✗);
+            ⮐ ;
+        }
+        ⤴ (text ≠ ∅){
+            ui.gameObject.SetActive(✓);
+            ui.GetChild(0).⧼Text⧽.text = text;
+            ui.position = Camera.main
                  .WorldToScreenPoint(transform.position + メ.up * 2 );
+        }
     }
+
+    ┈ Print(ㄹ arg) → Debug.Log($"{arg} @{Time.frameCount}");
 
     ┈ CreateUI(){
         ui = Instantiate(Resources.Load<エ>("SpeechBox"));
-        ⤴ (!canvas){ ∙ go = ロ.Find("Canvas");
-                     ⤴ (go) canvas = go.み;
+        ⤴ (!canvas){
+            ∙ go = ロ.Find("Canvas");
+            ⤴ (go) canvas = go.み;
         }
         ⤴ (!canvas) canvas = Instantiate(Resources.Load<エ>("Canvas"));
         ui.SetParent(canvas);

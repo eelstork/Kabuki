@@ -14,7 +14,6 @@ public static class ActorSetup{
             actor.θ.Find("hand", "r"),
             actor.θ.Find("hand", "l")
         };
-        actor.gameObject.AddComponent<SpeechBox>();
         return go.transform;
     }
 

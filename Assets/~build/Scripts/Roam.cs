@@ -10,8 +10,12 @@ public class Roam : Actor{
 
     Vector3? target;
 
+    void Start () => loco = new Locomotion();
+
     override public status Step() => (target.HasValue)
-    ? (Reach(target) || this["Flail"]) && Do( target = null )
+    ? (Eat(target) || this["Flail"]) && Do( target = null )
     : Do( target = giz.transform.position = RandomX_Z(15f) + (anchored ? origin : this .transform.position));
+
+    status Eat(Vector3? target) =>  Reach(target) && this["Eat"];
 
 }

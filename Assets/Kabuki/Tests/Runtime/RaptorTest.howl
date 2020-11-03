@@ -8,7 +8,7 @@
     ⁺◠ ㄹ ActorName → "Raptor"; ⁺◠ ㅅ ActorSize → 20f;
 
     ⁺◠ ㄹ[] skip → ⌢ ㄹ[]
-    { "Give_accept", "Grab", "Ingest", "Push", "Tell", "Throw" };
+    { "Give_accept", "Grab", "Push", "Tell", "Throw" };
 
     // Length: 0.792 + 1 = 1.792
     // With cross-fade animations complete earlier

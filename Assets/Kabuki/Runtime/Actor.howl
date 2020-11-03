@@ -10,17 +10,18 @@
     ‒ エ[] pushingBones;      // contact points for pushing
     ‒ Actor other;           // for give/take interaction
     ‒ エ gift;
+    ‒ Locomotion loco = ∅;
 
     // --------------------------------------------------------------
 
     ‒ ⑂ ⦿[ㄹ gesture, エ ⧕] → Face(⧕) ∧ ⦿[gesture];
 
-    ‒ ⑂ ⦿[ㄹ anim] → Play(anim)ʾ;
+    ‒ ⑂ ⦿[ㄹ anim] → animDriver.Exists(anim)
+        ? Play(anim)ʾ
+        : Wait(1f) % Play("Idle")ʾ % speechBox.SetText(anim);
 
     ‒ ⑂ Face(エ ⧕, ㄹ anim = "Walk")
-    → Playing(anim, み.RotateTowards(⧕, rotationSpeed));
-
-    //    → ⸨ み.RotateTowards(⧕, rotationSpeed) ≫ ⦿[anim] ⸩;
+        → Playing(anim, み.RotateTowards(⧕, rotationSpeed));
 
     ‒ ⑂ Face(メ pos, ㄹ anim = "Walk")
         → Playing(anim, み.RotateTowards(pos, rotationSpeed));
@@ -49,11 +50,11 @@
         ∧ ⦿["Push"] ∧ PushingTeardown() ;
 
     ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
-    → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
+        → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
 
-    ‒ ⑂ Reach(シ? ⧕) → ⧕.HasValue
-    ? ❰Face(⧕ᖾ)❱ ∧ Playing("Walk", み.MoveToWithAvoidance(⧕ᖾ, speed))
-    : ◇;
+    ‒ ⑂ Reach(シ? ⧕) → !⧕.HasValue ? ◇
+        : ❰Face(⧕ᖾ)❱ ∧ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇 )
+                                        ?? み.MoveTo(⧕ᖾ, 𝝇 ));
 
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes
@@ -62,15 +63,15 @@
     ‒ ⑂ Strike(エ ⧕) → ❰Reach(⧕)❱ ∧ ⦿["Strike"];
 
     ‒ ⑂ Take()
-    → (other ≠ ∅) ∧ Face(other.み) ∧ ⦿["Take"]
-                  % After(0.5f)?[ Hold(gift) ];
+        → (other ≠ ∅) ∧ Face(other.み) ∧ ⦿["Take"]
+                      % After(0.5f)?[ Hold(gift) ];
 
     ‒ ⑂ Tell(エ ⧕, ㄹ msg)
-    → ❰Reach(⧕)❱ ∧ ⧼SpeechBox⧽.SetText(msg) ∧ ⦿["Tell"];
+        → ❰Reach(⧕)❱ ∧ speechBox.SetText(msg) ∧ ⦿["Tell"];
 
     ‒ ⑂ Throw(エ ⧕, シ dir)
-    → ❰Hold(⧕)❱
-    ∧ Face(dir) ∧ ⦿["Throw"] * After(0.5f)? [ Impel(⧕, dir) ];
+        → ❰Hold(⧕)❱
+        ∧ Face(dir) ∧ ⦿["Throw"] * After(0.5f)? [ Impel(⧕, dir) ];
 
     // ==============================================================
 
@@ -139,5 +140,7 @@
         sum /= count;
         ⮐ sum;
     }
+
+    SpeechBox speechBox → ⧼SpeechBox⧽ ?? 《SpeechBox》;
 
 }}

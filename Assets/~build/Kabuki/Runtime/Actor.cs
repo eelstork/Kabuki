@@ -10,17 +10,18 @@ public class Actor : Activ.Kabuki.XTask{
     public Transform[] pushingBones;      // contact points for pushing
     public Actor other;           // for give/take interaction
     public Transform gift;
+    public Locomotion loco = null;
 
     // --------------------------------------------------------------
 
     public status this[string gesture, Transform that] => Face(that) && this[gesture];
 
-    public status this[string anim] => Play(anim).due;
+    public status this[string anim] => animDriver.Exists(anim)
+        ? Play(anim).due
+        : Wait(1f) % Play("Idle").due % speechBox.SetText(anim);
 
     public status Face(Transform that, string anim = "Walk")
-    => Playing(anim, transform.RotateTowards(that, rotationSpeed));
-
-    //    → ⸨ み.RotateTowards(⧕, rotationSpeed) ≫ ⦿[anim] ⸩;
+        => Playing(anim, transform.RotateTowards(that, rotationSpeed));
 
     public status Face(Vector3 pos, string anim = "Walk")
         => Playing(anim, transform.RotateTowards(pos, rotationSpeed));
@@ -49,11 +50,11 @@ public class Actor : Activ.Kabuki.XTask{
         && this["Push"] && PushingTeardown() ;
 
     public status Reach(Transform that, float dist = 1f)
-    => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
+        => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
 
-    public status Reach(Vector3? that) => that.HasValue
-    ? Once()?[Face(that .Value)] && Playing("Walk", transform.MoveToWithAvoidance(that .Value, speed))
-    : done();
+    public status Reach(Vector3? that) => !that.HasValue ? done()
+        : Once()?[Face(that .Value)] && Playing("Walk", loco?.MoveTo(transform, that .Value, speed )
+                                        ?? transform.MoveTo(that .Value, speed ));
 
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes
@@ -62,15 +63,15 @@ public class Actor : Activ.Kabuki.XTask{
     public status Strike(Transform that) => Once()?[Reach(that)] && this["Strike"];
 
     public status Take()
-    => (other != null) && Face(other.transform) && this["Take"]
-                  % After(0.5f)?[ Hold(gift) ];
+        => (other != null) && Face(other.transform) && this["Take"]
+                      % After(0.5f)?[ Hold(gift) ];
 
     public status Tell(Transform that, string msg)
-    => Once()?[Reach(that)] && GetComponent<SpeechBox>().SetText(msg) && this["Tell"];
+        => Once()?[Reach(that)] && speechBox.SetText(msg) && this["Tell"];
 
     public status Throw(Transform that, Vector3 dir)
-    => Once()?[Hold(that)]
-    && Face(dir) && this["Throw"] * After(0.5f)? [ Impel(that, dir) ];
+        => Once()?[Hold(that)]
+        && Face(dir) && this["Throw"] * After(0.5f)? [ Impel(that, dir) ];
 
     // ==============================================================
 
@@ -139,5 +140,7 @@ public class Actor : Activ.Kabuki.XTask{
         sum /= count;
         return sum;
     }
+
+    SpeechBox speechBox => GetComponent<SpeechBox>() ?? gameObject.AddComponent<SpeechBox>();
 
 }}

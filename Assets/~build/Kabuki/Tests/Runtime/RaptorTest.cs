@@ -8,7 +8,7 @@ public class RaptorTest : ActorTest{
     override protected string ActorName => "Raptor"; override protected float ActorSize => 20f;
 
     override protected string[] skip => new string[]
-    { "Give_accept", "Grab", "Ingest", "Push", "Tell", "Throw" };
+    { "Give_accept", "Grab", "Push", "Tell", "Throw" };
 
     // Length: 0.792 + 1 = 1.792
     // With cross-fade animations complete earlier

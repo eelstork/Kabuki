@@ -1,0 +1,34 @@
+⊐ Ex = System.Exception;
+⊐ UnityEngine; ⊐̥ UnityEngine.Time; ⊐̥ UnityEngine.Mathf;
+⊐ Active.Core; ⊐̥ Active.Core.status;
+
+⊓ Activ.Kabuki{ ‒ ○ Locomotion{
+
+    ‒ ⑂ MoveTo(エ x, メ y, ㅅ speed){
+        ⤴ (x˙ ☰ y) ◇̠
+        ㅅ d = x.PlanarDist(y), δ = 𝛿𝚝 ᐧ 𝝇;
+        ⮐ (δ > d) ? Do( x˙ = y) : Move(x, x.PlanarDir(y), δ, d);
+    }
+
+    ‒ ⑂ MoveTowards(エ x, メ y, ㅅ dist, ㅅ speed){
+        ㅅ d = x.PlanarDist(y);
+        ⮐  (d < dist) ∨ Move(x, x.PlanarDir(y), 𝛿𝚝 ᐧ 𝝇, d);
+    }
+
+    ‒ ⑂ MoveTowards(エ x, エ y, ㅅ dist, ㅅ speed){
+        ㅅ d = x.PlanarDist(y);
+        ⮐  (d < dist) ∨ Move(x, x.PlanarDir(y), 𝛿𝚝 ᐧ 𝝇, d);
+    }
+
+    // --------------------------------------------------------------
+
+    ⑂ Move(エ み, シ u, ㅅ δ, ㅅ los){
+        シ? v = Avoidance.Clear(み˙, u, maxDistance: los);
+        ⤴ (v ☰ ∅) ⮐ ■;
+        み.⫫ = シ.Lerp(み.⫫, vᖾ, 0.1f);
+        ⮐ Run(み˙ += vᖾ ᐧ δ);
+    }
+
+    ∘ ⑂ Do(⊡ x) { ⌽ } ∘ ⑂ Run(⊡ x) { ☡̱ }
+
+}}

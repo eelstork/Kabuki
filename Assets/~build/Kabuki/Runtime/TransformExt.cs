@@ -57,17 +57,6 @@ public static class TransformExt{
         return Run(x.transform.position += u * δ);
     }
 
-    public static status MoveToWithAvoidance(this Transform x, Vector3 y, float speed){
-        if (x.transform.position == y) return done();
-        float d = PlanarDist(x, y);
-        float δ = Mathf.Min(Time.deltaTime * speed, d);
-        Vector3  u0 = x.PlanarDir(y);
-        Vector3? u1 = Avoidance.Clear(x.transform.position, u0, maxDistance: d);
-        if (u1 == null) return fail();
-        x.forward = Vector3.Lerp(x.forward, u1.Value, 0.1f);
-        return Run(x.transform.position += u1.Value * δ);
-    }
-
     public static status MoveTowards(this Transform x, Vector3 y, float dist, float speed)
         => x.PlanarDist(y) < dist
         || Run( x.transform.position += x.PlanarDir(y) * Time.deltaTime * speed );

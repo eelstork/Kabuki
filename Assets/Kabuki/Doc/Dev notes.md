@@ -1,5 +1,12 @@
 # Kabuki dev notes
 
+## Animation placeholders
+
+If we look at the raptor, it is lacking an "eat" animation. Although we can duplicate another animation, this is not informative.
+Let's just see how playing a non-existent state fails. And, well, that creates an error but no exception.
+
+With legacy animation, we can query a state to see if it actually exists. When the state does not exist, we display a text box instead; we also want to hold a default animation for a while.
+
 ## Sequences vs Selectors
 
 There's a couple of things that we're going to cover here:
@@ -22,11 +29,22 @@ This may be considered a bug. There's a couple of ways this can be fixed, howeve
 
 In this case, what we may offer is a function level, explicit *reset*; this cannot be implemented right away. Currently decorators hash on a line basis. So we'll have to also store them on a member basis (via diagnostics) to implement this feature.
 
-An alternative here is the standard, ordered `Sequence`; however no luck here (could be a genuine 'bug').
+An alternative here is the standard, ordered `Sequence`; however no luck here (real 'bug'?).
 
 ## Selectors are better than sequences
 
-Based on what 
+Based on what we've seen, selectors (teleoreactive form) should be used, if possible. The obstacle avoidance example shows why:
+
+```
+A && B  // works in v0.1
+A && B' // broken because B' conflicts with A
+```
+
+The problem is that placing A and B in a sequence creates hidden dependencies. Whenever adding another node, we need to check whether it might conflict with all prior nodes. This is perhaps enough hassle that only ordered sequences should be used.
+
+## Delegation
+
+For obstacle avoidance support, we hacked into the `TransformExt` class. Right here and then, that is fine. A delegation pattern, however, may be useful here.
 
 ## Roaming - failing gracefully
 
