@@ -133,7 +133,7 @@ public class PlayTest{
             ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.transform.localScale *= 12;
         }
-        Active.Core.Details.RoR.Enter(this, frame);
+        Active.Core.Details.RoR.Enter(this, frame, leniency: 8);
     }
 
     [TearDown] public void Teardown(){

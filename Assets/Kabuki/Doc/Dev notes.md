@@ -1,5 +1,33 @@
 # Kabuki dev notes
 
+## The failing placeholder animation
+
+Dunno about that. Fixed itself?
+
+## Ordered sequences... what else?
+
+Bizarrely, when we replace `Reach(target)` with
+`Reach(target) ∧ ⦿["Eat"]`, the raptor will get stuck on the "eat" action. Yea that is probably a bug.
+- Goes away when removing the `Wait` call in `this[anim]`.
+- Observed with both `Wait` and `Timeout()?[]`.
+
+The likely reason is temporal discontinuity so that's an `RoR` conflict... probably?
+
+This has to do with a bad interaction between RoR and ordered composites.
+Essentially, an ordered composite can only execute ONE task per frame.
+Stateless composites are greedy. For practical purposes they behave like a fallthrough case.
+In contrast with the ternary pattern, once the task check passes, later nodes are ignored.
+So with how `Reach` is now implemented, over-exercising inserts a delay. The delay is probably one frame.
+
+In this case, for practical purposes, switching the RoR offset from 1 to 5, or just 3... Yea for practical purposes, that fixes the issue.
+
+It doesn't *feel* safe but not sure I can offer anything better right now. Or rather, I arrived at a compromise, as follows:
+- When we traverse an ordered composite subtask, add +2 to RoR leniency.
+- When we enter the RoR context, -1 to leniency.
+- Keep leniency in the +1 - MAX range, where MAX is a small value (using 8)
+
+I'd rather have something that works than not.
+
 ## Back to ordered sequences
 
 My conclusion for now is that until a `@break` statement can be implemented, ordered sequences should be used instead.

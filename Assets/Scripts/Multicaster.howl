@@ -27,7 +27,7 @@
         ⤴ (!P.HasValue){
             Debug.DrawRay(⦿˙, u, Color.white); ㆑
         }⤵ {
-            Debug.DrawLine(⦿˙, Pᖾ, Color.red); ⮐ ✗;
+            Debug.DrawLine(⦿˙, Pᖾ, Color.red); ⤬
         }
     }
 

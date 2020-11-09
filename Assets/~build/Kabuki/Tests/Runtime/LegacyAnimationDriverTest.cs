@@ -4,11 +4,11 @@ using Active.Core; using static Active.Core.status; using Active.Util;
 
 public class LegacyAnimationDriverTest : Kabuki.Test.PlayTest{
 
-    override protected float baseTimeScale => 12;  LegacyAnimationDriver2 x;
+    override protected float baseTimeScale => 12;  LegacyAnimationDriver x;
 
     [SetUp] public void SetupDriver(){
         var go = Create("Raptor"); go.transform.localScale = Vector3.one * 20;
-        x = new LegacyAnimationDriver2( go.GetComponent<Animation>() );
+        x = new LegacyAnimationDriver( go.GetComponent<Animation>() );
     }
 
     [Test] public void Play () => o( x.Play("Idle").running );

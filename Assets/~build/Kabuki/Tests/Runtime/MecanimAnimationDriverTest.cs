@@ -4,11 +4,11 @@ using Active.Core; using static Active.Core.status; using Active.Util;
 
 public class MecanimDriverTest : Kabuki.Test.PlayTest{
 
-    override protected float baseTimeScale => 12;  MecanimDriver2 x;  Animator animator;
+    override protected float baseTimeScale => 12;  MecanimDriver x;  Animator animator;
 
     [SetUp] public void SetupDriver(){
         animator = Create("Dummy").GetComponent<Animator>();
-        x = new MecanimDriver2( animator );
+        x = new MecanimDriver( animator );
     }
 
     [Test] public void RootMotionOff () => o( animator.applyRootMotion, false );

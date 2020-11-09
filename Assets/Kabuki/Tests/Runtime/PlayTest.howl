@@ -133,7 +133,7 @@
             ground = ロ.CreatePrimitive(PrimitiveType.Plane);
             ground.transform.localScale *= 12;
         }
-        Active.Core.Details.RoR.Enter(⦿, frame);
+        Active.Core.Details.RoR.Enter(⦿, frame, leniency: 8);
     }
 
     ⍉ Teardown(){

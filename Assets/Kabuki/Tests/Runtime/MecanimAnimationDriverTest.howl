@@ -4,11 +4,11 @@
 
 ‒ ○ MecanimDriverTest : Kabuki.Test.PlayTest{
 
-    ⁺◠ ㅅ baseTimeScale → 12;  MecanimDriver2 x;  Animator animator;
+    ⁺◠ ㅅ baseTimeScale → 12;  MecanimDriver x;  Animator animator;
 
     ⍜ SetupDriver(){
         animator = Create("Dummy").⧼Animator⧽;
-        x = new MecanimDriver2( animator );
+        x = new MecanimDriver( animator );
     }
 
     ؟ RootMotionOff ⎚ o( animator.applyRootMotion, ✗ );

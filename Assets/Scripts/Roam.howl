@@ -12,11 +12,11 @@
 
     ┈ Start ⎚ loco = ⌢ Locomotion();
 
-    ⁺‒ ⑂ Step() → (Reach(target) ∨ ⦿["Flail"]) ∧ Retarget();
+    ⁺‒ ⑂ Step() → (Eat() ∨ ⦿["Flail"]) ∧ Retarget();
+
+    ⑂ Eat() → (◍ ≠ ∅) ? Reach(◍) ∧ ⦿["*Munch*"] : ◇;
 
     ▷ Retarget()
-    { target = giz˙ = RandomX_Z(15f) + (anchored ? origin : ⦿˙); ⌽ }
-
-    //⑂ Eat(シ? target) → Reach(target) ∧ ⦿["Eat"];
+    → Do( ◍ = giz˙ = RandomX_Z(15f) + (anchored ? origin : ⦿˙) );
 
 }

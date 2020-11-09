@@ -4,7 +4,7 @@ using Active.Core; using static Active.Core.status; using Active.Util;
 namespace Activ.Kabuki{
 public class XTask : UTask{
 
-    AnimationDriver2 _animDriver;
+    AnimationDriver _animDriver;
 
     public pending Play(string anim) => animDriver.Play(anim);
 
@@ -24,13 +24,13 @@ public class XTask : UTask{
 
     // PRIVATE ------------------------------------------------------
 
-    AnimationDriver2 SetupAnimDriver(){
+    AnimationDriver SetupAnimDriver(){
         Animator  ator  = null;
         Animation ation = null;
         if (ator  = GetComponent<Animator>()  )
-            return new MecanimDriver2(ator);
+            return new MecanimDriver(ator);
         else if (ation = GetComponent<Animation>() )
-            return new LegacyAnimationDriver2(ation);
+            return new LegacyAnimationDriver(ation);
         else
             throw new Ex("No Animation or Animator component");
     }
@@ -38,7 +38,7 @@ public class XTask : UTask{
     // --------------------------------------------------------------
 
     public Transform θ => transform;
-    public AnimationDriver2 animDriver => _animDriver != null ? _animDriver
+    public AnimationDriver animDriver => _animDriver != null ? _animDriver
         : (_animDriver = SetupAnimDriver());
 
 }}

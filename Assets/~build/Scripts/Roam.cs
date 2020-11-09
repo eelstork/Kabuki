@@ -12,11 +12,11 @@ public class Roam : Actor{
 
     void Start () => loco = new Locomotion();
 
-    override public status Step() => (Reach(target) || this["Flail"]) && Retarget();
+    override public status Step() => (Eat() || this["Flail"]) && Retarget();
+
+    status Eat() => (target != null) ? Reach(target) && this["*Munch*"] : done();
 
     action Retarget()
-    { target = giz.transform.position = RandomX_Z(15f) + (anchored ? origin : this .transform.position); return @void(); }
-
-    //⑂ Eat(シ? target) → Reach(target) ∧ ⦿["Eat"];
+    => Do( target = giz.transform.position = RandomX_Z(15f) + (anchored ? origin : this .transform.position) );
 
 }

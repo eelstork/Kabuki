@@ -4,11 +4,11 @@
 
 ‒ ○ LegacyAnimationDriverTest : Kabuki.Test.PlayTest{
 
-    ⁺◠ ㅅ baseTimeScale → 12;  LegacyAnimationDriver2 x;
+    ⁺◠ ㅅ baseTimeScale → 12;  LegacyAnimationDriver x;
 
     ⍜ SetupDriver(){
         ∙ go = Create("Raptor"); go.み.𝚜 = シ.one * 20;
-        x = new LegacyAnimationDriver2( go.⧼Animation⧽ );
+        x = new LegacyAnimationDriver( go.⧼Animation⧽ );
     }
 
     ؟ Play ⎚ o( x.Play("Idle").running );
