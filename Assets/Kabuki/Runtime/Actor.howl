@@ -52,10 +52,22 @@
     ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
         → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
 
-    ‒ status Reach(シ? ⧕) → with(⧕)[
-        !⧕.HasValue ? ◇ :
-        ❰Face(⧕ᖾ)❱ ∧ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
-                                      ?? み.MoveTo(⧕ᖾ, 𝝇))];
+    ‒ ⑂ Test() → reckon(✗)[ ⦿["Flail"] ];
+
+    ‒ ⑂ Reach(シ? ⧕) → ⍈()
+        ⟦ Face(⧕ᖾ) ⟧
+        ⟦ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
+                               ?? み.MoveTo(⧕ᖾ, 𝝇)) ⟧;
+
+    //‒ ⑂ Reach(シ? ⧕) → !(⧕.HasValue) ? ◇ : Seq()
+    //    + @do?[ Face(⧕ᖾ) ]
+    //    + @do?[ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
+    //                           ?? み.MoveTo(⧕ᖾ, 𝝇)) ];
+
+    //‒ ⑂ Reach(シ? ⧕) → with(⧕)[
+    //    !⧕.HasValue ? ◇ :
+    //    ❰Face(⧕ᖾ)❱ ∧ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
+    //                                  ?? み.MoveTo(⧕ᖾ, 𝝇))];
 
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes

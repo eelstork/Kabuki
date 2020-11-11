@@ -52,10 +52,22 @@ public class Actor : Activ.Kabuki.XTask{
     public status Reach(Transform that, float dist = 1f)
         => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
 
-    public status Reach(Vector3? that) => with(that)[
-        !that.HasValue ? done() :
-        Once()?[Face(that .Value)] && Playing("Walk", loco?.MoveTo(transform, that .Value, speed)
-                                      ?? transform.MoveTo(that .Value, speed))];
+    public status Test() => reckon(false)[ this["Flail"] ];
+
+    public status Reach(Vector3? that) => Seq()
+        % @do?[ Face(that .Value) ]
+        % @do?[ Playing("Walk", loco?.MoveTo(transform, that .Value, speed)
+                               ?? transform.MoveTo(that .Value, speed)) ];
+
+    //‒ ⑂ Reach(シ? ⧕) → !(⧕.HasValue) ? ◇ : Seq()
+    //    + @do?[ Face(⧕ᖾ) ]
+    //    + @do?[ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
+    //                           ?? み.MoveTo(⧕ᖾ, 𝝇)) ];
+
+    //‒ ⑂ Reach(シ? ⧕) → with(⧕)[
+    //    !⧕.HasValue ? ◇ :
+    //    ❰Face(⧕ᖾ)❱ ∧ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
+    //                                  ?? み.MoveTo(⧕ᖾ, 𝝇))];
 
     // TODO: flakiness in "Reach" requires the Once node here.
     // if the memory node is removed the strike action will sometimes
