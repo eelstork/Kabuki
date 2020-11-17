@@ -16,9 +16,10 @@ public class Actor : Activ.Kabuki.XTask{
 
     public status this[string gesture, Transform that] => Face(that) && this[gesture];
 
-    public status this[string anim] => animDriver.Exists(anim)
+    public status this[string anim] => ε( animDriver.Exists(anim)
         ? Play(anim).due
-        : Wait(1f) % Play("Idle").due % speechBox.SetText(anim);
+        : Wait(1f) % Play("Idle").due % speechBox.SetText(anim)
+    );
 
     public status Face(Transform that, string anim = "Walk")
         => Playing(anim, transform.RotateTowards(that, rotationSpeed));
@@ -57,12 +58,7 @@ public class Actor : Activ.Kabuki.XTask{
     public status Reach(Vector3? that) => Seq()
         % @do?[ Face(that .Value) ]
         % @do?[ Playing("Walk", loco?.MoveTo(transform, that .Value, speed)
-                               ?? transform.MoveTo(that .Value, speed)) ];
-
-    //‒ ⑂ Reach(シ? ⧕) → !(⧕.HasValue) ? ◇ : Seq()
-    //    + @do?[ Face(⧕ᖾ) ]
-    //    + @do?[ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
-    //                           ?? み.MoveTo(⧕ᖾ, 𝝇)) ];
+                          ?? transform.MoveTo(that .Value, speed)) ];
 
     //‒ ⑂ Reach(シ? ⧕) → with(⧕)[
     //    !⧕.HasValue ? ◇ :

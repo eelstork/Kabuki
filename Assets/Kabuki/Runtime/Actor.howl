@@ -16,9 +16,10 @@
 
     ‒ ⑂ ⦿[ㄹ gesture, エ ⧕] → Face(⧕) ∧ ⦿[gesture];
 
-    ‒ ⑂ ⦿[ㄹ anim] → animDriver.Exists(anim)
+    ‒ ⑂ ⦿[ㄹ anim] → ε( animDriver.Exists(anim)
         ? Play(anim)ʾ
-        : Wait(1f) % Play("Idle")ʾ % speechBox.SetText(anim);
+        : Wait(1f) % Play("Idle")ʾ % speechBox.SetText(anim)
+    );
 
     ‒ ⑂ Face(エ ⧕, ㄹ anim = "Walk")
         → Playing(anim, み.RotateTowards(⧕, rotationSpeed));
@@ -57,12 +58,7 @@
     ‒ ⑂ Reach(シ? ⧕) → ⍈()
         ⟦ Face(⧕ᖾ) ⟧
         ⟦ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
-                               ?? み.MoveTo(⧕ᖾ, 𝝇)) ⟧;
-
-    //‒ ⑂ Reach(シ? ⧕) → !(⧕.HasValue) ? ◇ : Seq()
-    //    + @do?[ Face(⧕ᖾ) ]
-    //    + @do?[ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
-    //                           ?? み.MoveTo(⧕ᖾ, 𝝇)) ];
+                          ?? み.MoveTo(⧕ᖾ, 𝝇)) ⟧;
 
     //‒ ⑂ Reach(シ? ⧕) → with(⧕)[
     //    !⧕.HasValue ? ◇ :

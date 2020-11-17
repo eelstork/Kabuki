@@ -917,6 +917,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97010c7b7f6654148add7a8b2d300230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  staticRecon: 0
   speed: 3
   rotationSpeed: 180
   leftHold: {fileID: 0}
@@ -957,8 +958,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   root: {fileID: 0}
   loop: 1
+  leniency: 1
   log: 
-  enableLogging: 0
+  enableLogging: 1
   useHistory: 0
   useBreakpoints: 1
   step: 0
