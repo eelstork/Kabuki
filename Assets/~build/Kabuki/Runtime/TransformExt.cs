@@ -1,6 +1,6 @@
 using Ex = System.Exception;
 using UnityEngine; using static UnityEngine.Time; using static UnityEngine.Mathf;
-using Active.Core; using static Active.Core.status;
+using Active.Core; using static Active.Status;
 
 namespace Activ.Kabuki{
 public static class TransformExt{

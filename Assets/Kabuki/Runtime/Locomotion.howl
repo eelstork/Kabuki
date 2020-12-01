@@ -4,6 +4,8 @@
 
 ⊓ Activ.Kabuki{ ‒ ○ Locomotion{
 
+    TVec3 direction;
+
     ‒ ⑂ MoveTo(エ x, メ y, ㅅ speed){
         ⤴ (x˙ ☰ y) ◇̠
         ㅅ d = x.PlanarDist(y), δ = 𝛿𝚝 ᐧ 𝝇;
@@ -23,12 +25,34 @@
     // --------------------------------------------------------------
 
     ⑂ Move(エ み, シ u, ㅅ δ, ㅅ los){
-        シ? v = Avoidance.Clear(み˙, u, maxDistance: los);
-        ⤴ (v ☰ ∅) ⮐ ■;
+        シ? v = direction;
+        // Avoidance vector is valid for one second at most; this
+        // avoids dithering. Here the avoidance vector expired;
+        // regenerate it.
+        ⤴ (v ☰ ∅){
+            direction = Avoidance.Clear(み˙, u, maxDistance: los);
+            v = direction;
+        }
+        // If no valid direction was found, return fail
+        ⤴ (v ☰ ∅){
+            Print($"No avoidance vector @{Time.time:#.#}");
+            ⮐ ■;
+        }
+        // Since we don't always regen an avoidance vector, sometimes
+        // The current vector is invalid (ie, on a collision course).
+        // Then we return cont as we're just going to yield for a bit.
+        ⤴ (!Avoidance.HasClearLOS(み˙, vᖾ, Mathf.Min(1f, los))){
+            Debug.LogWarning($"Avoidance vector is out of date");
+            ⮐ ■;
+        }
+        // TODO: after lerp we may still be on a collision course.
+        // this is not taken into account.
         み.⫫ = シ.Lerp(み.⫫, vᖾ, 0.1f);
         ⮐ Run(み˙ += vᖾ ᐧ δ);
     }
 
     ∘ ⑂ Do(⊡ x) { ⌽ } ∘ ⑂ Run(⊡ x) { ☡̱ }
+
+    ┈ Print(⊡ arg) → UnityEngine.Debug.Log(arg);
 
 }}

@@ -896,7 +896,6 @@ GameObject:
   - component: {fileID: 87379560}
   - component: {fileID: 93981576}
   - component: {fileID: 87216715}
-  - component: {fileID: 87216717}
   - component: {fileID: 87216713}
   m_Layer: 0
   m_Name: Raptor
@@ -981,21 +980,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &87216717
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87216712}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d23690c231fb244978a205a06785978f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxAngle: 45
-  "\u03B4": 10
-  distance: 3
 --- !u!1 &87216718
 GameObject:
   m_ObjectHideFlags: 0

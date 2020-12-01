@@ -13,7 +13,7 @@
         ⏂
     }
 
-    ∘ ㅇ HasClearLOS(メ o, シ u, ㅅ distance){
+    ‒̥ ㅇ HasClearLOS(メ o, シ u, ㅅ distance){
         メ? P = Cast(o, u, distance);
         ⤴ (!P.HasValue){
             Debug.DrawRay(o, u, Color.white); ㆑

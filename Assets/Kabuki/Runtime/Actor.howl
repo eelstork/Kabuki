@@ -1,6 +1,6 @@
 ⊐ Ex = System.Exception;
 ⊐ T = UnityEngine.Transform; ⊐ UnityEngine;
-⊐ Active.Core; ⊐̥ Active.Core.status; ⊐ Active.Util;
+⊐ Active.Core; ⊐̥ Active.Status; ⊐ Active.Util;
 
 ⊓ Activ.Kabuki{
 ‒ ○ Actor : Activ.Kabuki.XTask{

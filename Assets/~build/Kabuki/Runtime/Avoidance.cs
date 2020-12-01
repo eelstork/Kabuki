@@ -13,7 +13,7 @@ public static class Avoidance{
         return null;
     }
 
-    static bool HasClearLOS(Vector3 o, Vector3 u, float distance){
+    public static bool HasClearLOS(Vector3 o, Vector3 u, float distance){
         Vector3? P = Cast(o, u, distance);
         if (!P.HasValue){
             Debug.DrawRay(o, u, Color.white); return true;

@@ -1,6 +1,6 @@
 using Ex = System.Exception;
 using T = UnityEngine.Transform; using UnityEngine;
-using Active.Core; using static Active.Core.status; using Active.Util;
+using Active.Core; using static Active.Status; using Active.Util;
 
 namespace Activ.Kabuki{
 public class Actor : Activ.Kabuki.XTask{

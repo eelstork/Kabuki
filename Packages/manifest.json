@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.activ.howl": "file:/Users/xxx/Documents/Howl-Project/Uta/Assets/Howl",
-    "com.activ.logic": "file:/Users/xxx/Documents/AL-Project/Agon/Assets/ActiveLogic",
+    "com.activ.logic": "file:/Users/xxx/Documents/AL-Project/al/Assets/ActiveLogic",
     "com.unity.test-framework": "1.1.11",
     "com.unity.ugui": "1.0.0",
     "com.vrmc.univrm": "file:/Users/xxx/Documents/UniVRM/Assets/VRM",
