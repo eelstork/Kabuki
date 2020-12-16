@@ -1,0 +1,23 @@
+⊐ UnityEngine; ⊐ Accel; ⊐ Activ.Kabuki;
+
+‒ ○ KaraptorAp : MonoBehaviour{
+
+    ‒ エ threat, water, food;
+
+    ‒ ㅇ dayOnly = ✓;
+
+    ‒ ┈ Update(){
+        LocateThreat();
+        LocateWater();
+        LocateFood();
+    }
+
+    ┈ LocateThreat ⎚ threat = み.Nearest<Actor>();
+
+    ┈ LocateFood ⎚ food = み.Nearest<エ>(Crit: x → xˮ ☰ "Grass");
+
+    ┈ LocateWater ⎚ water = み.Nearest<エ>(Crit: x → xˮ ☰ "Water");
+
+    ‒ ㅇ isDayTime → dayOnly ∨ FindObjectOfType<GameTime>().isDayTime;
+
+}

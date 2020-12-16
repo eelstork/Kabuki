@@ -1,0 +1,69 @@
+⊐ UnityEngine;
+⊐ Active.Core; ⊐̥ Active.Status;
+⊐ Activ.Kabuki; ⊐̥ Activ.Kabuki.VectorExt;
+
+‒ ○ Karaptor : UTask{
+
+    ⁺‒ ⑂ Step() → ε( ap.isDayTime
+        ? Wake()[log ∧ "Waking time"]
+        : Sleep()[log ∧ "Sleeping time"] );
+
+    ⑂ Wake() → ε(
+        ManageThreats()
+        ∧ Hydrate()
+        ∧ Forage()
+        ∧ Rest()
+    );
+
+    ⑂ Sleep ⎚ actor["Sleep"];
+
+    // --------------------------------------------------------------
+
+    ⑂ ManageThreats() → ε(
+        Ward() ∨
+        Attack() ∨
+        Evade()
+    );
+
+    ⑂ Ward() → model.angry ? actor["Flail", ap.threat]
+              : ◇[log ∧ "Not angry"];
+
+    ⑂ Attack() → actor.Strike(ap.threat);
+
+    ⑂ Evade(){
+        ⤴ (ap.threat ☰ ∅) ⮐ ◇[log ∧ "No threat"];
+        ⤳ (ap.threat.Dist(み) > 10f) ◇̠
+        ∙ u = ap.threat.Dir(み);
+        ∙ P = ap.threat˙ + u ᐧ 10f;
+        ⮐ actor.Reach(P);
+    }
+
+    // --------------------------------------------------------------
+
+    ⑂ Hydrate(){
+        ⤴ (!model.thirsty) ⮐ ◇[log ∧ "Not thirsty"];
+        ⮐ ε(
+            actor.Reach(ap.water)
+          ∧ actor.Ingest(ap.water, consume: ✗)
+          ∧ model.hydration.Feed()
+        )[log ∧ $"hydration: {model.hydration.amount}"];
+    }
+
+    ⑂ Forage(){
+        ⤴ (!model.hungry) ⮐ ◇[log ∧ "Not hungry"];
+        ⮐ ε(
+            actor.Reach(ap.food)
+          ∧ actor.Ingest(ap.food, consume: ✗)
+          ∧ model.nutrition.Feed()
+        )[log ∧ $"nutrition: {model.nutrition.amount}"];
+    }
+
+    ⑂ Rest() → actor["Idle"];
+
+    // --------------------------------------------------------------
+
+    KaraptorAp    ap    → ⧼KaraptorAp⧽;
+    KaraptorModel model → ⧼KaraptorModel⧽;
+    Actor         actor → ⧼Actor⧽;
+
+}

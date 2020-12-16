@@ -1,3 +1,4 @@
+using System;
 using Ex = System.Exception;
 using UnityEngine; using static UnityEngine.Time; using static UnityEngine.Mathf;
 using Active.Core; using static Active.Status;
@@ -64,6 +65,17 @@ public static class TransformExt{
     public static status MoveTowards(this Transform x, Transform y, float dist, float speed)
         => x.PlanarDist(y) < dist
         || Run( x.transform.position += x.PlanarDir(y) * Time.deltaTime * speed );
+
+    public static Transform Nearest<E>(this Transform x, float? range=null, Func <E,bool> Crit=null) where E : Component {
+        (E elem, float dist)? sel = null;
+        foreach (var k in UnityEngine.Object.FindObjectsOfType<E>()){
+            if (k.transform == x || Crit != null && !Crit(k))  continue;
+            var d = x.Dist(k.transform);
+            if (range.HasValue && d > range.Value)     continue;
+            if (sel == null || sel.Value.dist > d)        sel = (k, d);
+        }
+        return sel?.elem.transform ?? null;
+    }
 
     public static float PlanarDist(this Transform x, Vector3 y) => (y - x.transform.position).X_Z().magnitude;
 

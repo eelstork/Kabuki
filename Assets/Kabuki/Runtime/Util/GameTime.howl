@@ -1,0 +1,35 @@
+⊐ UnityEngine;
+
+⊓ Accel{
+‒ ○ GameTime : MonoBehaviour{
+
+    ‒ ㅅ startingHour = 4;
+    ‒ ᆞ secondsPerDay = 500;
+    ‒ ㅅ dayStart = 6f, dayEnd = 18f, hoursPerDay = 24;
+    // informative
+    ‒ ㄹ currentHour, status;
+
+    ‒ ┈ DayBreak ⎚ hour = dayStart;
+
+    ‒ ┈ NightFall ⎚ hour = dayEnd;
+
+    ‒ ㅅ hour{
+        ╭→ ((⒯ + timeOffset) % secondsPerDay)
+                                        / secondsPerDay ᐧ hoursPerDay;
+        ╰→ startingHour -= (hour - value);
+    }
+
+    ‒ ㅇ isDayTime → hour > dayStart ∧ hour < dayEnd;
+
+    ┈ Update(){
+        currentHour = $"{hour:0.00}";
+        status = isDayTime ? "Day" : "Night";
+    }
+
+    ㅅ timeOffset → HourToSeconds(startingHour);
+
+    ㅅ HourToSeconds(ㅅ h) → h ᐧ secondsPerHour;
+
+    ㅅ secondsPerHour → secondsPerDay / (ㅅ)hoursPerDay;
+
+}}

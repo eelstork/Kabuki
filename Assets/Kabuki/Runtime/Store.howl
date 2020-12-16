@@ -1,0 +1,27 @@
+⊐ UnityEngine;
+⊐ Active.Core; ⊐̥ Active.Status;
+
+⊓ Kabuki{
+‒ ○ Store{
+
+    ‒ ㅇ want;
+    ‒ ㅅ amount = 1f, cap = 1f, usage = -0.1f, fill = 1f;
+
+    ‒ ⑂ Feed(){
+        amount += fill ᐧ 𝛿𝚝 ;
+        ⤴ (amount > cap){ amount = cap; want = ✗; ◇̠ } ⤵ ☡̱
+    }
+
+    ‒ ┈ Update(){
+        amount += usage ᐧ 𝛿𝚝 ;
+        ⤴ (amount < 0f){
+            amount = 0f;
+            want = ✓;
+        }
+        ⤳ (amount > cap){
+            amount = cap;
+            want = ✗;
+        }
+    }
+
+}}

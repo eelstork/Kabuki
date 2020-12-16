@@ -1,0 +1,31 @@
+⊐ UnityEngine;
+⊐ Active.Core; ⊐̥ Active.Status;
+⊐ Store = Kabuki.Store;
+
+‒ ○ KaraptorModel : MonoBehaviour{
+
+    ‒ ㅅ anger = 0f,   irritability = 0.1f, angerDrop = 0.05f;
+    ‒ Store nutrition = ⌢ Store();
+    ‒ Store hydration = ⌢ Store();
+
+    ‒ ㅇ angry   → anger  ≥ 1f;
+    ‒ ㅇ hungry  → nutrition.want;
+    ‒ ㅇ thirsty → hydration.want;
+
+    ┈ Update(){
+        anger  += (AngerStimulus() ᐧ irritability - angerDrop) ᐧ 𝛿𝚝 ;
+        nutrition.Update();
+        hydration.Update();
+    }
+
+    ㅅ AngerStimulus(){
+        ⤴ (ap.threat ☰ ∅) ⮐ 0;
+        ㅅ d = シ.Distance(ap.threat˙, み˙);
+        ⮐ (d < 1f) ? 1f
+         : (d < 5f) ? irritability
+         : 0f;
+    }
+
+    KaraptorAp ap → ⧼KaraptorAp⧽;
+
+}

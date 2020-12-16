@@ -1,3 +1,4 @@
+⊐ System;
 ⊐ Ex = System.Exception;
 ⊐ UnityEngine; ⊐̥ UnityEngine.Time; ⊐̥ UnityEngine.Mathf;
 ⊐ Active.Core; ⊐̥ Active.Status;
@@ -64,6 +65,17 @@
     ‒̥ ⑂ MoveTowards(⦿ エ x, エ y, ㅅ dist, ㅅ speed)
         → x.PlanarDist(y) < dist
         ∨ Run( x˙ += x.PlanarDir(y) ᐧ 𝛿𝚝 ᐧ 𝝇 );
+
+    ‒̥ エ Nearest<E>(⦿ エ x, ㅅ? range=∅, ⒡ <E,ㅇ> Crit=∅) ¿ E : ⫙ {
+        (E elem, ㅅ dist)? sel = null;
+        ∀ (∙ k ∈ UnityEngine.Object.FindObjectsOfType<E>()){
+            ⤴ (k.み ☰ x ∨ Crit ≠ ∅ ∧ !Crit(k))  〰
+            ∙ d = x.Dist(k.み);
+            ⤴ (range.HasValue ∧ d > rangeᖾ)     〰
+            ⤴ (sel ☰ ∅ ∨ selᖾ.dist > d)        sel = (k, d);
+        }
+        ⮐ sel?.elem.み ?? ∅;
+    }
 
     ‒̥ ㅅ PlanarDist(⦿ エ x, シ y) → (y - x˙).X_Z()❚;
 

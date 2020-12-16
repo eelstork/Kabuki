@@ -14,7 +14,7 @@ public class Actor : Activ.Kabuki.XTask{
 
     // --------------------------------------------------------------
 
-    public status this[string gesture, Transform that] => Face(that) && this[gesture];
+    public status this[string gesture, Transform that] => (that != null) && Face(that) && this[gesture];
 
     public status this[string anim] => ε( animDriver.Exists(anim)
         ? Play(anim).due
@@ -35,9 +35,11 @@ public class Actor : Activ.Kabuki.XTask{
     public status Grab(Transform that)
         => (Has(that) || Reach(that)) && this["Grab"] % After(0.5f)?[ Hold(that) ];
 
-    public status Ingest(Transform that)
-        => Hold(that, allowNull: true, hand: "L")
-        & this["Eat"] % ( Wait(1.2f) && Destroy(that) );
+    public status Ingest(Transform that, bool consume = true)
+        => consume ?
+            Hold(that, allowNull: true, hand: "L")
+                & this["Eat"] % ( Wait(1.2f) && Destroy(that) )
+            : this["Eat"];
 
     public status Idle => this["Idle"];
 
@@ -50,8 +52,9 @@ public class Actor : Activ.Kabuki.XTask{
         => Once()?[Reach(that) && PushingSetup() ]
         && this["Push"] && PushingTeardown() ;
 
-    public status Reach(Transform that, float dist = 1f)
-        => Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed));
+    public status Reach(Transform that, float dist = 1f) => ε(
+        Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed))
+    );
 
     public status Test() => reckon(false)[ this["Flail"] ];
 
@@ -69,7 +72,9 @@ public class Actor : Activ.Kabuki.XTask{
     // if the memory node is removed the strike action will sometimes
     // stop half-way and repeat. Solution may be fix the "Reach"
     // action.
-    public status Strike(Transform that) => Once()?[Reach(that)] && this["Strike"];
+    public status Strike(Transform that) => (that != null)
+        ? ε( Once()?[Reach(that)] && this["Strike"] )
+        : fail()[log && "No strike target"];
 
     public status Take()
         => (other != null) && Face(other.transform) && this["Take"]

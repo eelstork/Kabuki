@@ -14,7 +14,7 @@
 
     // --------------------------------------------------------------
 
-    ‒ ⑂ ⦿[ㄹ gesture, エ ⧕] → Face(⧕) ∧ ⦿[gesture];
+    ‒ ⑂ ⦿[ㄹ gesture, エ ⧕] → (⧕ ≠ ∅) ∧ Face(⧕) ∧ ⦿[gesture];
 
     ‒ ⑂ ⦿[ㄹ anim] → ε( animDriver.Exists(anim)
         ? Play(anim)ʾ
@@ -35,9 +35,11 @@
     ‒ ⑂ Grab(エ ⧕)
         → (Has(⧕) ∨ Reach(⧕)) ∧ ⦿["Grab"] % After(0.5f)?[ Hold(⧕) ];
 
-    ‒ ⑂ Ingest(エ ⧕)
-        → Hold(⧕, allowNull: ✓, hand: "L")
-        & ⦿["Eat"] % ( Wait(1.2f) ∧ Destroy(⧕) );
+    ‒ ⑂ Ingest(エ ⧕, ㅇ consume = ✓)
+        → consume ?
+            Hold(⧕, allowNull: ✓, hand: "L")
+                & ⦿["Eat"] % ( Wait(1.2f) ∧ Destroy(⧕) )
+            : ⦿["Eat"];
 
     ‒ ⑂ Idle → ⦿["Idle"];
 
@@ -50,8 +52,9 @@
         → ❰Reach(⧕) ∧ PushingSetup() ❱
         ∧ ⦿["Push"] ∧ PushingTeardown() ;
 
-    ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f)
-        → Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed));
+    ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f) → ε(
+        Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed))
+    );
 
     ‒ ⑂ Test() → reckon(✗)[ ⦿["Flail"] ];
 
@@ -69,7 +72,9 @@
     // if the memory node is removed the strike action will sometimes
     // stop half-way and repeat. Solution may be fix the "Reach"
     // action.
-    ‒ ⑂ Strike(エ ⧕) → ❰Reach(⧕)❱ ∧ ⦿["Strike"];
+    ‒ ⑂ Strike(エ ⧕) → (⧕ ≠ ∅)
+        ? ε( ❰Reach(⧕)❱ ∧ ⦿["Strike"] )
+        : ■[log ∧ "No strike target"];
 
     ‒ ⑂ Take()
         → (other ≠ ∅) ∧ Face(other.み) ∧ ⦿["Take"]
