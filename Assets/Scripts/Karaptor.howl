@@ -4,43 +4,42 @@
 
 ‒ ○ Karaptor : UTask{
 
+    ┈ Start ⎚ ac.loco = ⌢ Locomotion();
+
     ⁺‒ ⑂ Step() → ε( ap.isDayTime
         ? Wake()[log ∧ "Waking time"]
         : Sleep()[log ∧ "Sleeping time"] );
 
     ⑂ Wake() → ε(
-        ManageThreats()
-        ∧ Hydrate()
-        ∧ Forage()
+        ~ (ManageThreats() ∧ Hydrate() ∧ Forage())
         ∧ Rest()
     );
 
-    ⑂ Sleep ⎚ ac["Sleep"];
+    ⑂ Sleep ⎚ ε(
+        (ap.safe ∨ Evade()) ∧ ac["Sleep"] % mo.damage.Feed(-0.2f)
+    );
 
     // --------------------------------------------------------------
 
     ⑂ ManageThreats() → ε(
-        mo.damage > 0.50f ? Evade()  :
-        mo.anger  > 0.66f ? Attack() :
-        mo.anger  > 0.33f ? Ward  () : ◇[log ∧ "Not angry"]
+        ap.safe ? ◇[log ∧ "Safe"]
+        : mo.wounded       ? Evade(2f)
+        : mo.anger > 0.66f ? Attack()
+        : mo.anger > 0.33f ? Ward  ()
+        : ◇[log ∧ "Not angry"]
     );
 
     ⑂ Ward() → ac["Flail", ap.threat];
 
     ⑂ Attack() → ac.Strike(ap.threat, 2f);
 
-    ⑂ Evade(){
-        ⤴ (ap.threat ☰ ∅) ⮐ ◇[log ∧ "No threat"];
-        ⤳ (ap.threat.Dist(み) > 15f) ◇̠
-        ∙ u = ap.threat.Dir(み);
-        ∙ P = ap.threat˙ + u ᐧ 15f;
-        ⮐ ac.Reach(P);
-    }
+    ⑂ Evade(ㅅ scalar = 1f) → ac.Evade(ap.threat, scalar);
 
     // --------------------------------------------------------------
 
     ⑂ Hydrate(){
         ⤴ (!mo.thirsty) ⮐ ◇[log ∧ "Not thirsty"];
+        ⤴ (!ap.water) ⮐ ■[log ∧ "No water or not reachable"];
         ⮐ ε(
             ac.Reach(ap.water)
           ∧ ac.Ingest(ap.water, consume: ✗)
@@ -57,7 +56,7 @@
         )[log ∧ $"nutrition: {mo.nutrition.amount}"];
     }
 
-    ⑂ Rest() → ac["Idle"];
+    ⑂ Rest() → ε(ac["Idle"] % mo.damage.Feed(-0.05f));
 
     // --------------------------------------------------------------
 

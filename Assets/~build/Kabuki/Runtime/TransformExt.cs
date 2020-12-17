@@ -23,7 +23,6 @@ public static class TransformExt{
     public static Transform Req(this Transform x, params string[] hints){
         var ㄸ = x.Find(hints);
         return ㄸ != null ? ㄸ : throw new Ex("Not found: " + hints);
-
     }
 
     public static Transform Find(this Transform x, params string[] hints){
@@ -48,7 +47,12 @@ public static class TransformExt{
     }
 
     public static float Look(this Transform x, Transform y, bool planar = true)
-    => Vector3.Angle(x.forward, x.Dir(y, planar: planar));
+        => Vector3.Angle(x.forward, x.Dir(y, planar: planar));
+
+    public static loop Move(this Transform x, Vector3 u, float speed){
+        x.transform.position += u.X_Z() * speed * Time.deltaTime;
+        return forever();
+    }
 
     public static status MoveTo(this Transform x, Vector3 y, float speed){
         if (x.transform.position == y) return done();

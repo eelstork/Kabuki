@@ -2,22 +2,37 @@
 
 ‒ ○ KaraptorAp : MonoBehaviour{
 
-    ‒ エ threat, water, food;
+    ‒ ㅅ  safeDistance = 15f;
+    ‒ エ  threat, water, food;
+    ‒ シ? safePoint;
+    ‒ ㅇ  dayOnly = ✓;
 
-    ‒ ㅇ dayOnly = ✓;
+    ‒ ㅇ safe      → (threat ☰ ∅) ∨ み.Dist(threat) > safeDistance;
+    ‒ ㅇ isDayTime → dayOnly ∨ FindObjectOfType<GameTime>().isDayTime;
 
-    ‒ ┈ Update(){
-        LocateThreat();
-        LocateWater();
-        LocateFood();
+    // --------------------------------------------------------------
+
+    ‒ ┈ Update(){ LocateThreat(); LocateWater(); LocateFood();
+                   LocateSafePoint(); }
+
+    ┈ LocateSafePoint(){
+        ⤴ (threat ☰ ∅){ safePoint = ∅; ⮐; }
+        ∙ u = threat.Dir(み);
+        safePoint = threat˙ + u ᐧ safeDistance ᐧ 1.1f;
     }
 
-    ┈ LocateThreat ⎚ threat = み.Nearest<Actor>();
+    ┈ LocateThreat ⎚ threat = み.Nearest<Actor>(
+        Crit: x → !x.⧼KaraptorModel⧽.wounded );
 
-    ┈ LocateFood ⎚ food = み.Nearest<エ>(Crit: x → xˮ ☰ "Grass");
+    ┈ LocateFood ⎚ food = み.Nearest<エ>(
+        Crit: x → xˮ ☰ "Grass" ∧ IsReachable(x) );
 
-    ┈ LocateWater ⎚ water = み.Nearest<エ>(Crit: x → xˮ ☰ "Water");
+    ┈ LocateWater ⎚ water = み.Nearest<エ>(
+        Crit: x → xˮ ☰ "Water" ∧ IsReachable(x) );
 
-    ‒ ㅇ isDayTime → dayOnly ∨ FindObjectOfType<GameTime>().isDayTime;
+    ㅇ IsReachable(エ target)
+    → !mo.wounded ∨ threat ☰ ∅ ∨ target.Dist(threat) > safeDistance;
+
+    KaraptorModel mo → ⧼KaraptorModel⧽;
 
 }

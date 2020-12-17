@@ -6,17 +6,21 @@
 ‒ ○ Store{
 
     ‒ ㅇ want;
-    ‒ ㅅ amount = 1f, cap = 1f, usage = -0.1f, fill = 1f;
+    ‒ ㅅ amount = 1f, cap = 1f, delta = -0.1f, fill = 1f;
+    ‒ ㅇ enabled = ✓;
 
-    ‒ ⑂ Feed(){
-        amount += fill ᐧ 𝛿𝚝 ;
+    ‒ ⑂ Feed(ㅅ scalar = 1f){
+        amount += scalar ᐧ fill ᐧ 𝛿𝚝 ;
         ⤴ (amount > cap){
             amount = cap; want = ✗; ◇̠
-        } ⤵ ☡̱
+        }⤳ (amount < 0f){
+            amount = 0f; want = ✓; ◇̠            
+        }⤵ ☡̱
     }
 
     ‒ ┈ Update(ㅅ δ=0f){
-        amount += usage ᐧ 𝛿𝚝 + δ;
+        ⤴ (!enabled) ⮐ ;
+        amount += delta ᐧ 𝛿𝚝 + δ;
         ⤴ (amount <  0f) { amount =  0f; want = ✓; }
         ⤳ (amount > cap) { amount = cap; want = ✗; }
     }
@@ -24,8 +28,5 @@
     ⒤ Store(ㅅ ⧕) → ⌢ Store(){ amount = ⧕ };
 
     ⒤ ㅅ(Store ⧕) → ⧕.amount;
-
-    //‒̥ ㅇ ⨕ > (Store x, ㅅ y) → x.amount > y;
-    //‒̥ ㅇ ⨕ < (Store x, ㅅ y) → x.amount < y;
 
 }}

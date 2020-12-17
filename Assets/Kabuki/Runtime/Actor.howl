@@ -48,47 +48,38 @@
         ☡̱ʿ
     }
 
+    ‒ ⑂ Evade(エ ⧕, ㅅ scalar) → Move(-み.Dir(⧕), scalar);
+
+    ‒ ⑂ Move(シ u, ㅅ scalar, ㅅ refDist=10f){
+        み.⫫ = シ.Lerp(み.⫫, u, 0.1f);
+        ⤴ (シ.Angle(み.⫫, u) < 10f)
+            ⮐ Playing("Walk", loco?.Move(み, u, 𝝇 ᐧ scalar, refDist)
+                               ?? み.Move(u, 𝝇 ᐧ scalar));
+        ⤵ ☡̱
+    }
+
     ‒ ⑂ Push(エ ⧕)
         → ❰Reach(⧕) ∧ PushingSetup() ❱
         ∧ ⦿["Push"] ∧ PushingTeardown() ;
 
-    ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f) → ε(
-        Face(⧕) ∧ Playing("Walk", み.MoveTowards(⧕, dist, speed))
-    );
+    ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f) → ⍈()
+        ⟦ Face(⧕) ⟧
+        ⟦ Playing("Walk", loco?.MoveTowards(み, ⧕˙, dist, 𝝇 )
+                          ?? み.MoveTowards(⧕, dist, 𝝇)) ⟧;
 
-    ‒ ⑂ Test() → reckon(✗)[ ⦿["Flail"] ];
-
-    ‒ ⑂ Reach(シ? ⧕) → ⍈()
+    ‒ ⑂ Reach(メ? ⧕, ㅅ scalar=1f) → ⍈()
         ⟦ Face(⧕ᖾ) ⟧
-        ⟦ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
-                          ?? み.MoveTo(⧕ᖾ, 𝝇)) ⟧;
+        ⟦ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇 ᐧ scalar)
+                          ?? み.MoveTo(⧕ᖾ, 𝝇 ᐧ scalar)) ⟧;
 
-    //‒ ⑂ Reach(シ? ⧕) → with(⧕)[
-    //    !⧕.HasValue ? ◇ :
-    //    ❰Face(⧕ᖾ)❱ ∧ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
-    //                                  ?? み.MoveTo(⧕ᖾ, 𝝇))];
-
-    // TODO: flakiness in "Reach" requires the Once node here.
-    // if the memory node is removed the strike action will sometimes
-    // stop half-way and repeat. Solution may be fix the "Reach"
-    // action.
     ‒ ⑂ Strike(エ ⧕, ㅅ dist=1f) → (⧕ ≠ ∅)
-        ? ε( ❰Reach(⧕, dist)❱ ∧ DoStrike(⧕, dist))
+        ? ⍈() ⟦ Reach(⧕, dist) ⟧
+              ⟦ ⦿["Strike"] ∧ Message("OnStrike", ⧕) ⟧
         : ■[log ∧ "No strike target"];
 
-    ‒ ⑂ DoStrike(エ ⧕, ㅅ dist){
-        ⤴ (み.Dist(⧕) ≤ dist){
-            ⮐ ⦿["Strike"] ∧ Message("OnStrike", ⧕);
-        }⤵
-            ⮐ ■[log ∧ "Not in strike range"];
-
-    }
-
     ▷ Message(ㄹ message, エ target){
-        Debug.Log($"Message: {message} -> {target}");
         target.SendMessage(message,
-                           SendMessageOptions.RequireReceiver);
-        ⌽
+                           SendMessageOptions.RequireReceiver); ⌽
     }
 
     ‒ ⑂ Take()

@@ -13,6 +13,11 @@ public class KaraptorModel : MonoBehaviour{
     public bool angry   => anger >= 1f;
     public bool hungry  => nutrition.want;
     public bool thirsty => hydration.want;
+    public bool wounded => damage > 0.5f;
+
+    void Start(){
+        damage.enabled = false;
+    }
 
     void Update(){
         anger.Update(AngerStimulus());

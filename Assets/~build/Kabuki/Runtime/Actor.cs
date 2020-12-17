@@ -48,47 +48,38 @@ public class Actor : Activ.Kabuki.XTask{
         return impending.cont();
     }
 
+    public status Evade(Transform that, float scalar) => Move(-transform.Dir(that), scalar);
+
+    public status Move(Vector3 u, float scalar, float refDist=10f){
+        transform.forward = Vector3.Lerp(transform.forward, u, 0.1f);
+        if (Vector3.Angle(transform.forward, u) < 10f)
+            return Playing("Walk", loco?.Move(transform, u, speed * scalar, refDist)
+                               ?? transform.Move(u, speed * scalar));
+        else return cont();
+    }
+
     public status Push(Transform that)
         => Once()?[Reach(that) && PushingSetup() ]
         && this["Push"] && PushingTeardown() ;
 
-    public status Reach(Transform that, float dist = 1f) => ε(
-        Face(that) && Playing("Walk", transform.MoveTowards(that, dist, speed))
-    );
+    public status Reach(Transform that, float dist = 1f) => Seq()
+        % @do?[ Face(that) ]
+        % @do?[ Playing("Walk", loco?.MoveTowards(transform, that .transform.position, dist, speed )
+                          ?? transform.MoveTowards(that, dist, speed)) ];
 
-    public status Test() => reckon(false)[ this["Flail"] ];
-
-    public status Reach(Vector3? that) => Seq()
+    public status Reach(Vector3? that, float scalar=1f) => Seq()
         % @do?[ Face(that .Value) ]
-        % @do?[ Playing("Walk", loco?.MoveTo(transform, that .Value, speed)
-                          ?? transform.MoveTo(that .Value, speed)) ];
+        % @do?[ Playing("Walk", loco?.MoveTo(transform, that .Value, speed * scalar)
+                          ?? transform.MoveTo(that .Value, speed * scalar)) ];
 
-    //‒ ⑂ Reach(シ? ⧕) → with(⧕)[
-    //    !⧕.HasValue ? ◇ :
-    //    ❰Face(⧕ᖾ)❱ ∧ Playing("Walk", loco?.MoveTo(み, ⧕ᖾ, 𝝇)
-    //                                  ?? み.MoveTo(⧕ᖾ, 𝝇))];
-
-    // TODO: flakiness in "Reach" requires the Once node here.
-    // if the memory node is removed the strike action will sometimes
-    // stop half-way and repeat. Solution may be fix the "Reach"
-    // action.
     public status Strike(Transform that, float dist=1f) => (that != null)
-        ? ε( Once()?[Reach(that, dist)] && DoStrike(that, dist))
+        ? Seq() % @do?[ Reach(that, dist) ]
+              % @do?[ this["Strike"] && Message("OnStrike", that) ]
         : fail()[log && "No strike target"];
 
-    public status DoStrike(Transform that, float dist){
-        if (transform.Dist(that) <= dist){
-            return this["Strike"] && Message("OnStrike", that);
-        }else
-            return fail()[log && "Not in strike range"];
-
-    }
-
     action Message(string message, Transform target){
-        Debug.Log($"Message: {message} -> {target}");
         target.SendMessage(message,
-                           SendMessageOptions.RequireReceiver);
-        return @void();
+                           SendMessageOptions.RequireReceiver); return @void();
     }
 
     public status Take()

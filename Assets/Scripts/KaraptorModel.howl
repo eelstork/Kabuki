@@ -13,6 +13,11 @@
     ‒ ㅇ angry   → anger ≥ 1f;
     ‒ ㅇ hungry  → nutrition.want;
     ‒ ㅇ thirsty → hydration.want;
+    ‒ ㅇ wounded → damage > 0.5f;
+
+    ┈ Start(){
+        damage.enabled = ✗;
+    }
 
     ┈ Update(){
         anger.Update(AngerStimulus());

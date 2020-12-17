@@ -23,7 +23,6 @@
     ‒̥ エ Req(⦿ エ x, ⋯ ㄹ[] hints){
         ∙ ㄸ = x.Find(hints);
         ⮐ ㄸ ≠ ∅ ? ㄸ : (╯°□°)╯ ⌢ Ex("Not found: " + hints);
-
     }
 
     ‒̥ エ Find(⦿ エ x, ⋯ ㄹ[] hints){
@@ -48,7 +47,12 @@
     }
 
     ‒̥ ㅅ Look(⦿ エ x, エ y, ㅇ planar = ✓)
-    → シ.Angle(x.forward, x.Dir(y, planar: planar));
+        → シ.Angle(x.forward, x.Dir(y, planar: planar));
+
+    ‒̥ 𝟾 Move(⦿ エ x, シ u, ㅅ speed){
+        x˙ += u.X_Z() ᐧ 𝝇 ᐧ 𝛿𝚝;
+        ⮐ forever();
+    }
 
     ‒̥ ⑂ MoveTo(⦿ エ x, メ y, ㅅ speed){
         ⤴ (x˙ ☰ y) ◇̠

@@ -6,17 +6,21 @@ namespace Kabuki{
 public class Store{
 
     public bool want;
-    public float amount = 1f, cap = 1f, usage = -0.1f, fill = 1f;
+    public float amount = 1f, cap = 1f, delta = -0.1f, fill = 1f;
+    public bool enabled = true;
 
-    public status Feed(){
-        amount += fill * Time.deltaTime ;
+    public status Feed(float scalar = 1f){
+        amount += scalar * fill * Time.deltaTime ;
         if (amount > cap){
             amount = cap; want = false; return done();
-        } else return cont();
+        }else if (amount < 0f){
+            amount = 0f; want = true; return done();            
+        }else return cont();
     }
 
     public void Update(float δ=0f){
-        amount += usage * Time.deltaTime + δ;
+        if (!enabled) return ;
+        amount += delta * Time.deltaTime + δ;
         if (amount <  0f) { amount =  0f; want = true; }
         else if (amount > cap) { amount = cap; want = false; }
     }
@@ -24,8 +28,5 @@ public class Store{
     public static implicit operator Store(float that) => new Store(){ amount = that };
 
     public static implicit operator float(Store that) => that.amount;
-
-    //‒̥ ㅇ ⨕ > (Store x, ㅅ y) → x.amount > y;
-    //‒̥ ㅇ ⨕ < (Store x, ㅅ y) → x.amount < y;
 
 }}
