@@ -15,55 +15,54 @@
         ∧ Rest()
     );
 
-    ⑂ Sleep ⎚ actor["Sleep"];
+    ⑂ Sleep ⎚ ac["Sleep"];
 
     // --------------------------------------------------------------
 
     ⑂ ManageThreats() → ε(
-        Ward() ∨
-        Attack() ∨
-        Evade()
+        mo.damage > 0.50f ? Evade()  :
+        mo.anger  > 0.66f ? Attack() :
+        mo.anger  > 0.33f ? Ward  () : ◇[log ∧ "Not angry"]
     );
 
-    ⑂ Ward() → model.angry ? actor["Flail", ap.threat]
-              : ◇[log ∧ "Not angry"];
+    ⑂ Ward() → ac["Flail", ap.threat];
 
-    ⑂ Attack() → actor.Strike(ap.threat);
+    ⑂ Attack() → ac.Strike(ap.threat, 2f);
 
     ⑂ Evade(){
         ⤴ (ap.threat ☰ ∅) ⮐ ◇[log ∧ "No threat"];
-        ⤳ (ap.threat.Dist(み) > 10f) ◇̠
+        ⤳ (ap.threat.Dist(み) > 15f) ◇̠
         ∙ u = ap.threat.Dir(み);
-        ∙ P = ap.threat˙ + u ᐧ 10f;
-        ⮐ actor.Reach(P);
+        ∙ P = ap.threat˙ + u ᐧ 15f;
+        ⮐ ac.Reach(P);
     }
 
     // --------------------------------------------------------------
 
     ⑂ Hydrate(){
-        ⤴ (!model.thirsty) ⮐ ◇[log ∧ "Not thirsty"];
+        ⤴ (!mo.thirsty) ⮐ ◇[log ∧ "Not thirsty"];
         ⮐ ε(
-            actor.Reach(ap.water)
-          ∧ actor.Ingest(ap.water, consume: ✗)
-          ∧ model.hydration.Feed()
-        )[log ∧ $"hydration: {model.hydration.amount}"];
+            ac.Reach(ap.water)
+          ∧ ac.Ingest(ap.water, consume: ✗)
+          ∧ mo.hydration.Feed()
+        )[log ∧ $"hydration: {mo.hydration.amount}"];
     }
 
     ⑂ Forage(){
-        ⤴ (!model.hungry) ⮐ ◇[log ∧ "Not hungry"];
+        ⤴ (!mo.hungry) ⮐ ◇[log ∧ "Not hungry"];
         ⮐ ε(
-            actor.Reach(ap.food)
-          ∧ actor.Ingest(ap.food, consume: ✗)
-          ∧ model.nutrition.Feed()
-        )[log ∧ $"nutrition: {model.nutrition.amount}"];
+            ac.Reach(ap.food)
+          ∧ ac.Ingest(ap.food, consume: ✗)
+          ∧ mo.nutrition.Feed()
+        )[log ∧ $"nutrition: {mo.nutrition.amount}"];
     }
 
-    ⑂ Rest() → actor["Idle"];
+    ⑂ Rest() → ac["Idle"];
 
     // --------------------------------------------------------------
 
-    KaraptorAp    ap    → ⧼KaraptorAp⧽;
-    KaraptorModel model → ⧼KaraptorModel⧽;
-    Actor         actor → ⧼Actor⧽;
+    KaraptorAp    ap → ⧼KaraptorAp⧽;
+    KaraptorModel mo → ⧼KaraptorModel⧽;
+    Actor         ac → ⧼Actor⧽;
 
 }

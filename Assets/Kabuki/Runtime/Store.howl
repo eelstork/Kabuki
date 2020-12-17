@@ -2,6 +2,7 @@
 ⊐ Active.Core; ⊐̥ Active.Status;
 
 ⊓ Kabuki{
+[System.Serializable]
 ‒ ○ Store{
 
     ‒ ㅇ want;
@@ -9,19 +10,22 @@
 
     ‒ ⑂ Feed(){
         amount += fill ᐧ 𝛿𝚝 ;
-        ⤴ (amount > cap){ amount = cap; want = ✗; ◇̠ } ⤵ ☡̱
+        ⤴ (amount > cap){
+            amount = cap; want = ✗; ◇̠
+        } ⤵ ☡̱
     }
 
-    ‒ ┈ Update(){
-        amount += usage ᐧ 𝛿𝚝 ;
-        ⤴ (amount < 0f){
-            amount = 0f;
-            want = ✓;
-        }
-        ⤳ (amount > cap){
-            amount = cap;
-            want = ✗;
-        }
+    ‒ ┈ Update(ㅅ δ=0f){
+        amount += usage ᐧ 𝛿𝚝 + δ;
+        ⤴ (amount <  0f) { amount =  0f; want = ✓; }
+        ⤳ (amount > cap) { amount = cap; want = ✗; }
     }
+
+    ⒤ Store(ㅅ ⧕) → ⌢ Store(){ amount = ⧕ };
+
+    ⒤ ㅅ(Store ⧕) → ⧕.amount;
+
+    //‒̥ ㅇ ⨕ > (Store x, ㅅ y) → x.amount > y;
+    //‒̥ ㅇ ⨕ < (Store x, ㅅ y) → x.amount < y;
 
 }}

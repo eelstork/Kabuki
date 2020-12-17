@@ -4,26 +4,33 @@
 
 ‒ ○ KaraptorModel : MonoBehaviour{
 
-    ‒ ㅅ anger = 0f,   irritability = 0.1f, angerDrop = 0.05f;
-    ‒ Store nutrition = ⌢ Store();
-    ‒ Store hydration = ⌢ Store();
+    ‒ Store nutrition = 0.5f;
+    ‒ Store hydration = 0.5f;
+    ‒ Store anger     = 0.0f;
+    ‒ Store damage    = 0.0f;
+    ㅅ irritability = 0.2f;
 
-    ‒ ㅇ angry   → anger  ≥ 1f;
+    ‒ ㅇ angry   → anger ≥ 1f;
     ‒ ㅇ hungry  → nutrition.want;
     ‒ ㅇ thirsty → hydration.want;
 
     ┈ Update(){
-        anger  += (AngerStimulus() ᐧ irritability - angerDrop) ᐧ 𝛿𝚝 ;
+        anger.Update(AngerStimulus());
         nutrition.Update();
         hydration.Update();
+        damage.Update();
     }
 
     ㅅ AngerStimulus(){
         ⤴ (ap.threat ☰ ∅) ⮐ 0;
         ㅅ d = シ.Distance(ap.threat˙, み˙);
-        ⮐ (d < 1f) ? 1f
-         : (d < 5f) ? irritability
+        ⮐ (d < 3f) ? 1f
+         : (d < 10f) ? irritability ᐧ 𝛿𝚝
          : 0f;
+    }
+
+    ┈ OnStrike(){
+        damage.amount += 0.2f;
     }
 
     KaraptorAp ap → ⧼KaraptorAp⧽;

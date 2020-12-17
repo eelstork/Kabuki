@@ -72,9 +72,24 @@ public class Actor : Activ.Kabuki.XTask{
     // if the memory node is removed the strike action will sometimes
     // stop half-way and repeat. Solution may be fix the "Reach"
     // action.
-    public status Strike(Transform that) => (that != null)
-        ? ε( Once()?[Reach(that)] && this["Strike"] )
+    public status Strike(Transform that, float dist=1f) => (that != null)
+        ? ε( Once()?[Reach(that, dist)] && DoStrike(that, dist))
         : fail()[log && "No strike target"];
+
+    public status DoStrike(Transform that, float dist){
+        if (transform.Dist(that) <= dist){
+            return this["Strike"] && Message("OnStrike", that);
+        }else
+            return fail()[log && "Not in strike range"];
+
+    }
+
+    action Message(string message, Transform target){
+        Debug.Log($"Message: {message} -> {target}");
+        target.SendMessage(message,
+                           SendMessageOptions.RequireReceiver);
+        return @void();
+    }
 
     public status Take()
         => (other != null) && Face(other.transform) && this["Take"]

@@ -4,26 +4,33 @@ using Store = Kabuki.Store;
 
 public class KaraptorModel : MonoBehaviour{
 
-    public float anger = 0f,   irritability = 0.1f, angerDrop = 0.05f;
-    public Store nutrition = new Store();
-    public Store hydration = new Store();
+    public Store nutrition = 0.5f;
+    public Store hydration = 0.5f;
+    public Store anger     = 0.0f;
+    public Store damage    = 0.0f;
+    float irritability = 0.2f;
 
-    public bool angry   => anger  >= 1f;
+    public bool angry   => anger >= 1f;
     public bool hungry  => nutrition.want;
     public bool thirsty => hydration.want;
 
     void Update(){
-        anger  += (AngerStimulus() * irritability - angerDrop) * Time.deltaTime ;
+        anger.Update(AngerStimulus());
         nutrition.Update();
         hydration.Update();
+        damage.Update();
     }
 
     float AngerStimulus(){
         if (ap.threat == null) return 0;
         float d = Vector3.Distance(ap.threat.transform.position, transform .transform.position);
-        return (d < 1f) ? 1f
-         : (d < 5f) ? irritability
+        return (d < 3f) ? 1f
+         : (d < 10f) ? irritability * Time.deltaTime
          : 0f;
+    }
+
+    void OnStrike(){
+        damage.amount += 0.2f;
     }
 
     KaraptorAp ap => GetComponent<KaraptorAp>();

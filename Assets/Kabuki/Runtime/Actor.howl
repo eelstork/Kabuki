@@ -72,9 +72,24 @@
     // if the memory node is removed the strike action will sometimes
     // stop half-way and repeat. Solution may be fix the "Reach"
     // action.
-    ‒ ⑂ Strike(エ ⧕) → (⧕ ≠ ∅)
-        ? ε( ❰Reach(⧕)❱ ∧ ⦿["Strike"] )
+    ‒ ⑂ Strike(エ ⧕, ㅅ dist=1f) → (⧕ ≠ ∅)
+        ? ε( ❰Reach(⧕, dist)❱ ∧ DoStrike(⧕, dist))
         : ■[log ∧ "No strike target"];
+
+    ‒ ⑂ DoStrike(エ ⧕, ㅅ dist){
+        ⤴ (み.Dist(⧕) ≤ dist){
+            ⮐ ⦿["Strike"] ∧ Message("OnStrike", ⧕);
+        }⤵
+            ⮐ ■[log ∧ "Not in strike range"];
+
+    }
+
+    ▷ Message(ㄹ message, エ target){
+        Debug.Log($"Message: {message} -> {target}");
+        target.SendMessage(message,
+                           SendMessageOptions.RequireReceiver);
+        ⌽
+    }
 
     ‒ ⑂ Take()
         → (other ≠ ∅) ∧ Face(other.み) ∧ ⦿["Take"]

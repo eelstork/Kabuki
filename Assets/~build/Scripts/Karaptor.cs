@@ -15,55 +15,54 @@ public class Karaptor : UTask{
         && Rest()
     );
 
-    status Sleep () => actor["Sleep"];
+    status Sleep () => ac["Sleep"];
 
     // --------------------------------------------------------------
 
     status ManageThreats() => ε(
-        Ward() ||
-        Attack() ||
-        Evade()
+        mo.damage > 0.50f ? Evade()  :
+        mo.anger  > 0.66f ? Attack() :
+        mo.anger  > 0.33f ? Ward  () : done()[log && "Not angry"]
     );
 
-    status Ward() => model.angry ? actor["Flail", ap.threat]
-              : done()[log && "Not angry"];
+    status Ward() => ac["Flail", ap.threat];
 
-    status Attack() => actor.Strike(ap.threat);
+    status Attack() => ac.Strike(ap.threat, 2f);
 
     status Evade(){
         if (ap.threat == null) return done()[log && "No threat"];
-        else if (ap.threat.Dist(transform) > 10f) return done();
+        else if (ap.threat.Dist(transform) > 15f) return done();
         var u = ap.threat.Dir(transform);
-        var P = ap.threat.transform.position + u * 10f;
-        return actor.Reach(P);
+        var P = ap.threat.transform.position + u * 15f;
+        return ac.Reach(P);
     }
 
     // --------------------------------------------------------------
 
     status Hydrate(){
-        if (!model.thirsty) return done()[log && "Not thirsty"];
+        if (!mo.thirsty) return done()[log && "Not thirsty"];
         return ε(
-            actor.Reach(ap.water)
-          && actor.Ingest(ap.water, consume: false)
-          && model.hydration.Feed()
-        )[log && $"hydration: {model.hydration.amount}"];
+            ac.Reach(ap.water)
+          && ac.Ingest(ap.water, consume: false)
+          && mo.hydration.Feed()
+        )[log && $"hydration: {mo.hydration.amount}"];
     }
 
     status Forage(){
-        if (!model.hungry) return done()[log && "Not hungry"];
+        if (!mo.hungry) return done()[log && "Not hungry"];
         return ε(
-            actor.Reach(ap.food)
-          && actor.Ingest(ap.food, consume: false)
-          && model.nutrition.Feed()
-        )[log && $"nutrition: {model.nutrition.amount}"];
+            ac.Reach(ap.food)
+          && ac.Ingest(ap.food, consume: false)
+          && mo.nutrition.Feed()
+        )[log && $"nutrition: {mo.nutrition.amount}"];
     }
 
-    status Rest() => actor["Idle"];
+    status Rest() => ac["Idle"];
 
     // --------------------------------------------------------------
 
-    KaraptorAp    ap    => GetComponent<KaraptorAp>();
-    KaraptorModel model => GetComponent<KaraptorModel>();
-    Actor         actor => GetComponent<Actor>();
+    KaraptorAp    ap => GetComponent<KaraptorAp>();
+    KaraptorModel mo => GetComponent<KaraptorModel>();
+    Actor         ac => GetComponent<Actor>();
 
 }
