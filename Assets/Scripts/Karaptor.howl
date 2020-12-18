@@ -6,57 +6,52 @@
 
     ┈ Start ⎚ ac.loco = ⌢ Locomotion();
 
-    ⁺‒ ⑂ Step() → ε( ap.isDayTime
-        ? Wake()[log ∧ "Waking time"]
-        : Sleep()[log ∧ "Sleeping time"] );
+    ⁺‒ ⑂ Step ⎚ ε(
+        ap.isDayTime ? Wake() : Sleep() );
 
-    ⑂ Wake() → ε(
-        ~ (ManageThreats() ∧ Hydrate() ∧ Forage())
-        ∧ Rest()
-    );
+    ⑂ Wake ⎚ ε(
+        ~ (ManageThreats() ∧ Hydrate() ∧ Forage()) ∧ Rest() );
 
     ⑂ Sleep ⎚ ε(
-        (ap.safe ∨ Evade()) ∧ ac["Sleep"] % mo.damage.Feed(-0.2f)
-    );
+        (ap.safe ∨ Evade()) ∧ ac["Sleep"] % mo.RecoverQuickly() );
 
     // --------------------------------------------------------------
 
-    ⑂ ManageThreats() → ε(
+    ⑂ ManageThreats ⎚ ε(
         ap.safe ? ◇[log ∧ "Safe"]
-        : mo.wounded       ? Evade(2f)
-        : mo.anger > 0.66f ? Attack()
-        : mo.anger > 0.33f ? Ward  ()
+        : ap.wounded ? Evade(2f)
+        : ap.angry   ? Attack()
+        : ap.annoyed ? Ward  ()
         : ◇[log ∧ "Not angry"]
     );
 
-    ⑂ Ward() → ac["Flail", ap.threat];
+    ⑂ Ward ⎚ ac["Flail", ap.threat];
 
-    ⑂ Attack() → ac.Strike(ap.threat, 2f);
+    ⑂ Attack ⎚ ac.Strike(ap.threat, 2f);
 
     ⑂ Evade(ㅅ scalar = 1f) → ac.Evade(ap.threat, scalar);
 
     // --------------------------------------------------------------
 
     ⑂ Hydrate(){
-        ⤴ (!mo.thirsty) ⮐ ◇[log ∧ "Not thirsty"];
-        ⤴ (!ap.water) ⮐ ■[log ∧ "No water or not reachable"];
-        ⮐ ε(
-            ac.Reach(ap.water)
-          ∧ ac.Ingest(ap.water, consume: ✗)
-          ∧ mo.hydration.Feed()
+        ⤴ (!ap.thirsty ) ⮐ ◇[log ∧ "Not thirsty"];
+        ⤴ (!ap.water   ) ⮐ ■[log ∧ "No water or not reachable"];
+        ⮐ ε(   ac.Reach(ap.water)
+              ∧ ac.Ingest(ap.water, consume: ✗)
+              ∧ mo.hydration.Feed()
         )[log ∧ $"hydration: {mo.hydration.amount}"];
     }
 
     ⑂ Forage(){
-        ⤴ (!mo.hungry) ⮐ ◇[log ∧ "Not hungry"];
-        ⮐ ε(
-            ac.Reach(ap.food)
-          ∧ ac.Ingest(ap.food, consume: ✗)
-          ∧ mo.nutrition.Feed()
+        ⤴ (!ap.hungry ) ⮐ ◇[log ∧ "Not hungry"];
+        ⤴ (!ap.food   ) ⮐ ■[log ∧ "No food or not reachable"];
+        ⮐ ε(   ac.Reach(ap.food)
+              ∧ ac.Ingest(ap.food, consume: ✗)
+              ∧ mo.nutrition.Feed()
         )[log ∧ $"nutrition: {mo.nutrition.amount}"];
     }
 
-    ⑂ Rest() → ε(ac["Idle"] % mo.damage.Feed(-0.05f));
+    ⑂ Rest ⎚ ε(ac["Idle"] % mo.RecoverSlowly());
 
     // --------------------------------------------------------------
 

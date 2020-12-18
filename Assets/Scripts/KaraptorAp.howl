@@ -4,25 +4,25 @@
 
     ‒ ㅅ  safeDistance = 15f;
     ‒ エ  threat, water, food;
-    ‒ シ? safePoint;
     ‒ ㅇ  dayOnly = ✓;
 
-    ‒ ㅇ safe      → (threat ☰ ∅) ∨ み.Dist(threat) > safeDistance;
+    // --------------------------------------------------------------
+
+    ‒ ㅇ angry   → mo.anger > 0.66f;
+    ‒ ㅇ annoyed → mo.anger > 0.33f;
+    ‒ ㅇ hungry  → mo.nutrition.want;
+    ‒ ㅇ safe    → (threat ☰ ∅) ∨ み.Dist(threat) > safeDistance;
+    ‒ ㅇ thirsty → mo.hydration.want;
+    ‒ ㅇ wounded → mo.damage > 0.5f;
+
     ‒ ㅇ isDayTime → dayOnly ∨ FindObjectOfType<GameTime>().isDayTime;
 
     // --------------------------------------------------------------
 
-    ‒ ┈ Update(){ LocateThreat(); LocateWater(); LocateFood();
-                   LocateSafePoint(); }
-
-    ┈ LocateSafePoint(){
-        ⤴ (threat ☰ ∅){ safePoint = ∅; ⮐; }
-        ∙ u = threat.Dir(み);
-        safePoint = threat˙ + u ᐧ safeDistance ᐧ 1.1f;
-    }
+    ┈ Update(){ LocateThreat(); LocateWater(); LocateFood(); }
 
     ┈ LocateThreat ⎚ threat = み.Nearest<Actor>(
-        Crit: x → !x.⧼KaraptorModel⧽.wounded );
+        Crit: x → !x.⧼KaraptorAp⧽.wounded );
 
     ┈ LocateFood ⎚ food = み.Nearest<エ>(
         Crit: x → xˮ ☰ "Grass" ∧ IsReachable(x) );
@@ -31,7 +31,7 @@
         Crit: x → xˮ ☰ "Water" ∧ IsReachable(x) );
 
     ㅇ IsReachable(エ target)
-    → !mo.wounded ∨ threat ☰ ∅ ∨ target.Dist(threat) > safeDistance;
+    → !wounded ∨ threat ☰ ∅ ∨ target.Dist(threat) > safeDistance;
 
     KaraptorModel mo → ⧼KaraptorModel⧽;
 

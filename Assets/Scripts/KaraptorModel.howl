@@ -1,23 +1,17 @@
 ⊐ UnityEngine;
-⊐ Active.Core; ⊐̥ Active.Status;
-⊐ Store = Kabuki.Store;
+⊐ Active.Core; ⊐̥ Active.Status; ⊐ Store = Kabuki.Store;
 
 ‒ ○ KaraptorModel : MonoBehaviour{
 
-    ‒ Store nutrition = 0.5f;
-    ‒ Store hydration = 0.5f;
-    ‒ Store anger     = 0.0f;
-    ‒ Store damage    = 0.0f;
-    ㅅ irritability = 0.2f;
+    ‒ Store nutrition = 0.5f, hydration = 0.5f, anger = 0.0f,
+             damage    = 0.0f;
+    ‒ ㅅ irritability = 0.2f;
 
-    ‒ ㅇ angry   → anger ≥ 1f;
-    ‒ ㅇ hungry  → nutrition.want;
-    ‒ ㅇ thirsty → hydration.want;
-    ‒ ㅇ wounded → damage > 0.5f;
+    ‒ ┈ OnStrike       ⎚  damage.amount += 0.2f;
+    ‒ ⑂ RecoverQuickly ⎚  damage.Feed(-0.2f);
+    ‒ ⑂ RecoverSlowly  ⎚  damage.Feed(-0.05f);
 
-    ┈ Start(){
-        damage.enabled = ✗;
-    }
+    ┈ Start ⎚ damage.enabled = ✗;
 
     ┈ Update(){
         anger.Update(AngerStimulus());
@@ -32,10 +26,6 @@
         ⮐ (d < 3f) ? 1f
          : (d < 10f) ? irritability ᐧ 𝛿𝚝
          : 0f;
-    }
-
-    ┈ OnStrike(){
-        damage.amount += 0.2f;
     }
 
     KaraptorAp ap → ⧼KaraptorAp⧽;

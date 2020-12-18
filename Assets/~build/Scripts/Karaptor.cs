@@ -6,26 +6,21 @@ public class Karaptor : UTask{
 
     void Start () => ac.loco = new Locomotion();
 
-    override public status Step() => ε( ap.isDayTime
-        ? Wake()[log && "Waking time"]
-        : Sleep()[log && "Sleeping time"] );
+    override public status Step() => ε( ap.isDayTime ? Wake() : Sleep() );
 
-    status Wake() => ε(
-        ~ (ManageThreats() && Hydrate() && Forage())
-        && Rest()
-    );
+    status Wake() => ε( ~ (ManageThreats() && Hydrate() && Forage())
+                  && Rest() );
 
-    status Sleep () => ε(
-        (ap.safe || Evade()) && ac["Sleep"] % mo.damage.Feed(-0.2f)
-    );
+    status Sleep () => ε( (ap.safe || Evade())
+                  && ac["Sleep"] % mo.RecoverQuickly() );
 
     // --------------------------------------------------------------
 
     status ManageThreats() => ε(
         ap.safe ? done()[log && "Safe"]
-        : mo.wounded       ? Evade(2f)
-        : mo.anger > 0.66f ? Attack()
-        : mo.anger > 0.33f ? Ward  ()
+        : ap.wounded ? Evade(2f)
+        : ap.angry   ? Attack()
+        : ap.annoyed ? Ward  ()
         : done()[log && "Not angry"]
     );
 
@@ -38,25 +33,24 @@ public class Karaptor : UTask{
     // --------------------------------------------------------------
 
     status Hydrate(){
-        if (!mo.thirsty) return done()[log && "Not thirsty"];
-        if (!ap.water) return fail()[log && "No water or not reachable"];
-        return ε(
-            ac.Reach(ap.water)
-          && ac.Ingest(ap.water, consume: false)
-          && mo.hydration.Feed()
+        if (!ap.thirsty ) return done()[log && "Not thirsty"];
+        if (!ap.water   ) return fail()[log && "No water or not reachable"];
+        return ε(   ac.Reach(ap.water)
+              && ac.Ingest(ap.water, consume: false)
+              && mo.hydration.Feed()
         )[log && $"hydration: {mo.hydration.amount}"];
     }
 
     status Forage(){
-        if (!mo.hungry) return done()[log && "Not hungry"];
-        return ε(
-            ac.Reach(ap.food)
-          && ac.Ingest(ap.food, consume: false)
-          && mo.nutrition.Feed()
+        if (!ap.hungry ) return done()[log && "Not hungry"];
+        if (!ap.food   ) return fail()[log && "No food or not reachable"];
+        return ε(   ac.Reach(ap.food)
+              && ac.Ingest(ap.food, consume: false)
+              && mo.nutrition.Feed()
         )[log && $"nutrition: {mo.nutrition.amount}"];
     }
 
-    status Rest() => ε(ac["Idle"] % mo.damage.Feed(-0.05f));
+    status Rest() => ε(ac["Idle"] % mo.RecoverSlowly());
 
     // --------------------------------------------------------------
 
