@@ -1,0 +1,38 @@
+⊐ UnityEngine;
+
+‒̥ ○ Avoidance{
+
+    ‒̥ シ? Clear(メ o, シ u, ㅅ maxAngle=90f, ㅅ maxDistance=5f, ㅅ δ=5f,
+                           エ ignore=∅){
+        ⟳ (ㅅ i = 0 ; i < maxAngle; i += δ ){
+            シ a = ᇅ.AngleAxis(i, シ.⊥) * u;
+            ⤴ (HasClearLOS(o, a, maxDistance, ignore)) ⮐ a;
+            シ b = ᇅ.AngleAxis(i, シ.⊤) * u;
+            ⤴ (HasClearLOS(o, b, maxDistance, ignore)) ⮐ b;
+        }
+        ⏂
+    }
+
+    ‒̥ ㅇ HasClearLOS(メ o, シ u, ㅅ distance, エ ignore=∅){
+        メ? P = Cast(o, u, distance, ignore);
+        ⤴ (!P.HasValue){
+            Debug.DrawRay(o, u, Color.white);
+            ㆑
+        }⤵ {
+            Debug.DrawLine(o, Pᖾ, Color.red);
+            ⤬
+        }
+    }
+
+    ∘ メ? Cast(メ o, シ u, ㅅ dist, エ ignore){
+        RaycastHit hit;
+        ⤴ (Physics.SphereCast(o, 0.5f, u, out hit, dist)){
+            ⤴ (hit.collider ≠ ∅ ∧ hit.collider.transform ☰ ignore) ⏂
+            Debug.Log(
+                $"Avoidance did hit {hit.collider}; (ignoring {ignore}) ");
+            ⮐ hit.point;
+        }
+        ⏂
+    }
+
+}

@@ -1,0 +1,35 @@
+⊐ UnityEngine; ⊐̥ UnityEngine.Mathf;
+
+‒ ○ RotatorComponent : MonoBehaviour{
+
+    ‒ エ target;
+    ‒ ㅅ speed = 10f;
+    ‒ ㅅ traction = 50f;
+    ‒ ㅅ ρ = 15f;
+    [Header("Info")]
+    ‒ ㅅ scalar = 1f;
+
+    ┈ FixedUpdate(){
+        ∙ u = (◍˙ - み˙)¹; u.y = 0f;
+        ∙ α = シ.SignedAngle(u, み.⫫, axis: シ.⊥);
+        ∙ s = (Abs(α) < ρ) ? Abs(α/ρ) : 1f;
+        ∙ w = α < 0 ? シ.⊥ : シ.⊤;
+        ∙ body = ⧼Rigidbody⧽;
+        ∙ w0 = body.angularVelocity;
+        body.AddTorque((w ᐧ 𝝇 ᐧ s - w0) ᐧ 𝓽 );
+    }
+
+    ┈ FixedUpdate2(){
+        ∙ u = (◍˙ - み˙)¹; u.y = 0f;
+        ∙ v = み.⫫;
+        ∙ w = シ.Cross(v, u);
+        //torqueMagnitude = w❚;
+        //Debug.DrawRay(み˙, w, Color.magenta);
+        ∙ body = ⧼Rigidbody⧽;
+        ∙ w0 = body.angularVelocity;
+        //∙ m = Pow(w❚, pow);
+        //w = w¹ ᐧ m;
+        body.AddTorque((w ᐧ 𝝇 - w0) ᐧ 𝓽 );
+    }
+
+}

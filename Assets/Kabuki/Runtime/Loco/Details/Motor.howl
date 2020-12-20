@@ -1,0 +1,21 @@
+⊐ UnityEngine;
+
+⊓ Active.Loco{
+[System.Serializable]
+‒ ○ Motor{
+
+    ‒ ㅅ traction = 25f;
+    [Range(0f, 1f)]
+    ‒ ㅅ drift = 0.5f;
+
+    ‒ ┈ Update(シ dir, ㅅ speed, エ τ, Rigidbody body){
+        ∙ u = シ.Lerp(τ.⫫, dir, drift);
+        ∙ δ = 𝝇 ᐧ u - body.𝓋;
+        body.AddForce(δ ᐧ body.𝓂 ᐧ 𝓽);
+    }
+
+    ‒ ┈ Stop(エ τ, Rigidbody body){
+        body.AddForce(- body.𝓋 ᐧ body.𝓂 ᐧ 𝓽);
+    }
+
+}}

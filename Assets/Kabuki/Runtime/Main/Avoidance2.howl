@@ -1,0 +1,23 @@
+⊐ UnityEngine;
+⊐ Active.Core; ⊐̥ Active.Status;
+
+⊓ Active.Loco{
+‒ ○ Avoidance2{
+
+    // Returns cont if vector is being evaluated, fail if no valid
+    // avoidance vector found, done if vector is ready
+    // 'targetObj' is one we don't collide with, such as when
+    // walking towards another actor or prop
+    ‒ ⑂ Correct(エ み, ref シ u, ㅅ maxDist, エ targetObj = ∅){
+        シ? v = Avoidance.Clear(み˙ + シ.⊥, u, maxDistance: maxDist,
+                                             ignore: targetObj);
+        ⤴ (v.HasValue){
+            //ebug.Log("Avoidance vec: " + v);
+            ⮐ Do(u = vᖾ);
+        }⤵ {
+            //ebug.LogError($"[No avoidance vec for {u}]");
+            ⮐ ■;
+        }
+    }
+
+}}

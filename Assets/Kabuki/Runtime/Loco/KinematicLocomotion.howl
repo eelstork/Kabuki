@@ -1,0 +1,86 @@
+⊐ Ex = System.Exception;
+⊐ UnityEngine; ⊐̥ UnityEngine.Time; ⊐̥ UnityEngine.Mathf;
+⊐ Active.Core; ⊐̥ Active.Status; ⊐ Active.Util;
+⊐ Activ.Kabuki;
+
+⊓ Active.Loco{
+‒ ○ KinematicLocomotion : Locomotion{
+
+    Active.Core.Details.LogString log = ∅;
+    TVec3 direction;
+    Transform transform;
+    XTask actor;
+
+    // TODO: actor is only needed for animation playback
+    ‒ KinematicLocomotion(エ t, XTask actor){
+        み = t;
+        ⦿.actor = actor;
+    }
+
+    ‒ ⑂ Idle() → ☡;
+
+    ‒ ⑂ MoveTo(メ ◍, ㅅ speed){
+        ⤴ (み˙ ☰ ◍) ◇̠
+        ㅅ d = み.PlanarDist(◍), δ = 𝛿𝚝 ᐧ 𝝇;
+        ⮐ (δ > d) ? Do(み˙ = ◍) : DoMove(み.PlanarDir(◍), δ, d);
+    }
+
+    ‒ ⑂ MoveTo(エ ◍, ㅅ speed){
+        ⤴ (み˙ ☰ ◍˙) ◇̠
+        ㅅ d = み.PlanarDist(◍), δ = 𝛿𝚝 ᐧ 𝝇;
+        ⮐ (δ > d) ? Do(み˙ = ◍˙) : DoMove(み.PlanarDir(◍), δ, d);
+    }
+
+    ‒ ⑂ MoveTowards(メ ◍, ㅅ dist, ㅅ speed){
+        ㅅ d = み.PlanarDist(◍);
+        ⮐  (d < dist) ∨ DoMove(み.PlanarDir(◍), 𝛿𝚝 ᐧ 𝝇, d);
+    }
+
+    ‒ ⑂ MoveTowards(エ ◍, ㅅ dist, ㅅ speed){
+        //ebug.Log($"Move towards {target}, dist:{dist}, speed:{speed} @{Time.frameCount}");
+        ㅅ d = み.PlanarDist(◍);
+        ⮐  (d < dist) ∨ DoMove(み.PlanarDir(◍), 𝛿𝚝 ᐧ 𝝇, d, ignore: ◍);
+    }
+
+    ‒ ⑂ Move(シ u, ㅅ speed, ㅅ los)
+        → DoMove(u.X_Z()¹, 𝛿𝚝 ᐧ 𝝇, los);
+
+    // --------------------------------------------------------------
+
+    ⑂ DoMove(シ u, ㅅ δ, ㅅ los, エ ignore=∅){
+        シ? v = direction;
+        // Avoidance vector is valid for one second at most; this
+        // avoids dithering. Here the avoidance vector expired;
+        // regenerate it.
+        ⤴ (v ☰ ∅){
+            direction = Avoidance.Clear(み˙, u, maxDistance: los,
+                                                ignore: ignore);
+            v = direction;
+        }
+        // If no valid direction was found, return fail
+        ⤴ (v ☰ ∅){
+            actor.Play("Idle");
+            ⮐ ■[log ∧ $"No avoidance vec @{Time.time:#.#}"];
+        }
+        // Since we don't always regen an avoidance vector, sometimes
+        // The current vector is invalid (ie, on a collision course).
+        // Then we return cont as we're just going to yield for a bit.
+        ⤴ (!Avoidance.HasClearLOS(み˙, vᖾ, Mathf.Min(1f, los),
+                                                             ignore)){
+            actor.Play("Idle");
+            ⮐ ■[log ∧ "Collision course (avoid vec out of date)"];
+        }
+        // TODO: after lerp we may still be on a collision course.
+        // this is not taken into account.
+        み.⫫ = シ.Lerp(み.⫫, vᖾ, 0.1f);
+        // If orientation is lagging behind catch-up first, no
+        // location update
+        ⤴ (シ.Angle(み.⫫, vᖾ) > 10f) ☡̱
+        // Update position
+        actor.Play("Walk");
+        ⮐ Cont(み˙ += vᖾ ᐧ δ);
+    }
+
+    ┈ Print(⊡ arg) → UnityEngine.Debug.Log(arg);
+
+}}

@@ -1,0 +1,45 @@
+⊐ UnityEngine; ⊐ Active.Core; ⊐̥ Active.Status;
+
+⊓ Active.Loco{
+‒ ○ Homing : LocoTask{
+
+    メ target;
+    ㅅ speed;
+
+    ‒ ㅇ Update(メ target, ㅅ speed){
+        ㅇ changed = false;
+        ⤴ (⦿.target ≠ ◍) { ⦿.◍ = ◍; changed = ✓; }
+        ⤴ (⦿.speed  ≠ 𝝇) { ⦿.𝝇 = 𝝇; changed = ✓; }
+        //⤴ (changed) Debug.LogError("target has changed");
+        ⮐ changed;
+    }
+
+    ⁺‒ ⑂ Step(PhysicalLocomotion o){
+        ∙ dist = シ.Distance(o.み˙, target);
+        ⤴ (dist < 0.1f){
+            // TODO: do not ever mutate on 'done'
+            // o.Play("Idle");
+            // o.motor.Stop(o.み, o.body);
+            // o.rotor.Stop(o.み, o.body);
+            ⮐ ◇[log ∧ "On target"];
+        }
+        ∙ direction = (target - o.み˙)¹;
+        o.rotor.Update(direction, o.み, o.body);
+        // Maybe no clear LOS here since course corrections take time.
+        // was o.み˙
+        ⤴ (Avoidance.HasClearLOS(o.shape.bounds.center,
+                                  o.body.𝓋, 1f)){
+            ∙ s = 𝝇;
+            ⤴ (dist ≤ 1f) s *= dist;
+            o.motor.Update(direction, s, o.み, o.body);
+            o.Play("Walk");
+            ⮐ ☡[log ∧ "Move"];
+        }⤵ {
+            // So, if not, stop moving.
+            o.motor.Stop(o.み, o.body);
+            o.Play("Idle");
+            ⮐ ☡[log ∧ "Stall"];
+        }
+    }
+
+}}

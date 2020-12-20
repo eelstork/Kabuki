@@ -1,0 +1,32 @@
+⊐ UnityEngine; ⊐ Active.Core; ⊐̥ Active.Status;
+
+⊓ Active.Loco{
+‒ ○ Steering : LocoTask{
+
+    シ direction;
+    ㅅ speed;
+
+    ‒ ㅇ Update(シ u, ㅅ speed){
+        ㅇ changed = false;
+        ⤴ (direction ≠ u)   { direction = u;   changed = ✓; }
+        ⤴ (⦿.speed ≠ speed) { ⦿.speed = speed; changed = ✓; }
+        ⮐ changed;
+    }
+
+    ⁺‒ ⑂ Step(PhysicalLocomotion o){
+        //
+        o.rotor.Update(direction, o.み, o.body);
+        // Maybe no clear LOS here since course corrections take time.
+        ⤴ (Avoidance.HasClearLOS(o.み˙, o.body.𝓋, 1f)){
+            o.motor.Update(direction, 𝝇, o.み, o.body);
+            o.Play("Walk");
+            ⮐ ☡[log ∧ "Move"];
+        }⤵ {
+            // So, if not, stop moving.
+            o.motor.Stop(o.み, o.body);
+            o.Play("Idle");
+            ⮐ ☡[log ∧ "Stall"];
+        }
+    }
+
+}}

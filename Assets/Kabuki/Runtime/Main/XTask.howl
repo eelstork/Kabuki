@@ -1,0 +1,69 @@
+using Ex = System.Exception; ⊐ UnityEngine;
+⊐ Active.Core; ⊐̥ Active.Core.status; ⊐ Active.Util;
+
+⊓ Activ.Kabuki{
+‒ ○ XTask : UTask{
+
+    ᆞ frame = -1;
+    ㄹ currentAnimation;
+    ‒ ㅇ ward;
+    AnimationDriver _animDriver;
+
+    ‒ ⨮ Play(ㄹ anim){
+        FrameCheck(anim);
+        ⮐ animDriver.Play(anim);
+    }
+
+    ‒ ⑂ Playing(ㄹ anim,  ⑂ @while){
+        ⤴ (@while.running){
+            FrameCheck(anim);
+            Play(anim);
+        }
+        ⮐ @while;
+    }
+
+    ‒ C Req<C>() ¿ C : ⫙ {
+        ∙ c = ⧼C⧽; ⤴ (c ≠ ∅) ⮐ c;
+        ⮐ 《C》;
+    }
+
+    ‒ action Delete(エ arg){
+        Debug.Log("Destroy thing: " + arg);
+        ⤴ (arg ≠ ∅) DestroyImmediate(arg.gameObject); ⌽
+    }
+
+    ┈ FrameCheck(ㄹ anim){
+        ⤴ (!ward) ⮐ ;
+        ᆞ i = Time.frameCount;
+        ⤴ (i ☰ frame) (╯°□°)╯
+            ⌢ Ex($"Playing {currentAnimation} but requested {anim}");
+        frame = i;
+        currentAnimation = anim;
+    }
+
+    // PRIVATE ------------------------------------------------------
+
+    ┈ Start(){
+        ∀ (∙ s ∈ GetComponents<XTask>()) ⤴ (s ≠ ⦿){
+            _animDriver = s.animDriver; ¦
+        }
+    }
+
+    AnimationDriver SetupAnimDriver(){
+        Animator  ator  = ∅;
+        Animation ation = ∅;
+        ⤴ (ator  = ⧼Animator⧽  )
+            ⮐ ⌢ MecanimDriver(ator);
+        ⤳ (ation = ⧼Animation⧽ )
+            ⮐ ⌢ LegacyAnimationDriver(ation);
+        ⤵
+            (╯°□°)╯ ⌢ Ex("No Animation or Animator component");
+    }
+
+    // --------------------------------------------------------------
+
+    ‒ エ θ → transform;
+    ‒ AnimationDriver animDriver → _animDriver ≠ ∅ ? _animDriver
+        : (_animDriver = SetupAnimDriver());
+
+}}

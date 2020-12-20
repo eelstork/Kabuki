@@ -1,10 +1,21 @@
 ⊐ UnityEngine;
 ⊐ Active.Core; ⊐̥ Active.Status;
 ⊐ Activ.Kabuki; ⊐̥ Activ.Kabuki.VectorExt;
+⊐ Active.Loco;
 
 ‒ ○ Karaptor : UTask{
 
-    ┈ Start ⎚ ac.loco = ⌢ Locomotion();
+    ‒ ㅇ usePhysicalLocomotion = ✗;
+
+    ┈ Start(){
+        ⤴ (usePhysicalLocomotion){
+            ∙ loco = gameObject.《PhysicalLocomotion》;
+            ac.loco = loco;
+            ∙ agent = gameObject.《PhysicsAgent》;
+            agent.root = loco;
+        }
+        ⤵ ac.loco = ⌢ KinematicLocomotion(み, ac);
+    }
 
     ⁺‒ ⑂ Step ⎚ ε(
         ap.isDayTime ? Wake() : Sleep() );
@@ -27,9 +38,9 @@
 
     ⑂ Ward ⎚ ac["Flail", ap.threat];
 
-    ⑂ Attack ⎚ ac.Strike(ap.threat, 2f);
+    ⑂ Attack ⎚ ac.Strike(ap.threat, 2f, message: ✓);
 
-    ⑂ Evade(ㅅ scalar = 1f) → ac.Evade(ap.threat, scalar);
+    ⑂ Evade(ㅅ scalar = 1f) → ε(ac.Evade(ap.threat, scalar));
 
     // --------------------------------------------------------------
 

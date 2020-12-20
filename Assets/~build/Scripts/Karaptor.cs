@@ -1,22 +1,34 @@
 using UnityEngine;
 using Active.Core; using static Active.Status;
 using Activ.Kabuki; using static Activ.Kabuki.VectorExt;
+using Active.Loco;
 
 public class Karaptor : UTask{
 
-    void Start () => ac.loco = new Locomotion();
+    public bool usePhysicalLocomotion = false;
 
-    override public status Step() => ε( ap.isDayTime ? Wake() : Sleep() );
+    void Start(){
+        if (usePhysicalLocomotion){
+            var loco = gameObject.gameObject.AddComponent<PhysicalLocomotion>();
+            ac.loco = loco;
+            var agent = gameObject.gameObject.AddComponent<PhysicsAgent>();
+            agent.root = loco;
+        }
+        else ac.loco = new KinematicLocomotion(transform, ac);
+    }
 
-    status Wake() => ε( ~ (ManageThreats() && Hydrate() && Forage())
-                  && Rest() );
+    override public status Step () => ε(
+        ap.isDayTime ? Wake() : Sleep() );
 
-    status Sleep () => ε( (ap.safe || Evade())
-                  && ac["Sleep"] % mo.RecoverQuickly() );
+    status Wake () => ε(
+        ~ (ManageThreats() && Hydrate() && Forage()) && Rest() );
+
+    status Sleep () => ε(
+        (ap.safe || Evade()) && ac["Sleep"] % mo.RecoverQuickly() );
 
     // --------------------------------------------------------------
 
-    status ManageThreats() => ε(
+    status ManageThreats () => ε(
         ap.safe ? done()[log && "Safe"]
         : ap.wounded ? Evade(2f)
         : ap.angry   ? Attack()
@@ -24,11 +36,11 @@ public class Karaptor : UTask{
         : done()[log && "Not angry"]
     );
 
-    status Ward() => ac["Flail", ap.threat];
+    status Ward () => ac["Flail", ap.threat];
 
-    status Attack() => ac.Strike(ap.threat, 2f);
+    status Attack () => ac.Strike(ap.threat, 2f, message: true);
 
-    status Evade(float scalar = 1f) => ac.Evade(ap.threat, scalar);
+    status Evade(float scalar = 1f) => ε(ac.Evade(ap.threat, scalar));
 
     // --------------------------------------------------------------
 
@@ -50,7 +62,7 @@ public class Karaptor : UTask{
         )[log && $"nutrition: {mo.nutrition.amount}"];
     }
 
-    status Rest() => ε(ac["Idle"] % mo.RecoverSlowly());
+    status Rest () => ε(ac["Idle"] % mo.RecoverSlowly());
 
     // --------------------------------------------------------------
 

@@ -1,0 +1,163 @@
+⊐ Ex = System.Exception;
+⊐ UnityEngine; ⊐ T = UnityEngine.Transform;
+⊐ Active.Core; ⊐̥ Active.Status; ⊐ Active.Util;
+⊐ Active.Loco;
+
+⊓ Activ.Kabuki{
+‒ ○ Actor : Activ.Kabuki.XTask{
+
+    ‒ ㅅ speed = 1, rotationSpeed = 180;
+    ‒ エ leftHold, rightHold; // for holding an object in hand
+    ‒ エ[] pushingBones;      // contact points for pushing
+    ‒ Actor other;           // for give/take interaction
+    ‒ エ gift;
+    ‒ Locomotion loco = ∅;
+
+    ┈ Start(){
+        ⤴ (loco ☰ ∅) loco = ⌢ KinematicLocomotion(み, ⦿);
+    }
+
+    // --------------------------------------------------------------
+
+    ‒ ⑂ ⦿[ㄹ gesture, エ ⧕] → (⧕ ≠ ∅) ∧ Face(⧕) ∧ ⦿[gesture];
+
+    ‒ ⑂ ⦿[ㄹ anim] → ε( animDriver.Exists(anim)
+        ? Play(anim) % loco.Idle()
+        : Wait(1f)   % Playing("Idle", loco.Idle())
+                     % speechBox.SetText(anim)
+    );
+
+    ‒ ⑂ Evade(エ ⧕, ㅅ scalar) → Move(-み.Dir(⧕), scalar);
+
+    ‒ ⑂ Face(エ ⧕, ㄹ anim = "Walk")
+        → Playing(anim, み.RotateTowards(⧕, rotationSpeed));
+
+    ‒ ⑂ Face(メ pos, ㄹ anim = "Walk")
+        → Playing(anim, み.RotateTowards(pos, rotationSpeed));
+
+    ‒ ⑂ Give(エ ⧕, Actor recipient)
+        → Reach(recipient.み)
+        ∧ While(Offer(⧕, recipient))?[ ⦿["Idle"] ]
+        ∧ Present(⧕, recipient);
+
+    ‒ ⑂ Grab(エ ⧕)
+        → (Has(⧕) ∨ Reach(⧕)) ∧ ⦿["Grab"] % After(0.5f)?[ Hold(⧕) ];
+
+    ‒ ⑂ Ingest(エ ⧕, ㅇ consume = ✓)
+        → ε(consume ? Hold(⧕, allowNull: ✓, hand: "L")
+                            ∧ ⦿["Eat"] % ( Wait(1.2f) ∧ Delete(⧕) )
+                    : ⦿["Eat"]);
+
+    ‒ ⑂ Idle → ⦿["Idle"];
+
+    ‒ ⨴ LookAt(エ ⧕, ㄹ rotationAnim = "Walk", ㄹ idleAnim = "Idle"){
+        ∙ s = Face(⧕, rotationAnim) ∧ ⦿[idleAnim];
+        ☡̱ʿ
+    }
+
+    ‒ ⑂ Move(シ u, ㅅ scalar, ㅅ refDist=10f)
+        → loco.Move(u, 𝝇 ᐧ scalar, refDist);
+
+    ‒ ⑂ Push(エ ⧕)
+        → ❰Reach(⧕) ∧ PushingSetup() ❱
+        ∧ ⦿["Push"] ∧ PushingTeardown() ;
+
+    ‒ ⑂ Reach(エ ⧕, ㅅ dist = 1f){
+        ⮐ loco.MoveTowards(⧕, dist, 𝝇 );
+    }
+
+    ‒ ⑂ Reach(メ? ⧕, ㅅ scalar=1f) → loco.MoveTo(⧕ᖾ, 𝝇 ᐧ scalar);
+
+    ‒ ⑂ Strike(エ ⧕, ㅅ dist=1f, ㅇ message=✗) → (⧕ ≠ ∅)
+        ? ⍈() ⟦ Reach(⧕, dist) ⟧
+              ⟦ ⦿["Strike"] ∧ (!message ∨ Message("OnStrike", ⧕)) ⟧
+        : ■[log ∧ "No strike target"];
+
+    ▷ Message(ㄹ message, エ target){
+        target.SendMessage(message,
+                           SendMessageOptions.RequireReceiver); ⌽
+    }
+
+    ‒ ⑂ Take()
+        → (other ≠ ∅) ∧ Face(other.み) ∧ ⦿["Take"]
+                      % After(0.5f)?[ Hold(gift) ];
+
+    ‒ ⑂ Tell(エ ⧕, ㄹ msg)
+        → ❰Reach(⧕)❱ ∧ speechBox.SetText(msg) ∧ ⦿["Tell"];
+
+    ‒ ⑂ Throw(エ ⧕, シ dir)
+        → ❰Hold(⧕)❱
+        ∧ Face(dir) ∧ ⦿["Throw"] * After(0.5f)? [ Impel(⧕, dir) ];
+
+    // ==============================================================
+
+    ‒ ㅇ IsLookingAt(Actor ⧕) → み.Look(⧕.み) < 5f;
+
+    ‒ ㅇ Has(エ ⧕) → み.Has(⧕);
+
+    // ==============================================================
+
+    ▷ Hold(エ ⧕, ㅇ allowNull = ✗, ㄹ hand = "R"){
+        ⮐ Hold(⧕, hand ☰ "R" ? rightHold : leftHold, allowNull);
+    }
+
+    ▷ Hold(エ ⧕, エ hold, ㅇ allowNull){
+        ⤴ (hold ☰ ∅)
+            (╯°□°)╯ ⌢ Ex("'hold' is null");
+        ⤴ (⧕ ☰ ∅) ⮐ allowNull ? @void()
+                                 : (╯°□°)╯ ⌢ Ex("that is null");
+        ⧕.gameObject.SetActive(✓);
+        ⤴ (⧕.parent ☰ hold) ⌽
+        ∙ body = ⧕.⧼Rigidbody⧽;
+        ⤴ (body) body.isKinematic = ✓;
+        ⧕.SetParent(hold);
+        ⧕.𝚙 = Palm(hold) + シ.⫫ * ⧕.Radius();
+        ⌽
+    }
+
+    ▷ Impel(エ ⧕, シ dir, ㅅ force = 10f){
+        ⧕.SetParent(∅);
+        ∙ body = ⧕.⧼Rigidbody⧽;
+        body.isKinematic = ✗;
+        body.AddForce(dir¹ * 𝐹, ForceMode.Impulse);
+        ⌽
+    }
+
+    ⑂ Offer(エ ⧕, Actor recipient)
+        → Do(recipient.other = ⦿)
+        & Do(recipient.gift  = ⧕)
+        & +(⑂)recipient.IsLookingAt(⦿);
+
+    ⑂ Present(エ ⧕, Actor recipient)
+        → (recipient.Has(⧕) ∨ Hold(⧕)) ∧ ⦿["Give"];
+
+    ▷ PushingSetup(){
+        UseRootMotion(✓);
+        ∀ (エ x ∈ pushingBones){
+            ∙ c = x.《SphereCollider》; c.radius = 0.05f;
+            ∙ b = x.《Rigidbody》; b.isKinematic = ✓;
+        } ⌽
+    }
+
+    ▷ PushingTeardown(){
+        UseRootMotion(✗);
+        ∀ (エ x ∈ pushingBones){
+            Destroy(x.⧼SphereCollider⧽);
+            Destroy(x.⧼Rigidbody⧽);
+        } ⌽
+    }
+
+    ▷ UseRootMotion(ㅇ flag) → Do( ⧼Animator⧽.applyRootMotion = flag );
+
+    // --------------------------------------------------------------
+
+    メ Palm(エ hold){
+        メ sum = メ.zero; ᆞ count = 1;
+        ∀ (エ x ∈ hold){ sum += x.𝚙/2; count++; }
+        sum /= count;
+        ⮐ sum;
+    }
+
+    SpeechBox speechBox → ⧼SpeechBox⧽ ?? 《SpeechBox》;
+
+}}

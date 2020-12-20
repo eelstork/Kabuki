@@ -24,13 +24,13 @@ public class RaptorTest : ActorTest{
         //
         var t1 = Time.time ;
         s = status.cont();
-        while (!s.complete){ s = actor["Flail"]; yield return null; }
+        while (!s.complete){ s = actor["Greet"]; yield return null; }
         var δ1 = Time.time - t1;
         //rint($"Flail played {δ1:0.##}s");
         //
         o( s.complete );
         float D = actor.GetComponent<Animation>()["Strike"].length +
-              actor.GetComponent<Animation>()["Flail"].length
+              actor.GetComponent<Animation>()["Greet"].length
               - fadeLength * 2f;
         var δ = δ0 + δ1;
         o( Mathf.Abs(D - δ) < 0.05f );

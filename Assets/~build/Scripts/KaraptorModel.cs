@@ -7,7 +7,7 @@ public class KaraptorModel : MonoBehaviour{
              damage    = 0.0f;
     public float irritability = 0.2f;
 
-    public void OnStrike       () =>  damage.amount += 0.2f;
+    public void OnStrike       () => damage.amount += 0.2f;
     public status RecoverQuickly () =>  damage.Feed(-0.2f);
     public status RecoverSlowly  () =>  damage.Feed(-0.05f);
 

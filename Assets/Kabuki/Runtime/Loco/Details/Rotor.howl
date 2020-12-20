@@ -1,0 +1,22 @@
+⊐ UnityEngine; ⊐̥ UnityEngine.Mathf;
+
+⊓ Active.Loco{
+[System.Serializable] ‒ ○ Rotor{
+
+    ‒ ㅅ speed = 10f;
+    ‒ ㅅ traction = 25f;
+    ‒ ㅅ ρ = 30f;
+
+    ‒ ┈ UpdateWithTarget(シ u, エ τ, Rigidbody body){}
+
+    ‒ ┈ Update(シ u, エ τ, Rigidbody body){
+        ∙ α = シ.SignedAngle(u, τ.⫫, axis: シ.⊥);
+        ∙ s = (Abs(α) < ρ) ? Abs(α/ρ) : 1f;
+        ∙ w = α < 0 ? シ.⊥ : シ.⊤;
+        body.AddTorque((w ᐧ 𝝇 ᐧ s - body.angularVelocity) ᐧ 𝓽 );
+    }
+
+    ‒ ┈ Stop(エ τ, Rigidbody body)
+        → body.AddTorque( - body.angularVelocity ᐧ 𝓽 );
+
+}}

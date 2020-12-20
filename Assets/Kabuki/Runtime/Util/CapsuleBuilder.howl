@@ -1,0 +1,18 @@
+⊐ UnityEngine;
+
+⊓ Active.Util{
+[ExecuteInEditMode]
+‒ ○ CapsuleBuilder : MonoBehaviour{
+
+    ┈ Update() → BuildAndResize(み);
+
+    ‒̥ ┈ BuildAndResize(エ τ){
+        ∙ capsule = τ.⧼CapsuleCollider⧽;
+        ⤴ (!capsule) capsule = τ.《CapsuleCollider》;
+        ∙ r = τ.GetComponentInChildren<Renderer>();
+        capsule.radius = r.bounds.extents.x / τ.𝚜.x;
+        capsule.center = τ.InverseTransformPoint(r.bounds.center);
+        capsule.height = capsule.center.y * 2f;
+    }
+
+}}

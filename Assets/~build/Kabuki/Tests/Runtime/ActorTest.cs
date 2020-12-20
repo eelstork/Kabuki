@@ -8,7 +8,7 @@ namespace Kabuki.Test{ public abstract class ActorTest : PlayTest{
 
     protected abstract string ActorName { get; }  protected abstract float ActorSize { get; }
 
-    protected virtual float fadeLength => 0.3f;  override protected float baseTimeScale => 12;
+    protected virtual float fadeLength => 0.3f;  override protected float baseTimeScale => 1;
 
     [SetUp] public void SetupActor(){
         actor = ActorSetup.Setup( Create(ActorName), ActorSize )

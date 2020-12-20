@@ -1,0 +1,15 @@
+⊐ UnityEngine;
+
+[ExecuteInEditMode]
+‒ ○ TrackingCamera : MonoBehaviour{
+
+    ‒ エ target;
+    ‒ シ offset = ⌢ シ(-5f, 5f, -10f);
+    [Range(0f, 1f)] ‒ ㅅ smooth = 0.1f;
+
+    ┈ Update(){
+        ⤴ (Time.frameCount < 25) み.LookAt(◍);
+        み˙ = シ.Lerp(み˙, ◍˙ + offset, smooth);
+    }
+
+}

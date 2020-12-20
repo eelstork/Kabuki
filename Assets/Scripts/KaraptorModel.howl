@@ -7,7 +7,7 @@
              damage    = 0.0f;
     ‒ ㅅ irritability = 0.2f;
 
-    ‒ ┈ OnStrike       ⎚  damage.amount += 0.2f;
+    ‒ ┈ OnStrike       ⎚ damage.amount += 0.2f;
     ‒ ⑂ RecoverQuickly ⎚  damage.Feed(-0.2f);
     ‒ ⑂ RecoverSlowly  ⎚  damage.Feed(-0.05f);
 

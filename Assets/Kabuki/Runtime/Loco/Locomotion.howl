@@ -1,0 +1,13 @@
+⊐ UnityEngine;
+⊐ Active.Core; ⊐̥ Active.Status;
+
+⊓ Active.Loco{
+‒ 𐋂 Locomotion{
+
+    ⑂ MoveTo(メ ◍, ㅅ speed);
+    ⑂ MoveTowards(メ ◍, ㅅ dist, ㅅ speed);
+    ⑂ MoveTowards(エ ◍, ㅅ dist, ㅅ speed);
+    ⑂ Move(シ u, ㅅ speed, ㅅ los);
+    ⑂ Idle();
+
+}}

@@ -1,0 +1,17 @@
+⊐ UnityEngine;
+⊐ Inp = UnityEngine.Input;
+
+⊓ Active.Input{
+‒ ○ Tap : MonoBehaviour{
+
+    ‒ メ? ◍;
+
+    ┈ Update(){
+        ⤴ (!Inp.GetMouseButtonUp(0)) ⮐ ;
+        RaycastHit hit;
+        ㅇ didHit = Physics.Raycast(Camera.main.ScreenPointToRay(
+                                   Inp.mousePosition), out hit);
+        ⤴ (didHit) ◍ = hit.point;
+    }
+
+}}

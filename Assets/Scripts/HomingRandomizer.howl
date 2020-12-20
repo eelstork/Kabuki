@@ -1,0 +1,34 @@
+⊐ UnityEngine; ⊐ Active.Loco; ⊐ Activ.Kabuki;
+⊐ Active.Input;
+
+‒ ○ HomingRandomizer : MonoBehaviour{
+
+    ‒ ㅅ delay = 5f;
+    ‒ ㅅ radius = 10f;
+    ‒ メ target = シ.zero;
+
+    ┈ Start(){
+        ⤴ (delay > 0f) InvokeRepeating("Randomize", delay, delay);
+    }
+
+    ┈ Update(){
+        GetTap();
+        ∙ λ = ⧼PhysicalLocomotion⧽;
+        Debug.DrawLine(み˙ + シ.⊥, ◍, Color.red);
+        ∙ s = λ.MoveTo(◍, 3f) ∧ λ.Playing("Idle", λ.Idle());
+    }
+
+    ┈ GetTap(){
+        ∙ taps = FindObjectOfType<Tap>();
+        ⤴ (!taps) ⮐ ;
+        ∙ P = taps.target;
+        ⤴ (P.HasValue){ target = Pᖾ; taps.target = ∅; }
+    }
+
+    ┈ Randomize(){
+        ⤴ (!enabled) ⮐ ;
+        ◍ = Random.insideUnitSphere * radius;
+        ◍.y = 0f;
+    }
+
+}

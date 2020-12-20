@@ -1,0 +1,118 @@
+⊐ System; ⊐ UnityEngine; ⊐ Active.Core; ⊐̥ Active.Status;
+⊐ Activ.Kabuki; ⊐ Active.Util;
+
+⊓ Active.Loco{
+‒ ○ PhysicalLocomotion : Activ.Kabuki.XTask, Locomotion{
+
+    ‒ Motor motor = ⌢ Motor();
+    ‒ Rotor rotor = ⌢ Rotor();
+    ‒ ㅇ setupCapsule = ✓;
+    LocoTask @delegate;
+    int cframe;
+
+    Avoidance2 avoidance = ⌢ Avoidance2();
+    ⑂ state;
+
+    ┈ Awake(){
+        ⤴ (setupCapsule)CapsuleBuilder.BuildAndResize(み);
+        ∙ rb = ⧼Rigidbody⧽;
+        ⤴ (!rb){
+            rb =《Rigidbody》;
+            rb.mass = 50;
+            rb.constraints = RigidbodyConstraints.FreezeRotationX
+                           | RigidbodyConstraints.FreezeRotationZ;
+
+        }
+    }
+
+    ‒ ⑂ Idle(){
+        cframe = Time.frameCount;
+        @delegate = ⌢ Stopping(); ☡̱
+    }
+
+    // <Locomotion>
+    ‒ ⑂ Move(シ u, ㅅ speed, ㅅ los) → Steer(u, 𝝇, los);
+
+    ‒ ⑂ Steer(シ ◍, ㅅ speed, ㅅ maxDist = 3f){
+        cframe = Time.frameCount;
+        シ direction = ◍;
+        ⑂ av = avoidance.Correct(み, ref direction, maxDist);
+        ⤴ (av.failing){
+            direction = シ.zero;
+            ⤴ (!(@delegate is Stopping)) @delegate = ⌢ Stopping();
+            ⮐ ■[log ∧ "No clear course"];
+        }⤵{
+            ㅇ changed = ✗;
+            ⤴ (!(@delegate is Steering)){
+                @delegate = ⌢ Steering(); changed = ✓;
+            }
+            changed |= (@delegate as Steering).Update(direction, 𝝇);
+            ⮐ changed ? ☡ : state;
+        }
+    }
+
+    // <Locomotion>
+    // NOTE: do not modify state when done (no idle stance/animation)
+    ‒ ⑂ MoveTowards(メ ◍, ㅅ dist, ㅅ speed)
+        → (み.Dist(◍) ≤ dist) ∨ MoveTo(◍, 𝝇);
+
+    ‒ ⑂ MoveTowards(エ ◍, ㅅ dist, ㅅ speed){
+        //ebug.Log($"(Physics) Move towards {target}, dist:{dist}, speed:{speed} @{Time.frameCount}");
+        ⮐ (み.Dist(◍) ≤ dist) ∨ MoveTo(◍˙, 𝝇, ◍);
+    }
+
+    // <Locomotion>
+    ‒ ⑂ MoveTo(メ ◍, ㅅ speed) → MoveTo(◍, 𝝇, ∅);
+
+    ‒ ⑂ MoveTo(メ ◍, ㅅ speed, エ ignore){
+        // We're going to check first whether we can move towards
+        // the target.
+        cframe = Time.frameCount;
+        シ u0 = み.Dir(◍, planar: ✓);
+        シ u = u0;
+        ⑂ av = avoidance.Correct(み, ref u, み.Dist(◍), ignore);
+        ⤴ (av.failing){
+            ⤴ (!(@delegate is Stopping)) @delegate = ⌢ Stopping();
+            ⮐ ■[log ∧ "No clear course"];
+        }
+        ㅇ changed = ✗;
+        // Now uh... this is a little tricky. If we have an
+        // avoidance vector then we probably should not want the
+        // homing delegate. Otherwise we use that.
+        ⤴ (u ☰ u0){
+            ⤴ (!(@delegate is Homing)){
+                @delegate = ⌢ Homing(); changed = ✓;
+            }
+            changed |= (@delegate as Homing).Update(◍, 𝝇);
+            ⮐ changed ? ☡ : state;
+        }⤵ {
+            ⤴ (!(@delegate is Steering)){
+                @delegate = ⌢ Steering(); changed = ✓;
+            }
+            changed |= (@delegate as Steering).Update(u, 𝝇);
+            ⮐ changed ? ☡ : state;
+        }
+    }
+
+    ⁺‒ ⑂ Step(){
+        ⤴ (Time.frameCount > cframe + 1) ◇̠
+        ⤴ (!grounded){
+            Play("Flail");
+            ⮐ state = ■[log ∧ "Not grounded"]; }
+        Play("Walk");
+        ⮐ ε(state = @delegate ≠ ∅ ? @delegate.Step(⦿)
+                                   : ■[log ∧ "No delegate"]);
+    }
+
+    ㅇ grounded{ ╭{
+        ∙ P = shape.bounds.center;
+        ∙ h = shape.bounds.extents.y * 1.1f;
+        RaycastHit hit;
+        ㅇ didHit = Physics.Raycast(P, シ.⊤, out hit, h);
+        ⮐ didHit;
+    }}
+
+    ‒ Collider  shape → ⧼Collider⧽;
+    ‒ Rigidbody body  → ⧼Rigidbody⧽;
+
+}}

@@ -1,0 +1,17 @@
+⊐ UnityEngine; ⊐̥ UnityEngine.Debug;
+⊐ Active.Core; ⊐̥ Active.Status;
+
+⊓ Active.Loco{
+‒ ○ Stopping : LocoTask{
+
+    ⁺‒ ⑂ Step(PhysicalLocomotion o){
+        ⤴ (o.body  ☰ ∅) LogWarning($"? rb    @{Time.frameCount}");
+        ⤳ (o.motor ☰ ∅) LogWarning($"? motor @{Time.frameCount}");
+        ⤵ {
+            o.motor.Stop(o.み, o.body);
+            o.rotor.Stop(o.み, o.body);
+            o.Play("Idle");
+        } ☡̱
+    }
+
+}}

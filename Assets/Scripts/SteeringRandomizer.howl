@@ -1,0 +1,24 @@
+⊐ UnityEngine; ⊐ Active.Loco; ⊐ Activ.Kabuki;
+
+‒ ○ SteeringRandomizer : MonoBehaviour{
+
+    ‒ ㅅ delay = 5f;
+    ‒ シ aim = シ.⫫;
+
+    ┈ Start(){
+        ⤴ (delay > 0f) InvokeRepeating("Randomize", delay, delay);
+    }
+
+    ┈ Update(){
+        Debug.DrawRay(み˙ + シ.⊥, aim, Color.cyan);
+        ⧼PhysicalLocomotion⧽.Steer(aim, 3f);
+    }
+
+    ┈ Randomize(){
+        ⤴ (!enabled) ⮐ ;
+        aim = Random.insideUnitSphere;
+        aim.y = 0f;
+        aim.Normalize();
+    }
+
+}

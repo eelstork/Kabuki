@@ -1,6 +1,7 @@
 using Active.Core; using static Active.Core.status;
 using UnityEngine;
 using Activ.Kabuki; using static Activ.Kabuki.VectorExt;
+using Active.Loco;
 
 public class Roam : Actor{
 
@@ -10,7 +11,7 @@ public class Roam : Actor{
 
     Vector3? target;
 
-    void Start () => loco = new Locomotion();
+    void Start () => loco = new KinematicLocomotion(transform, this);
 
     override public status Step() => (Eat() || this["Flail"]) && Retarget();
 

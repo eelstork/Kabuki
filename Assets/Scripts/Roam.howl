@@ -1,6 +1,7 @@
 ⊐ Active.Core; ⊐̥ Active.Core.status;
 ⊐ UnityEngine;
 ⊐ Activ.Kabuki; ⊐̥ Activ.Kabuki.VectorExt;
+⊐ Active.Loco;
 
 ‒ ○ Roam : Actor{
 
@@ -10,7 +11,7 @@
 
     シ? target;
 
-    ┈ Start ⎚ loco = ⌢ Locomotion();
+    ┈ Start ⎚ loco = ⌢ KinematicLocomotion(み, ⦿);
 
     ⁺‒ ⑂ Step() → (Eat() ∨ ⦿["Flail"]) ∧ Retarget();
 

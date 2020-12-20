@@ -1,0 +1,8 @@
+⊐ UnityEngine; ⊐ Active.Core; ⊐̥ Active.Status;
+
+⊓ Active.Loco{
+‒☋ ○ LocoTask : Gig{
+
+    ‒☋ ⑂ Step(PhysicalLocomotion o);
+
+}}
