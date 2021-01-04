@@ -21,7 +21,7 @@ public class HomingRandomizer : MonoBehaviour{
     void GetTap(){
         var taps = FindObjectOfType<Tap>();
         if (!taps) return ;
-        var P = taps.target;
+        var P = taps.target?.position;
         if (P.HasValue){ target = P.Value; taps.target = null; }
     }
 

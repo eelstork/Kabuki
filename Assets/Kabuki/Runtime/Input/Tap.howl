@@ -4,14 +4,23 @@
 ⊓ Active.Input{
 ‒ ○ Tap : MonoBehaviour{
 
-    ‒ メ? ◍;
+    ‒ Target ◍;
 
     ┈ Update(){
         ⤴ (!Inp.GetMouseButtonUp(0)) ⮐ ;
         RaycastHit hit;
         ㅇ didHit = Physics.Raycast(Camera.main.ScreenPointToRay(
                                    Inp.mousePosition), out hit);
-        ⤴ (didHit) ◍ = hit.point;
+        ⤴ (didHit) ◍ = ⌢ Target(){
+                            position = hit.point,
+                            @object  = hit.collider.transform };
+    }
+
+    ‒ ○ Target{
+
+        ‒ メ position;
+        ‒ エ @object;
+
     }
 
 }}

@@ -21,7 +21,7 @@
     ┈ GetTap(){
         ∙ taps = FindObjectOfType<Tap>();
         ⤴ (!taps) ⮐ ;
-        ∙ P = taps.target;
+        ∙ P = taps.target?.position;
         ⤴ (P.HasValue){ target = Pᖾ; taps.target = ∅; }
     }
 
